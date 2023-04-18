@@ -2,16 +2,16 @@ import "primereact/resources/primereact.min.css";
 import "/node_modules/primeflex/primeflex.css";
 import "./App.css";
 import SidebarCraft from "./Components/SidebarCraft/SidebarCraft";
-import TableCraft from "./Components/TableCraft/TableCraft";
+import TableCraftContainer from "./Components/TableCraft/TableCraftContainer";
 
-const App = () => {
+const App = (props) => {
   return (
     <div className="grid">
       <div className="col-1">
         <SidebarCraft />
       </div>
       <div className="col">
-        <TableCraft />
+        <TableCraftContainer {...props}/>
       </div>
     </div>
   );
