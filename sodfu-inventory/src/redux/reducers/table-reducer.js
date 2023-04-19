@@ -1,9 +1,8 @@
-// import { AuthAPI } from "../../api/api";
-// import { stopSubmit } from "redux-form";
+import { DataAPI } from "../../api/api";
 import { ProductService } from "../../service/ProductService";
 import { FilterMatchMode } from "primereact/api";
 
-const SET_USER_DATA = "sodfu-inventory/tableReducer/SET_USER_DATA";
+const SET_DATA = "sodfu-inventory/tableReducer/SET_DATA";
 
 let initialState = {
   columns: [
@@ -19,6 +18,7 @@ let initialState = {
     { field: "serviceable", header: "Состояние исправности", width: "12rem" },
   ],
   data: ProductService.getProductsData(),
+  data: "",
   filters: {
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
     id: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -31,15 +31,27 @@ let initialState = {
 
 const tableReducer = (state = initialState, action) => {
   switch (action.type) {
-    case SET_USER_DATA:
+    case SET_DATA:
       return {
         ...state,
-        ...action.data,
+        data: action.data,
       };
     default:
       return state;
   }
 };
 
+const setData = (data) => ({ type: SET_DATA, data: data });
+
+export const requestData = () => {
+  return (dispatch) => {
+    DataAPI.getData().then((data) => {
+      // if (data.resultCode === 0) {
+      //   dispatch(followSuccess(id));
+      // }
+      dispatch(setData(data));
+    });
+  };
+};
 
 export default tableReducer;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
@@ -9,10 +9,14 @@ import { MultiSelect } from "primereact/multiselect";
 import { Button } from "primereact/button";
 
 const TableCraft = (props) => {
-  const { data, columns } = props;
+  const { data, columns, requestData } = props;
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filters, setFilters] = useState(props.filters);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
+
+  useEffect(() => {
+    requestData()
+  }, []);
 
   const onColumnToggle = (event) => {
     let selectedColumns = event.value;

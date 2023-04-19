@@ -3,9 +3,6 @@ import axios from "axios";
 const instance = axios.create({
   withCredentials: true,
   baseURL: '/',
-  headers: {
-    "API-KEY": "6418f527-56fd-4c7d-a109-28133beb7bdd",
-  },
 });
 
 export const DataAPI = {
@@ -16,7 +13,7 @@ export const DataAPI = {
   },
   follow(id) {
     return instance
-      .post(`updateData`, { email, password, rememberMe })
+      .post(`updateData`)
       .then((responce) => responce.data);
   },
 }
