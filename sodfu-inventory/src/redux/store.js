@@ -1,9 +1,11 @@
 import { applyMiddleware, combineReducers, legacy_createStore as createStore } from "redux"
 import tableReducer from "./reducers/table-reducer";
+import furnitureReducer from "./reducers/furniture-reducer";
 import thunkMiddleware from "redux-thunk"
 
 let reducers = combineReducers({
     table: tableReducer,
+    furniture: furnitureReducer,
   });
 
 let store = createStore(reducers, applyMiddleware(thunkMiddleware))

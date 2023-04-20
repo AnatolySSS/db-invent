@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node backend/index.js",
+    "start": "nodemon backend/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/AnatolySSS/db-invent/issues"
   },
-  "homepage": "https://github.com/AnatolySSS/db-invent#readme"
+  "homepage": "https://github.com/AnatolySSS/db-invent#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
 }
