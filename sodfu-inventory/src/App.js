@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SidebarCraftContainer from "./Components/SidebarCraft/SidebarCraftContainer";
 import TableCraftItContainer from "./Components/TableCraft/TableCraftItContainer";
 import TableCraftFurnitureContainer from "./Components/TableCraft/TableCraftFurnitureContainer";
+import ItDownloadCraftContainer from "./Components/DownloadCraft/ItDownloadCraftContainer";
 
 class App extends React.Component {
   render() {
@@ -19,6 +20,7 @@ class App extends React.Component {
             <Routes>
               <Route path="/it" element={<TableCraftItContainer />} />
               <Route path="/furniture" element={<TableCraftFurnitureContainer />} />
+              <Route path="/it/download" element={<ItDownloadCraftContainer />} />
             </Routes>
           </div>
         </div>

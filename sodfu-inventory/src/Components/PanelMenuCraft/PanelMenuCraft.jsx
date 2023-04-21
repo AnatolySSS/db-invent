@@ -10,7 +10,7 @@ const PanelMenuCraft = (props) => {
 
   const items = [
     {
-      label: "Данные",
+      label: "Показать данные",
       icon: "pi pi-fw pi-file",
       items: [
         {
@@ -33,6 +33,43 @@ const PanelMenuCraft = (props) => {
           template: (item, options) => {
             return (
                 <NavLink to="/furniture"
+                  className={classNames(options.className,"w-full p-link flex align-items-center")}
+                  style={{
+                    textDecoration: "none",
+                    color: "#495057",
+                  }}>
+                  <i className="pi pi-fw pi-box mr-2"></i>
+                  Мебель
+                </NavLink>
+            );
+          },
+        },
+      ],
+    },
+    {
+      label: "Загрузить данные",
+      icon: "pi pi-fw pi-download",
+      items: [
+        {
+          template: (item, options) => {
+            return (
+                <NavLink to="/it/download"
+                  className={classNames(options.className,"w-full p-link flex align-items-center")}
+                  style={{
+                    textDecoration: "none",
+                    color: "#495057",
+                  }}>
+                  <i className="pi pi-fw pi-print mr-2"></i>
+                  Оборудование
+                </NavLink>
+            );
+          },
+        },
+        {
+          icon: "pi pi-fw pi-box",
+          template: (item, options) => {
+            return (
+                <NavLink to="/furniture/download"
                   className={classNames(options.className,"w-full p-link flex align-items-center")}
                   style={{
                     textDecoration: "none",

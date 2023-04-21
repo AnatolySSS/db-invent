@@ -1,8 +1,8 @@
 const express = require("express");
-const mysql = require('mysql')
+const mysql = require("mysql");
+const { networkInterfaces } = require('os');
 const app = express();
-const PORT = process.env.PORT || 3001;
-const jsonParser = express.json()
+const jsonParser = express.json();
 
 let dataIt = {
   values: [
@@ -369,18 +369,58 @@ let dataIt = {
   ],
   columns: [
     { field: "id", header: "ID", width: "12rem", showFilterMenu: true },
-    { field: "inventary_number", header: "Инвентарный номер", width: "18rem", showFilterMenu: true },
-    { field: "internal_number", header: "Внутренний номер", width: "18rem", showFilterMenu: true },
+    {
+      field: "inventary_number",
+      header: "Инвентарный номер",
+      width: "18rem",
+      showFilterMenu: true,
+    },
+    {
+      field: "internal_number",
+      header: "Внутренний номер",
+      width: "18rem",
+      showFilterMenu: true,
+    },
     { field: "type", header: "Тип", width: "12rem", showFilterMenu: true },
-    { field: "name", header: "Наименование", width: "18rem", showFilterMenu: true },
-    { field: "release_date ", header: "Дата выпуска", width: "12rem", showFilterMenu: true },
-    { field: "date_of_purchase ", header: "Дата приобретения", width: "12rem", showFilterMenu: true },
-    { field: "last_check_date ", header: "Дата последней проверки", width: "12rem", showFilterMenu: true },
-    { field: "serviceable", header: "Состояние исправности", width: "12rem", showFilterMenu: false },
-    { field: "is_capital_good", header: "Основное средство", width: "4rem", showFilterMenu: false },
+    {
+      field: "name",
+      header: "Наименование",
+      width: "18rem",
+      showFilterMenu: true,
+    },
+    {
+      field: "release_date ",
+      header: "Дата выпуска",
+      width: "12rem",
+      showFilterMenu: true,
+    },
+    {
+      field: "date_of_purchase ",
+      header: "Дата приобретения",
+      width: "12rem",
+      showFilterMenu: true,
+    },
+    {
+      field: "last_check_date ",
+      header: "Дата последней проверки",
+      width: "12rem",
+      showFilterMenu: true,
+    },
+    {
+      field: "serviceable",
+      header: "Состояние исправности",
+      width: "12rem",
+      showFilterMenu: false,
+    },
+    {
+      field: "is_capital_good",
+      header: "Основное средство",
+      width: "4rem",
+      showFilterMenu: false,
+    },
   ],
   name: "IT оборудование",
-}
+};
 
 let dataFurniture = {
   values: [
@@ -543,38 +583,149 @@ let dataFurniture = {
   ],
   columns: [
     { field: "id", header: "ID", width: "12rem", showFilterMenu: true },
-    { field: "inventary_number", header: "Инвентарный номер", width: "18rem", showFilterMenu: true },
-    { field: "internal_number", header: "Внутренний номер", width: "18rem", showFilterMenu: true },
+    {
+      field: "inventary_number",
+      header: "Инвентарный номер",
+      width: "18rem",
+      showFilterMenu: true,
+    },
+    {
+      field: "internal_number",
+      header: "Внутренний номер",
+      width: "18rem",
+      showFilterMenu: true,
+    },
     { field: "type", header: "Тип", width: "12rem", showFilterMenu: true },
-    { field: "name", header: "Наименование", width: "18rem", showFilterMenu: true },
-    { field: "release_date ", header: "Дата выпуска", width: "12rem", showFilterMenu: true },
-    { field: "date_of_purchase ", header: "Дата приобретения", width: "12rem", showFilterMenu: true },
-    { field: "last_check_date ", header: "Дата последней проверки", width: "12rem", showFilterMenu: true },
-    { field: "serviceable", header: "Состояние исправности", width: "12rem", showFilterMenu: false },
-    { field: "is_capital_good", header: "Основное средство", width: "4rem", showFilterMenu: false },
+    {
+      field: "name",
+      header: "Наименование",
+      width: "18rem",
+      showFilterMenu: true,
+    },
+    {
+      field: "release_date ",
+      header: "Дата выпуска",
+      width: "12rem",
+      showFilterMenu: true,
+    },
+    {
+      field: "date_of_purchase ",
+      header: "Дата приобретения",
+      width: "12rem",
+      showFilterMenu: true,
+    },
+    {
+      field: "last_check_date ",
+      header: "Дата последней проверки",
+      width: "12rem",
+      showFilterMenu: true,
+    },
+    {
+      field: "serviceable",
+      header: "Состояние исправности",
+      width: "12rem",
+      showFilterMenu: false,
+    },
+    {
+      field: "is_capital_good",
+      header: "Основное средство",
+      width: "4rem",
+      showFilterMenu: false,
+    },
   ],
   name: "Мебель",
+};
+
+const nets = networkInterfaces();
+const results = Object.create(null); // Or just '{}', an empty object
+
+for (const name of Object.keys(nets)) {
+    for (const net of nets[name]) {
+        // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
+        // 'IPv4' is in Node <= 17, from 18 it's a number 4 or 6
+        const familyV4Value = typeof net.family === 'string' ? 'IPv4' : 4
+        if (net.family === familyV4Value && !net.internal) {
+            if (!results[name]) {
+                results[name] = [];
+            }
+            results[name].push(net.address);
+        }
+    }
 }
 
-const connection = mysql.createConnection({
-  host: '10.205.24.14',
-  user: 'inventorydb',
-  password: 'inventory1983!',
-  database: 'Test'
+let currentIP = results["en0"] || results["eth0"]
+currentIP = currentIP.toString()
+
+let connection
+//В зависимости от IP адреса необходимо подключаться к различным портам и с разными настройками базы данных
+switch (currentIP) {
+  case "192.168.0.19":
+    console.log("Это localhost");
+    PORT = 3001;
+    //Подключение к базе данных timeweb 
+    connection = mysql.createConnection({
+      host: "localhost",
+      port: 3306,
+      user: "root",
+      password: "",
+      database: "test_db",
+    })
+    break;
+
+  case "10.205.24.14": // поправить
+    console.log("Это sodfu");
+    PORT = 3001;
+    //Подключение к базе данных timeweb 
+    connection = mysql.createConnection({
+        host : process.env.DB_SODFU_HOST,
+        port : process.env.DB_SODFU_PORT,
+        user : process.env.DB_SODFU_USER,
+        database : process.env.DB_SODFU_NAME,
+        password : process.env.DB_SODFU_PASSWORD,
+    })
+    break;
+
+  default:
+    PORT = 3001;
+    //Подключение к базе данных timeweb 
+    connection = mysql.createConnection({
+      host: "localhost",
+      port: 3306,
+      user: "root",
+      password: "",
+      database: "test_db",
+    });
+    break;
+}
+
+connection.connect(function(error) {
+  if (error) {
+      return console.error("Ошибка " + error.message)
+  } else {
+      console.log("Подключение прошло успешно");
+  }
 })
 
 app.get("/data", (request, responce) => {
   //bd request
-  connection.connect()
+  let it_lib_data = {}
 
-  connection.query('SELECT * FROM it_lib', (err, rows, fields) => {
-    if (err) throw err
+  connection.query("SELECT * FROM it_lib", (err, rows, fields) => {
+    if (err) throw err;
 
-    console.log('The solution is: ', rows[0].solution)
-  })
+    it_lib_data.values = Object.values(JSON.parse(JSON.stringify(rows)))
+    it_lib_data.columns = dataIt.columns
+    console.log(it_lib_data);
+    responce.json(it_lib_data);
+    // console.log("Fields: ", fields);
+  });
 
-  connection.end()
-  responce.json(dataIt)
+  // connection.query(`SELECT * FROM it_params`, (err, result) => {
+  //   if (err) throw err;
+
+  //   console.log("Result: ", result);
+  // });
+
 });
 
 app.post("/updateData", jsonParser, (request, responce) => {
@@ -585,14 +736,14 @@ app.post("/updateData", jsonParser, (request, responce) => {
     } else {
       return row;
     }
-  })
+  });
 
   responce.json(dataIt);
 });
 
 app.get("/furniture", (request, responce) => {
   //bd request
-  responce.json(dataFurniture)
+  responce.json(dataFurniture);
 });
 
 app.post("/updateFurniture", jsonParser, (request, responce) => {
@@ -604,9 +755,77 @@ app.post("/updateFurniture", jsonParser, (request, responce) => {
     } else {
       return row;
     }
-  })
+  });
   responce.json(dataFurniture);
-})
+});
+
+app.post("/uploadItData", jsonParser, (request, responce) => {
+  let data = request.body.data;
+  console.log(Object.keys(data[0]));
+  //bd update
+
+  //Удаление таблицы it_lib
+  const queryDeleteTableMotivations = `DROP TABLE if exists it_lib`;
+  connection.query(queryDeleteTableMotivations, function (error, result) {
+    if (error) throw error;
+    console.log("Table deleted");
+  });
+
+  //Создание таблицы it_lib
+  let queryCreateTableStr = ``;
+  console.log(data);
+  for (const key of Object.keys(data[0])) {
+    console.log(key);
+    if (key !== 'id') {
+      queryCreateTableStr = `${queryCreateTableStr}${key} TEXT, `;
+      console.log(key);
+    }
+  }
+  queryCreateTableStr = queryCreateTableStr.slice(0, -2);
+
+  const queryCreateTable = `CREATE TABLE if not exists it_lib (id INT AUTO_INCREMENT PRIMARY KEY, ${queryCreateTableStr});`;
+  connection.query(queryCreateTable, function (error, result) {
+    if (error) throw error;
+    console.log("Table created");
+  });
+
+  //Изменяем кодировку it_lib
+  let queryChangeCoding = "";
+  for (const key of Object.keys(data[0])) {
+    queryChangeCoding = `ALTER TABLE it_lib CHANGE ${key} ${key} TEXT CHARACTER set utf8mb4 COLLATE utf8mb4_unicode_ci;`;
+    connection.query(queryChangeCoding, function (error, result) {
+      if (error) throw error;
+      console.log(`Column ${key} coding change`);
+    });
+  }
+
+  //Заполнение таблицы it_lib данными из файла excel
+  let queryInsertIntoMotivation = ``
+  let queryInsertIntoMotivationStr
+  let queryInsertIntoMotivationStrQuestionMark
+  for (let i = 0; i < data.length; i++) {
+      queryInsertIntoMotivationStr = ``
+      queryInsertIntoMotivationStrQuestionMark = ``
+      for (let j = 0; j < Object.values(data[i]).length; j++) {
+          queryInsertIntoMotivationStr = `${queryInsertIntoMotivationStr}${Object.keys(data[i])[j]}, `
+          queryInsertIntoMotivationStrQuestionMark = `${queryInsertIntoMotivationStrQuestionMark}?, `
+      }
+      //Обрезание последних запятой и пробела в тексте запроса (поля)
+      queryInsertIntoMotivationStr = queryInsertIntoMotivationStr.slice(0, -2)
+      //Обрезание последних запятой и пробела в тексте запроса (знаки вопросов)
+      queryInsertIntoMotivationStrQuestionMark = queryInsertIntoMotivationStrQuestionMark.slice(0, -2)
+      //Формирование текста sql-запроса
+      queryInsertIntoMotivation = `INSERT INTO it_lib (${queryInsertIntoMotivationStr}) VALUES(${queryInsertIntoMotivationStrQuestionMark})`;
+      //Занесение данных  в таблицу
+      connection.query(queryInsertIntoMotivation, Object.values(data[i]), (error, result) => {
+          if (error) throw error
+          console.log(i);
+      })
+      
+  }
+
+  responce.json(dataIt);
+});
 
 app.listen(PORT, () => {
   console.log(`Server is starting on PORT ${PORT}`);

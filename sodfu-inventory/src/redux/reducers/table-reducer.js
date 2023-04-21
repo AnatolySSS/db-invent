@@ -37,6 +37,7 @@ const setData = (data) => ({ type: SET_DATA, data: data });
 export const requestData = () => {
   return (dispatch) => {
     DataAPI.getData().then((data) => {
+      console.log(data);
       dispatch(setData(data));
     });
   };
