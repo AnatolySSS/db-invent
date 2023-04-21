@@ -1,4 +1,5 @@
 const express = require("express");
+const mysql = require('mysql')
 const app = express();
 const PORT = process.env.PORT || 3001;
 const jsonParser = express.json()
@@ -555,8 +556,24 @@ let dataFurniture = {
   name: "Мебель",
 }
 
+const connection = mysql.createConnection({
+  host: '10.205.24.14',
+  user: 'inventorydb',
+  password: 'inventory1983!',
+  database: 'Test'
+})
+
 app.get("/data", (request, responce) => {
   //bd request
+  connection.connect()
+
+  connection.query('SELECT * FROM it_lib', (err, rows, fields) => {
+    if (err) throw err
+
+    console.log('The solution is: ', rows[0].solution)
+  })
+
+  connection.end()
   responce.json(dataIt)
 });
 
@@ -569,7 +586,7 @@ app.post("/updateData", jsonParser, (request, responce) => {
       return row;
     }
   })
-  
+
   responce.json(dataIt);
 });
 
