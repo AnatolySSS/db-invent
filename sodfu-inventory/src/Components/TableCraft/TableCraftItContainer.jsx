@@ -1,9 +1,7 @@
 import { connect } from "react-redux";
-import "primereact/resources/themes/lara-light-indigo/theme.css";
-import "primereact/resources/primereact.min.css";
-import "primeicons/primeicons.css";
 import TableCraft from "./TableCraft";
 import { requestData, updateData } from "../../redux/reducers/table-reducer";
+import { setVisible } from "../../redux/reducers/side-bar-reducer";
 
 let mapStateToProps = (state) => {
 
@@ -18,6 +16,7 @@ let mapStateToProps = (state) => {
 let mapDispatchToProps =  {
     requestData,
     updateData,
+    setVisible,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(TableCraft)

@@ -13,7 +13,7 @@ import { Tag } from 'primereact/tag';
 import { TriStateCheckbox } from 'primereact/tristatecheckbox';
 
 const TableCraft = (props) => {
-  const { data, columns, requestData, updateData } = props;
+  const { data, columns, requestData, updateData, setVisible } = props;
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filters, setFilters] = useState(props.filters);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
@@ -182,7 +182,7 @@ const TableCraft = (props) => {
 };
 
 const verifiedBodyTemplate = (rowData) => {
-  return <i className={classNames('pi', { 'true-icon pi-check-circle': rowData.is_capital_good, 'false-icon pi-times-circle': !rowData.is_capital_good })}></i>;
+  return <i className={classNames('pi', { 'true-icon text-green-500 pi-check-circle': rowData.is_capital_good, 'false-icon text-red-500 pi-times-circle': !rowData.is_capital_good })}></i>;
 };
 
 const serviceableRowFilterTemplate = (options) => {
@@ -197,38 +197,46 @@ const verifiedRowFilterTemplate = (options) => {
 
   const renderHeader = () => {
     return (
-      <div className="flex justify-content-between">
-        <div>
-          <MultiSelect
-            value={visibleColumns}
-            options={columns}
-            optionLabel="header"
-            onChange={onColumnToggle}
-            className="w-full sm:w-20rem"
-            display="chip"
-          />
+      <div className="flex align-content-center">
+        <div className="flex align-items-center col-fixed">
+          <Button icon="pi pi-bars" onClick={() => setVisible(true)} />
         </div>
-        <div>
-          <h2>{props.name}</h2>
-        </div>
-        <div>
-          <span className="p-input-icon-left">
-            <i className="pi pi-search" />
-            <InputText
-              value={globalFilterValue}
-              onChange={onGlobalFilterChange}
-              placeholder="Keyword Search"
+        <div className="col flex justify-content-between align-content-center">
+          <div className="flex align-items-center justify-content-center">
+            <MultiSelect
+              value={visibleColumns}
+              options={columns}
+              optionLabel="header"
+              onChange={onColumnToggle}
+              className="w-full sm:w-20rem"
+              display="chip"
             />
-          </span>
-          <Button
-            className="ml-2"
-            type="button"
-            icon="pi pi-file-excel"
-            severity="success"
-            rounded
-            onClick={exportExcel}
-            data-pr-tooltip="XLS"
-          />
+          </div>
+          <div className="flex align-items-center justify-content-center">
+            <h2>{props.name}</h2>
+          </div>
+          <div className="flex align-items-center justify-content-center">
+            <span className="p-input-icon-left">
+              <i className="pi pi-search" />
+              <InputText
+                value={globalFilterValue}
+                onChange={onGlobalFilterChange}
+                placeholder="Keyword Search"
+              />
+            </span>
+            <div className="col-fixed">
+            <Button
+              className="ml-2"
+              type="button"
+              icon="pi pi-file-excel"
+              severity="success"
+              rounded
+              onClick={exportExcel}
+              data-pr-tooltip="XLS"
+            />
+            </div>
+            
+          </div>
         </div>
       </div>
     );
@@ -237,7 +245,7 @@ const verifiedRowFilterTemplate = (options) => {
   const header = renderHeader();
 
   return (
-    <div className="card mt-2 max-w-screen">
+    <div className="card">
       <DataTable
         value={data}
         filters={filters}
