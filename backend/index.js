@@ -765,25 +765,25 @@ app.post("/uploadItData", jsonParser, (request, responce) => {
   //bd update
 
   //Удаление таблицы it_lib
-  const queryDeleteTableMotivations = `DROP TABLE if exists it_lib`;
-  connection.query(queryDeleteTableMotivations, function (error, result) {
+  const queryDeleteTableIt_lib = `DROP TABLE if exists it_lib`;
+  connection.query(queryDeleteTableIt_lib, function (error, result) {
     if (error) throw error;
     console.log("Table deleted");
   });
 
-  //Создание таблицы it_lib
-  let queryCreateTableStr = ``;
-  console.log(data);
-  for (const key of Object.keys(data[0])) {
-    console.log(key);
-    if (key !== 'id') {
-      queryCreateTableStr = `${queryCreateTableStr}${key} TEXT, `;
-      console.log(key);
+  //Создание таблицы
+  const createTable = (data) => {
+    let queryCreateTableStr = ``;
+    for (const key of Object.keys(data[0])) {
+      if (key !== 'id') {
+        queryCreateTableStr = `${queryCreateTableStr}${key} VARCHAR(45), `;
+      }
     }
+    queryCreateTableStr = queryCreateTableStr.slice(0, -2);
+    return queryCreateTableStr
   }
-  queryCreateTableStr = queryCreateTableStr.slice(0, -2);
 
-  const queryCreateTable = `CREATE TABLE if not exists it_lib (id INT AUTO_INCREMENT PRIMARY KEY, ${queryCreateTableStr});`;
+  const queryCreateTable = `CREATE TABLE if not exists it_lib (id INT AUTO_INCREMENT PRIMARY KEY, ${createTable(data)});`;
   connection.query(queryCreateTable, function (error, result) {
     if (error) throw error;
     console.log("Table created");
@@ -795,7 +795,6 @@ app.post("/uploadItData", jsonParser, (request, responce) => {
     queryChangeCoding = `ALTER TABLE it_lib CHANGE ${key} ${key} TEXT CHARACTER set utf8mb4 COLLATE utf8mb4_unicode_ci;`;
     connection.query(queryChangeCoding, function (error, result) {
       if (error) throw error;
-      console.log(`Column ${key} coding change`);
     });
   }
 
@@ -819,12 +818,11 @@ app.post("/uploadItData", jsonParser, (request, responce) => {
       //Занесение данных  в таблицу
       connection.query(queryInsertIntoMotivation, Object.values(data[i]), (error, result) => {
           if (error) throw error
-          console.log(i);
       })
       
   }
 
-  responce.json(dataIt);
+  responce.json(data);
 });
 
 app.listen(PORT, () => {
