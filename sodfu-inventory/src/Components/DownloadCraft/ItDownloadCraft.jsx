@@ -25,7 +25,7 @@ const ItDownloadCraft = (props) => {
           );
           uploadItData(it_lib)
           console.log(it_lib);
-          toast.current.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded' });
+          onUpload()
         };
         
     };
@@ -38,10 +38,22 @@ const ItDownloadCraft = (props) => {
         </div>
         <div className="col-11 flex justify-content-center">
           <FileUpload
+            chooseLabel="Upload IT data"
             className="flex"
             mode="basic"
             name="it_lib"
             url="/api/it_lib"
+            accept="xlsx/*"
+            maxFileSize={1000000}
+            customUpload={true}
+            uploadHandler={invoiceUploadHandler}
+          />
+          <FileUpload
+            chooseLabel="Upload Furniture data"
+            className="flex"
+            mode="basic"
+            name="furniture_lib"
+            url="/api/it_furniture"
             accept="xlsx/*"
             maxFileSize={1000000}
             customUpload={true}

@@ -36,7 +36,7 @@ const setData = (data) => ({ type: SET_DATA, data: data });
 
 export const requestData = () => {
   return (dispatch) => {
-    DataAPI.getData().then((data) => {
+    DataAPI.getIt().then((data) => {
       console.log(data);
       dispatch(setData(data));
     });
@@ -45,8 +45,11 @@ export const requestData = () => {
 
 export const updateData = (rowData, rowId) => {
   return (dispatch) => {
-    DataAPI.updateData(rowData, rowId).then((data) => {
-      dispatch(setData(data));
+    DataAPI.updateIt(rowData, rowId).then((data) => {
+      console.log(data);
+      DataAPI.getIt().then((data) => {
+        dispatch(setData(data));
+      });
     });
   };
 };

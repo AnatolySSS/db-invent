@@ -6,20 +6,19 @@ const instance = axios.create({
 });
 
 export const DataAPI = {
-  async getData() {
+  async getIt() {
     const responce = await instance
-      .get(`data`);
-      console.log(responce.data);
+      .get(`getIt`);
     return responce.data;
   },
-  async updateData(rowData, rowId) {
+  async updateIt(rowData, rowId) {
     const responce = await instance
-      .post(`updateData`, { rowData, rowId });
+      .post(`updateIt`, { rowData, rowId });
     return responce.data;
   },
   async getFurniture() {
     const responce = await instance
-      .get(`furniture`);
+      .get(`getFurniture`);
     return responce.data;
   },
   async updateFurniture(rowData, rowId) {
