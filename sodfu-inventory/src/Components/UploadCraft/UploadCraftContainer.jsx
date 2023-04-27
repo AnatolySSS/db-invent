@@ -1,0 +1,21 @@
+import { connect } from "react-redux";
+import UploadCraft from "./UploadCraft";
+import { uploadData as uploadItData } from "../../redux/reducers/it-data-reducer";
+import { uploadData as uploadFurnitureData } from "../../redux/reducers/furniture-data-reducer";
+import { setVisible } from "../../redux/reducers/side-bar-reducer";
+
+let mapStateToProps = (state) => {
+
+  return {
+    uploadedStatusIt: state.itData.uploadedStatus,
+    uploadedStatusFurniture: state.furnitureData.uploadedStatus,
+  };
+};
+
+let mapDispatchToProps =  {
+  uploadItData,
+  uploadFurnitureData,
+  setVisible,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(UploadCraft)

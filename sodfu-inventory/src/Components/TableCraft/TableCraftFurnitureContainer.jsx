@@ -1,15 +1,16 @@
 import { connect } from "react-redux";
 import TableCraft from "./TableCraft";
-import { requestData, updateData } from "../../redux/reducers/furniture-reducer";
+import { requestData, updateData } from "../../redux/reducers/furniture-data-reducer";
 import { setVisible } from "../../redux/reducers/side-bar-reducer";
 
 let mapStateToProps = (state) => {
 
   return {
-    data: state.furniture.data,
-    columns: state.furniture.columns,
-    filters: state.furniture.filters,
-    name: state.furniture.name,
+    data: state.furnitureData.data,
+    columns: state.furnitureData.columns,
+    values: state.furnitureData.values,
+    filters: state.furnitureData.filters,
+    name: state.furnitureData.name,
   };
 };
 

@@ -1,23 +1,36 @@
 //Создание таблицы
-export const createTable = (data) => {
+export const createTable = (tableName, data, meta) => {
   let query = ``
   let columnNames = ``;
-  for (const key of Object.keys(data[0])) {
-    if (key !== "id") {
-        if (key == "is_capital_good") {
-            columnNames = `${columnNames}${key} int, `;
-        } else {
-            columnNames = `${columnNames}${key} varchar(45), `;
-        }
+  // console.log(tableName);
+  
+  if (tableName.includes("lib")) {
+    for (const key of meta) {
+      if (key.field !== "id") {
+        columnNames = `${columnNames}${key.field} ${key.dbFieldType}, `;
+      }
+    }
+  } else if (tableName.includes("meta")) {
+    for (const key of Object.keys(meta[0])) {
+      // console.log(Object.keys(key));
+      columnNames = `${columnNames}${key} varchar(45), `;
+    }
+  } else if (tableName.includes("values")) {
+    for (const key of meta) {
+      if (key.field !== "id") {
+        columnNames = `${columnNames}${key.field} varchar(45), `;
+      }
     }
   }
+  
   columnNames = columnNames.slice(0, -2);
-  query = `CREATE TABLE if not exists it_lib (id INT AUTO_INCREMENT PRIMARY KEY, ${columnNames});`;
+  query = `CREATE TABLE if not exists ${tableName} (id INT AUTO_INCREMENT PRIMARY KEY, ${columnNames});`;
+  console.log(query);
   return query;
 };
 
 //Заполнение таблицу данными
-export const insertData = (data) => {
+export const insertData = (tableName, data) => {
   let query = ``;
   let columnNames = ``;
   let questionMarks = ``;
@@ -30,17 +43,17 @@ export const insertData = (data) => {
   //Обрезание последних запятой и пробела в тексте запроса (знаки вопросов)
   questionMarks = questionMarks.slice(0, -2);
   //Формирование текста sql-запроса
-  query = `INSERT INTO it_lib (${columnNames}) VALUES(${questionMarks})`;
+  query = `INSERT INTO ${tableName} (${columnNames}) VALUES(${questionMarks})`;
   return query
 };
 
 //Изменение данных в таблице
-export const updateData = (rowData, rowId) => {
+export const updateData = (tableName, rowData, rowId) => {
   let query = ``;
   let columnNames = ``;
   for (let j = 0; j < Object.values(rowData).length; j++) {
-    if (Object.keys(rowData)[j] !== "id") {
-        if (Object.keys(rowData)[j] == "is_capital_good") {
+    if (Object.keys(rowData)[j] !== "id" && Object.values(rowData)[j] !== null) {
+        if (Object.keys(rowData)[j] == "is_workplace" || Object.keys(rowData)[j] == "was_deleted") {
             columnNames = `${columnNames}${Object.keys(rowData)[j]} = ${Object.values(rowData)[j]}, `
         } else {
             columnNames = `${columnNames}${Object.keys(rowData)[j]} = '${Object.values(rowData)[j]}', `
@@ -50,6 +63,6 @@ export const updateData = (rowData, rowId) => {
   //Обрезание последних запятой и пробела в тексте запроса (поля)
   columnNames = columnNames.slice(0, -2);
   //Формирование текста sql-запроса
-  query = `UPDATE it_lib SET ${columnNames} WHERE id = ${rowId};`;
+  query = `UPDATE ${tableName} SET ${columnNames} WHERE id = ${rowId};`;
   return query;
 };

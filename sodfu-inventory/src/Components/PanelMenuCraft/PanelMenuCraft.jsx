@@ -53,30 +53,14 @@ const PanelMenuCraft = (props) => {
         {
           template: (item, options) => {
             return (
-                <NavLink to="/it/download"
+                <NavLink to="/upload"
                   className={classNames(options.className,"w-full p-link flex align-items-center")}
                   style={{
                     textDecoration: "none",
                     color: "#495057",
                   }}>
-                  <i className="pi pi-fw pi-print mr-2"></i>
-                  Оборудование
-                </NavLink>
-            );
-          },
-        },
-        {
-          icon: "pi pi-fw pi-box",
-          template: (item, options) => {
-            return (
-                <NavLink to="/furniture/download"
-                  className={classNames(options.className,"w-full p-link flex align-items-center")}
-                  style={{
-                    textDecoration: "none",
-                    color: "#495057",
-                  }}>
-                  <i className="pi pi-fw pi-box mr-2"></i>
-                  Мебель
+                  <i className="pi pi-fw pi-download mr-2"></i>
+                  Загрузить данные
                 </NavLink>
             );
           },
