@@ -28,7 +28,7 @@ const setConnection = () => {
   switch (currentIP) {
     case "192.168.0.19":
       console.log("Это localhost");
-      PORT = 3001;
+      PORT = 3005;
       //Подключение к localhost
       connection = createConnection({
         host: "localhost",
@@ -41,7 +41,7 @@ const setConnection = () => {
 
     case "10.205.24.14": // поправить
       console.log("Это sodfu");
-      PORT = 3001;
+      PORT = 3005;
       //Подключение к базе данных sodfu
       connection = createConnection({
         host: "10.205.24.14",
@@ -53,7 +53,7 @@ const setConnection = () => {
       break;
 
     default:
-      PORT = 3001;
+      PORT = 3005;
       //Подключение к localhost
       connection = createConnection({
         host: "localhost",
