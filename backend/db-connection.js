@@ -47,7 +47,7 @@ const setConnection = () => {
         host: "10.205.24.14",
         port: 3306,
         user: "inventorydb",
-        database: "test_db",
+        database: "inventory",
         password: "inventory1983!",
       });
       break;

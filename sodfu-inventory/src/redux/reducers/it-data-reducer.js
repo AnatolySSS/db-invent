@@ -103,6 +103,16 @@ export const updateData = (rowData, rowId) => {
   };
 };
 
+export const addData = (rowData) => {
+  return (dispatch) => {
+    DataAPI.addData("it", rowData).then((data) => {
+      DataAPI.getData("it").then((data) => {
+        dispatch(setData(getCustomers(data)));
+      });
+    });
+  };
+};
+
 export const uploadData = (data) => {
   return (dispatch) => {
     DataAPI.uploadData("it", data).then((data) => {

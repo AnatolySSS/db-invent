@@ -29,7 +29,7 @@ export const createTable = (tableName, data, meta) => {
   return query;
 };
 
-//Заполнение таблицу данными
+//Добавление данных в таблицу
 export const insertData = (tableName, data) => {
   let query = ``;
   let columnNames = ``;
@@ -45,7 +45,7 @@ export const insertData = (tableName, data) => {
   //Формирование текста sql-запроса
   query = `INSERT INTO ${tableName} (${columnNames}) VALUES(${questionMarks})`;
   return query
-};
+}
 
 //Изменение данных в таблице
 export const updateData = (tableName, rowData, rowId) => {

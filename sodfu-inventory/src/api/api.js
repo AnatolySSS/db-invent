@@ -11,6 +11,11 @@ export const DataAPI = {
       .post(`getData`, { type });
     return responce.data;
   },
+  async addData(type, rowData, rowId) {
+    const responce = await instance
+      .post(`addData`, { type, rowData });
+    return responce.data;
+  },
   async updateData(type, rowData, rowId) {
     const responce = await instance
       .post(`updateData`, { type, rowData, rowId });

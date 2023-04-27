@@ -670,18 +670,34 @@ app.post("/getData", jsonParser, (request, responce) => {
     data.lib = Object.values(JSON.parse(JSON.stringify(rows)));
     //Преобразование TINYINT в BOOLEAN
     data.lib = data.lib.map((v) => {
-      if (v.is_workplace == 1) {
-        v.is_workplace = true;
-      } else {
-        v.is_workplace = false;
+      switch (v.is_workplace) {
+        case 1:
+          v.is_workplace = true;
+          break;
+        case 0:
+          v.is_workplace = false;
+          break;
+        case null:
+          v.is_workplace = "null";
+          break;
+        default:
+          break;
       }
-      if (v.was_deleted == 1) {
-        v.was_deleted = true;
-      } else {
-        v.was_deleted = false;
+      switch (v.was_deleted) {
+        case 1:
+          v.was_deleted = true;
+          break;
+        case 0:
+          v.was_deleted = false;
+          break;
+        case null:
+          v.was_deleted = "null";
+          break;
+        default:
+          break;
       }
 
-      Object.keys(v).forEach(element => {
+      Object.keys(v).forEach((element) => {
         if (element.includes("date")) {
           if (v[element] !== null) {
             v[element] = new Date(v[element]).toLocaleString("ru-RU", {
@@ -689,12 +705,12 @@ app.post("/getData", jsonParser, (request, responce) => {
               month: "2-digit",
               year: "numeric",
               timeZone: "Europe/Moscow",
-            })
-            v[element] = changeDateType(v[element])
-            v[element] = new Date(v[element])
+            });
+            v[element] = changeDateType(v[element]);
+            v[element] = new Date(v[element]);
           }
         }
-      })
+      });
       return v;
     });
     connection.query(`SELECT * FROM ${tableMetaName}`, (err, rows, fields) => {
@@ -721,6 +737,45 @@ app.post("/getData", jsonParser, (request, responce) => {
       })
     })
   });
+});
+
+app.post("/addData", jsonParser, (request, responce) => {
+  let { type, rowData } = request.body;
+  let tableName
+
+  switch (type) {
+    case "it":
+      tableName = "it_lib";
+      break;
+    case "furniture":
+      tableName = "furniture_lib";
+      break;
+    default:
+      break;
+  }
+
+  for (const key in rowData) {
+    switch (rowData[key]) {
+      case 'true':
+        rowData[key] = true
+        break;
+        case 'false':
+          rowData[key] = false
+          break;
+      default:
+        break;
+    }
+  }
+
+  connection.query(
+    insertData(tableName, rowData),
+    Object.values(rowData),
+    (error, result) => {
+      if (error) throw error;
+      console.log(`Add item to ${tableName} Table`);
+      responce.json({});
+    }
+  );
 });
 
 app.post("/updateData", jsonParser, (request, responce) => {
@@ -795,7 +850,7 @@ app.post("/uploadData", jsonParser, (request, responce) => {
         (error, result) => {
           if (error) throw error;
         }
-      );
+      )
     }
   }
   responce.json(data);

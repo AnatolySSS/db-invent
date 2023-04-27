@@ -90,6 +90,16 @@ export const updateData = (rowData, rowId) => {
   };
 };
 
+export const addData = (rowData) => {
+  return (dispatch) => {
+    DataAPI.addData("furniture", rowData).then((data) => {
+      DataAPI.getData("furniture").then((data) => {
+        dispatch(setData(getCustomers(data)));
+      });
+    });
+  };
+};
+
 export const uploadData = (data) => {
   return (dispatch) => {
     DataAPI.uploadData("furniture", data).then((data) => {

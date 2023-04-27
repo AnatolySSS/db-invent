@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import TableCraft from "./TableCraft";
-import { requestData, updateData } from "../../redux/reducers/it-data-reducer";
+import { requestData, addData, updateData } from "../../redux/reducers/it-data-reducer";
 import { setVisible } from "../../redux/reducers/side-bar-reducer";
 
 let mapStateToProps = (state) => {
@@ -16,6 +16,7 @@ let mapStateToProps = (state) => {
 
 let mapDispatchToProps =  {
     requestData,
+    addData,
     updateData,
     setVisible,
 };
