@@ -1,12 +1,20 @@
 import express, { json } from "express";
 import setConnection from "./db-connection.js";
+import path from 'path';
+import {fileURLToPath} from 'url';
 const app = express();
 const jsonParser = json();
 import { createTable, insertData, updateData } from "./db-manage.js";
 import changeDateType from "./changeDateType.js";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+let dirname = __dirname.replace("backend", "sodfu-inventory")
+
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000}));
+app.use(express.static(path.join(dirname, 'build')));
+
 // let dataIt = {
 //   values: [
 //     {
@@ -643,6 +651,9 @@ app.use(express.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000
 const {PORT, connection} = setConnection()
 
 app.post("/getData", jsonParser, (request, responce) => {
+  
+  console.log(__dirname);
+  console.log(dirname);
   let { type } = request.body;
   let tableLibName, tableMetaName, tableValuesName
   let data = {};
@@ -854,6 +865,10 @@ app.post("/uploadData", jsonParser, (request, responce) => {
     }
   }
   responce.json(data);
+});
+
+app.get('/*', function (req, res) {
+  res.sendFile(path.join(dirname, 'build', 'index.html'));
 });
 
 app.listen(PORT, () => {
