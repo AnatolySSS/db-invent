@@ -675,7 +675,7 @@ const TableCraft = (props) => {
         // resizableColumns
         removableSort
         scrollable
-        scrollHeight="600px"
+        scrollHeight="71vh"
         style={{ minWidth: "50rem" }}
         // editMode="row"
         // onRowEditComplete={onRowEditComplete}
