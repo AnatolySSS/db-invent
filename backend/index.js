@@ -652,8 +652,6 @@ const {PORT, connection} = setConnection()
 
 app.post("/getData", jsonParser, (request, responce) => {
   
-  console.log(__dirname);
-  console.log(dirname);
   let { type } = request.body;
   let tableLibName, tableMetaName, tableValuesName
   let data = {};

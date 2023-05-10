@@ -132,8 +132,22 @@ const TableCraft = (props) => {
     initFilters();
   }, []);
 
+  let tableWidth
   useEffect(() => {
     setVisibleColumns(columns)
+    console.log("Высота экрана: " + window.innerHeight);
+    var headerWidth = document.getElementsByClassName('p-datatable-header')[0].offsetHeight
+    console.log("Высота шапки: " + headerWidth);
+    var width2 = document.getElementsByClassName('p-datatable-wrapper')[0].offsetHeight
+    console.log("Высота таблицы: " + width2);
+    var paginatorWidth = document.getElementsByClassName('p-paginator-bottom')[0].offsetHeight
+    console.log("Высота пагинатора: " + paginatorWidth);
+    
+    let _1vh = window.innerHeight / 100
+    console.log(_1vh);
+    tableWidth = window.innerHeight - headerWidth - paginatorWidth - 10
+    console.log("Высота таблицы расчетная: " + tableWidth);
+
   }, [dataWasReceived]);
 
   const getSeverity = (value) => {
@@ -570,19 +584,21 @@ const TableCraft = (props) => {
 
   const renderHeader = () => {
     return (
-      <div className="flex align-content-center">
-        <div className="flex align-items-center col-fixed">
-          <Button icon="pi pi-bars" onClick={() => setVisible(true)} />
+      <div className="flex flex-wrap align-content-center justify-content-between">
+        <div className="col-fixed flex">
+          <div className="flex align-items-center col-fixed">
+            <Button icon="pi pi-bars" onClick={() => setVisible(true)} />
+          </div>
+          <div className="flex align-items-center justify-content-center">
+            <Button
+              label="New"
+              icon="pi pi-plus"
+              severity="success"
+              onClick={openNew}
+            />
+          </div>
         </div>
-        <div className="flex align-items-center justify-content-center">
-          <Button
-            label="New"
-            icon="pi pi-plus"
-            severity="success"
-            onClick={openNew}
-          />
-        </div>
-        <div className="col flex justify-content-between align-content-center">
+        <div className="col flex flex-wrap justify-content-between align-content-center">
           <div className="flex align-items-center justify-content-center">
             <MultiSelect
               value={visibleColumns}
@@ -675,7 +691,7 @@ const TableCraft = (props) => {
         // resizableColumns
         removableSort
         scrollable
-        scrollHeight="71vh"
+        scrollHeight={tableWidth}
         style={{ minWidth: "50rem" }}
         // editMode="row"
         // onRowEditComplete={onRowEditComplete}
