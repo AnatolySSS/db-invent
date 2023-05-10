@@ -132,22 +132,13 @@ const TableCraft = (props) => {
     initFilters();
   }, []);
 
-  let tableWidth
+  let tableHeight
   useEffect(() => {
     setVisibleColumns(columns)
-    console.log("Высота экрана: " + window.innerHeight);
     var headerWidth = document.getElementsByClassName('p-datatable-header')[0].offsetHeight
-    console.log("Высота шапки: " + headerWidth);
-    var width2 = document.getElementsByClassName('p-datatable-wrapper')[0].offsetHeight
-    console.log("Высота таблицы: " + width2);
     var paginatorWidth = document.getElementsByClassName('p-paginator-bottom')[0].offsetHeight
-    console.log("Высота пагинатора: " + paginatorWidth);
-    
-    let _1vh = window.innerHeight / 100
-    console.log(_1vh);
-    tableWidth = window.innerHeight - headerWidth - paginatorWidth - 10
-    console.log("Высота таблицы расчетная: " + tableWidth);
-
+    tableHeight = window.innerHeight - headerWidth - paginatorWidth - 10
+    document.getElementsByClassName('p-datatable-wrapper')[0].style.height = `${tableHeight}px`
   }, [dataWasReceived]);
 
   const getSeverity = (value) => {
@@ -691,7 +682,7 @@ const TableCraft = (props) => {
         // resizableColumns
         removableSort
         scrollable
-        scrollHeight={tableWidth}
+        scrollHeight={`${tableHeight}px`}
         style={{ minWidth: "50rem" }}
         // editMode="row"
         // onRowEditComplete={onRowEditComplete}
