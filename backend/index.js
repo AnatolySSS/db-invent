@@ -732,7 +732,11 @@ app.post("/getData", jsonParser, (request, responce) => {
         }
         return v;
       });
-      connection.query(`SELECT type, serviceable, location FROM ${tableValuesName}`, (err, rows, fields) => {
+      let workplace_type = ""
+      if (type == "it") {
+        workplace_type = ", workplace_type "
+      }
+      connection.query(`SELECT type, serviceable, location ${workplace_type}FROM ${tableValuesName}`, (err, rows, fields) => {
         data.values = Object.values(JSON.parse(JSON.stringify(rows)));
         data.values = data.values.map((v) => {
           if (v.showFilterMenu == 1) {

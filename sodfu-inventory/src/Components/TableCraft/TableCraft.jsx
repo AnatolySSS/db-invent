@@ -20,7 +20,7 @@ import { Toast } from 'primereact/toast';
 import changeDateType from './../../function-helpers/changeDateType'
 
 const TableCraft = (props) => {
-  let { data, columns, values, requestData, addData, updateData, setVisible } = props;
+  let { name, data, columns, values, requestData, addData, updateData, setVisible } = props;
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filters, setFilters] = useState(props.filters);
   const [globalFilterValue, setGlobalFilterValue] = useState('');
@@ -28,6 +28,7 @@ const TableCraft = (props) => {
   const toast = useRef(null);
   let emptyItem, location, type, serviceable, workplace_type, globalFilterColumns
   emptyItem = {}
+  
   if (values) {
     // emptyItem = columns.map(obj => obj.field)
     location = values.map(obj => obj.location).filter(obj => obj !== null)
@@ -58,16 +59,6 @@ const TableCraft = (props) => {
     emptyItem[obj.field] = dataType;
   });
   const [item, setItem] = useState(emptyItem);
-
-  // if (data) {
-  //   for (let i = 0; i < data.length; i++) {
-  //     for (let j = 0; j < Object.keys(data[i]).length; j++) {
-  //       if (Object.values(data[i])[j] == null) {
-  //         data[i][Object.keys(data[i])[j]] = "нет данных"
-  //       }
-  //     }
-  //   }
-  // }
 
   const openNew = () => {
     setItem(emptyItem);
@@ -258,24 +249,30 @@ const TableCraft = (props) => {
   const getDropdownOptions = (col) => {
     switch (col) {
       case "serviceable":
-        serviceable.push("");
+        if (!serviceable.includes("")) {
+          serviceable.push("");
+        }
         return serviceable
 
       case "location":
-        location.push("");
+        if (!location.includes("")) {
+          location.push("");
+        }
         return location
 
       case "type":
-        type.push("");
+        if (!type.includes("")) {
+          type.push("");
+        }
         return type
 
       case "workplace_type":
-        workplace_type.push("");
+        if (!workplace_type.includes("")) {
+          workplace_type.push("");
+        }
         return workplace_type
 
       default:
-        type.push("");
-        return type
     }
   };
 
@@ -515,11 +512,6 @@ const TableCraft = (props) => {
         <label htmlFor="checkbox-filter" className="font-bold">
           Check
         </label>
-        {/* <TriStateCheckbox
-          // inputid="checkbox-filter"
-          value={options.value}
-          onChange={(e) => options.filterCallback(e.value)}
-        /> */}
         <MultiStateCheckbox
           inputid="checkbox-filter"
           value={options.value}
@@ -662,59 +654,8 @@ const TableCraft = (props) => {
     </React.Fragment>
   );
 
-  return (
-    <div className="card">
-      <Toast ref={toast} />
-      <DataTable
-        value={data}
-        filters={filters}
-        filterDisplay="menu"
-        globalFilterFields={globalFilterColumns}
-        dataKey="id"
-        header={header}
-        paginator
-        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} items"
-        rows={3}
-        rowsPerPageOptions={[3, 5, 10, 25, 50]}
-        tableStyle={{ minWidth: "50rem" }}
-        stripedRows
-        // resizableColumns
-        removableSort
-        scrollable
-        scrollHeight={`${tableHeight}px`}
-        style={{ minWidth: "50rem" }}
-        // editMode="row"
-        // onRowEditComplete={onRowEditComplete}
-      >
-        {visibleColumns.map((col, i) => (
-          <Column
-            key={col.field}
-            field={col.field}
-            header={col.header}
-            sortable
-            filter
-            filterField={col.field}
-            dataType={col.dataType}
-            filterElement={getColumnFilterElement(col)}
-            filterApply={col.dataType == "boolean" ? filterApplyTemplate : null}
-            showFilterMatchModes={col.showFilterMenu}
-            style={{ minWidth: col.width }}
-            body={getColumnBody(col)}
-            // bodyClassName={col.dataType == "boolean" ? "text-center" : ""}
-            // editor={col.field !== "id" ? getColumnEditor(col) : null}
-          />
-        ))}
-        <Column
-          body={actionBodyTemplate}
-          exportable={false}
-          alignFrozen="right"
-          frozen
-          headerStyle={{ width: "10%", minWidth: "8rem" }}
-          bodyStyle={{ textAlign: "center" }}
-        ></Column>
-      </DataTable>
-
+  const renderDialogCraftFurniture = () => {
+    return (
       <Dialog
         visible={ItemDialog}
         style={{ width: "48rem" }}
@@ -736,12 +677,14 @@ const TableCraft = (props) => {
           <label htmlFor="name" className="font-bold">
             Наименование
           </label>
-          <InputText
+          <InputTextarea
             id="name"
             value={item.name || ""}
             onChange={(e) => onInputChange(e, "name")}
             required
             autoFocus
+            rows={3}
+            cols={20}
             // className={classNames({ "p-invalid": submitted && !item.name })}
           />
           {/* {submitted && !item.name && (
@@ -759,7 +702,6 @@ const TableCraft = (props) => {
                 value={item.inventary_number || ""}
                 onChange={(e) => onInputChange(e, "inventary_number")}
                 required
-                autoFocus
               />
             </div>
             <div className="field col-6 mb-0">
@@ -771,7 +713,6 @@ const TableCraft = (props) => {
                 value={item.qr_code || ""}
                 onChange={(e) => onInputChange(e, "qr_code")}
                 required
-                autoFocus
               />
             </div>
           </div>
@@ -914,6 +855,378 @@ const TableCraft = (props) => {
           />
         </div>
       </Dialog>
+    )
+  }
+
+  const DialogCraftFurniture = renderDialogCraftFurniture();
+
+  const renderDialogCraftIt = () => {
+    return (
+      <Dialog
+        visible={ItemDialog}
+        style={{ width: "48rem" }}
+        breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+        header="Описание предмета"
+        modal
+        className="p-fluid"
+        footer={itemDialogFooter}
+        onHide={hideNew}
+      >
+        {/* {item.image && (
+          <img
+            src={`https://primefaces.org/cdn/primereact/images/item/${item.image}`}
+            alt={item.image}
+            className="product-image block m-auto pb-3"
+          />
+        )} */}
+        <div className="field">
+          <label htmlFor="name" className="font-bold">
+            Наименование
+          </label>
+          <InputTextarea
+            id="name"
+            value={item.name || ""}
+            onChange={(e) => onInputChange(e, "name")}
+            required
+            autoFocus
+            rows={3}
+            cols={20}
+            // className={classNames({ "p-invalid": submitted && !item.name })}
+          />
+          {/* {submitted && !item.name && (
+            <small className="p-error">Name is required.</small>
+          )} */}
+        </div>
+        <div className="field">
+          <div className="grid">
+            <div className="field col-6 mb-0">
+              <label htmlFor="inventary_number" className="font-bold">
+                Инвентарный номер
+              </label>
+              <InputText
+                id="inventary_number"
+                value={item.inventary_number || ""}
+                onChange={(e) => onInputChange(e, "inventary_number")}
+                required
+              />
+            </div>
+            <div className="field col-6 mb-0">
+              <label htmlFor="qr_code" className="font-bold">
+                QRCODE
+              </label>
+              <InputText
+                id="qr_code"
+                value={item.qr_code || ""}
+                onChange={(e) => onInputChange(e, "qr_code")}
+                required
+              />
+            </div>
+          </div>
+        </div>
+        <div className="field">
+          <div className="grid">
+            <div className="field col-6 mb-0">
+              <label htmlFor="serial" className="font-bold">
+                Серийный номер
+              </label>
+              <InputText
+                id="serial"
+                value={item.serial || ""}
+                onChange={(e) => onInputChange(e, "serial")}
+                required
+              />
+            </div>
+            <div className="field col-6 mb-0">
+              <label htmlFor="ad_name" className="font-bold">
+                Имя устройства в AD
+              </label>
+              <InputText
+                id="ad_name"
+                value={item.ad_name || ""}
+                onChange={(e) => onInputChange(e, "ad_name")}
+                required
+              />
+            </div>
+          </div>
+        </div>
+        <div className="field">
+          <div className="grid">
+            <div className="field col-6 mb-0">
+              <label htmlFor="owner" className="font-bold">
+                ФИО юзера
+              </label>
+              <InputText
+                id="owner"
+                value={item.owner || ""}
+                onChange={(e) => onInputChange(e, "owner")}
+                required
+              />
+            </div>
+            <div className="field col-6 mb-0">
+              <label htmlFor="prev_owner" className="font-bold">
+                ФИО предыдущего юзера
+              </label>
+              <InputText
+                id="prev_owner"
+                value={item.prev_owner || ""}
+                onChange={(e) => onInputChange(e, "prev_owner")}
+                required
+              />
+            </div>
+          </div>
+        </div>
+        <div className="field">
+          <div className="grid">
+            <div className="field col-6 mb-0">
+              <label htmlFor="type" className="font-bold">
+                Тип
+              </label>
+              <Dropdown
+                id="type"
+                value={item.type || ""}
+                options={getDropdownOptions("type")}
+                onChange={(e) => onInputChange(e, "type")}
+                placeholder={item.type || ""}
+                itemTemplate={(option) => {
+                  return option; //<Tag value={option} severity={getSeverity(option)}></Tag>
+                }}
+              />
+            </div>
+            <div className="field col-6 mb-0">
+              <label htmlFor="location" className="font-bold">
+                Где установлено
+              </label>
+              <Dropdown
+                id="location"
+                value={item.location || ""}
+                options={getDropdownOptions("location")}
+                onChange={(e) => onInputChange(e, "location")}
+                placeholder={item.location || ""}
+                itemTemplate={(option) => {
+                  return option; //<Tag value={option} severity={getSeverity(option)}></Tag>
+                }}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="field">
+          <div className="grid">
+            <div className="field col-6 mb-0">
+              <label htmlFor="workplace_type" className="font-bold">
+                Тип рабочего места
+              </label>
+              <Dropdown
+                id="workplace_type"
+                value={item.workplace_type || ""}
+                options={getDropdownOptions("workplace_type")}
+                onChange={(e) => onInputChange(e, "workplace_type")}
+                placeholder={item.workplace_type || ""}
+                itemTemplate={(option) => {
+                  return option; //<Tag value={option} severity={getSeverity(option)}></Tag>
+                }}
+              />
+            </div>
+            <div className="field col-6 mb-0">
+              <label htmlFor="serviceable" className="font-bold">
+                Состояние исправности
+              </label>
+              <Dropdown
+                id="serviceable"
+                value={item.serviceable || ""}
+                options={getDropdownOptions("serviceable")}
+                onChange={(e) => onInputChange(e, "serviceable")}
+                placeholder={item.serviceable || ""}
+                itemTemplate={(option) => {
+                  return option; //<Tag value={option} severity={getSeverity(option)}></Tag>
+                }}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="field">
+          <div className="grid">
+            <div className="field col-6 mb-0">
+              <label htmlFor="set_with" className="font-bold">
+                Образует одно устройство
+              </label>
+              <InputText
+                id="set_with"
+                value={item.set_with || ""}
+                onChange={(e) => onInputChange(e, "set_with")}
+                required
+              />
+            </div>
+            <div className="field col-6 mb-0">
+              <label htmlFor="price" className="font-bold">
+                Стоимость
+              </label>
+              <InputNumber
+                id="purchase_price"
+                value={item.purchase_price || 0}
+                onChange={(e) => onInputNumberChange(e, "purchase_price")}
+                mode="currency"
+                currency="RUB"
+                locale="ru-RU"
+              />
+            </div>
+          </div>
+        </div>
+        <div className="field">
+          <div className="grid">
+            <div className="field col-6 mb-0">
+              <label htmlFor="purchase_date" className="font-bold">
+                Дата приобретения
+              </label>
+              <Calendar
+                id="purchase_date"
+                value={item.purchase_date || null}
+                onChange={(e) => onInputChange(e, "purchase_date")}
+                dateFormat="dd.mm.yy"
+                placeholder={formatDate(item.purchase_date || null)}
+                mask="99.99.9999"
+              />
+            </div>
+            <div className="field col-6 mb-0">
+              <label htmlFor="release_date" className="font-bold">
+                Дата выпуска
+              </label>
+              <Calendar
+                id="release_date"
+                value={item.release_date || null}
+                onChange={(e) => onInputChange(e, "release_date")}
+                dateFormat="dd.mm.yy"
+                placeholder={formatDate(item.release_date || null)}
+                mask="99.99.9999"
+              />
+            </div>
+          </div>
+        </div>
+        <div className="field">
+          <div className="grid">
+            <div className="field col-6 mb-0">
+              <label htmlFor="incoming_date" className="font-bold">
+                Дата поступления в НН
+              </label>
+              <Calendar
+                id="incoming_date"
+                value={item.incoming_date || null}
+                onChange={(e) => onInputChange(e, "incoming_date")}
+                dateFormat="dd.mm.yy"
+                placeholder={formatDate(item.incoming_date || null)}
+                mask="99.99.9999"
+              />
+            </div>
+            <div className="field col-6 mb-0">
+              <label htmlFor="last_setup_date" className="font-bold">
+                Дата установки пользователю
+              </label>
+              <Calendar
+                id="last_setup_date"
+                value={item.last_setup_date || null}
+                onChange={(e) => onInputChange(e, "last_setup_date")}
+                dateFormat="dd.mm.yy"
+                placeholder={formatDate(item.last_setup_date || null)}
+                mask="99.99.9999"
+              />
+            </div>
+          </div>
+        </div>
+        <div className="field">
+          <div className="grid">
+            <div className="field col-6 mb-0">
+              <MultiStateCheckbox
+                inputid="is_workplace"
+                value={item.is_workplace != undefined ? item.is_workplace.toString(): null}
+                onChange={(e) => onInputChange(e, "is_workplace")}
+                options={multiStateCheckboxOptions}
+                optionValue="value"
+              />
+              <span htmlFor="is_workplace" className="font-bold ml-2">
+                Рабочее место
+              </span>
+            </div>
+            <div className="field col-6 mb-0">
+              <MultiStateCheckbox
+                inputid="was_deleted"
+                value={item.was_deleted != undefined ? item.was_deleted.toString(): null}
+                onChange={(e) => onInputChange(e, "was_deleted")}
+                options={multiStateCheckboxOptions}
+                optionValue="value"
+              />
+              <span htmlFor="was_deleted" className="font-bold ml-2">
+                Удалено
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="field">
+          <label htmlFor="note" className="font-bold">
+            Описание
+          </label>
+          <InputTextarea
+            id="note"
+            value={item.note || ""}
+            onChange={(e) => onInputChange(e, "note")}
+            required
+            rows={3}
+            cols={20}
+          />
+        </div>
+      </Dialog>
+    )
+  }
+  
+  const DialogCraftIt = renderDialogCraftIt();
+
+  return (
+    <div className="card">
+      <Toast ref={toast} />
+      <DataTable
+        value={data}
+        filters={filters}
+        filterDisplay="menu"
+        globalFilterFields={globalFilterColumns}
+        dataKey="id"
+        header={header}
+        paginator
+        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} items"
+        rows={3}
+        rowsPerPageOptions={[3, 5, 10, 25, 50]}
+        tableStyle={{ minWidth: "50rem" }}
+        stripedRows
+        removableSort
+        scrollable
+        scrollHeight={`${tableHeight}px`}
+        style={{ minWidth: "50rem" }}
+      >
+        {visibleColumns.map((col, i) => (
+          <Column
+            key={col.field}
+            field={col.field}
+            header={col.header}
+            sortable
+            filter
+            filterField={col.field}
+            dataType={col.dataType}
+            filterElement={getColumnFilterElement(col)}
+            filterApply={col.dataType == "boolean" ? filterApplyTemplate : null}
+            showFilterMatchModes={col.showFilterMenu}
+            style={{ minWidth: col.width }}
+            body={getColumnBody(col)}
+          />
+        ))}
+        <Column
+          body={actionBodyTemplate}
+          exportable={false}
+          alignFrozen="right"
+          frozen
+          headerStyle={{ width: "10%", minWidth: "8rem" }}
+          bodyStyle={{ textAlign: "center" }}
+        ></Column>
+      </DataTable>
+      {name === "Мебель" ? DialogCraftFurniture : DialogCraftIt}
+      
     </div>
   );
 };
