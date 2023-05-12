@@ -128,7 +128,7 @@ const TableCraft = (props) => {
     setVisibleColumns(columns)
     var headerWidth = document.getElementsByClassName('p-datatable-header')[0].offsetHeight
     var paginatorWidth = document.getElementsByClassName('p-paginator-bottom')[0].offsetHeight
-    tableHeight = window.innerHeight - headerWidth - paginatorWidth - 10
+    tableHeight = window.innerHeight - headerWidth - paginatorWidth
     document.getElementsByClassName('p-datatable-wrapper')[0].style.height = `${tableHeight}px`
   }, [dataWasReceived]);
 

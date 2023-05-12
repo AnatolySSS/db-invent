@@ -1,7 +1,9 @@
 import { connect } from "react-redux";
+import { compose } from "redux";
 import TableCraft from "./TableCraft";
 import { requestData, addData, updateData } from "../../redux/reducers/furniture-data-reducer";
 import { setVisible } from "../../redux/reducers/side-bar-reducer";
+import { withAuthNavigate } from "../../hoc/withAuthNavigate";
 
 let mapStateToProps = (state) => {
 
@@ -21,4 +23,9 @@ let mapDispatchToProps =  {
     setVisible,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(TableCraft)
+// export default connect(mapStateToProps, mapDispatchToProps)(TableCraft)
+
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  withAuthNavigate
+)(TableCraft);

@@ -18,12 +18,25 @@ export const DataAPI = {
   },
   async updateData(type, rowData, rowId) {
     const responce = await instance
-      .post(`updateData`, { type, rowData, rowId });
+      .put(`updateData`, { type, rowData, rowId });
     return responce.data;
   },
   async uploadData(type, data) {
     const responce = await instance
       .post(`uploadData`, { type, data });
+    return responce.data;
+  },
+}
+
+export const AuthAPI = {
+  async login(login, password) {
+    const responce = await instance
+      .post(`auth/login`, { login, password });
+    return responce.data;
+  },
+  async me(login) {
+    const responce = await instance
+      .post(`auth/me`, { login });
     return responce.data;
   },
 }

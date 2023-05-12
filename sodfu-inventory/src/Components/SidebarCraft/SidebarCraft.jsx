@@ -7,7 +7,7 @@ import PanelMenuCraft from "../PanelMenuCraft/PanelMenuCraft";
 
 const SidebarCraft = (props) => {
   return (
-    <div className="card flex justify-content-left mt-2 ml-2">
+    <div>
       <Sidebar visible={props.visible} onHide={() => props.setVisible(false)}>
         <PanelMenuCraft />
       </Sidebar>
