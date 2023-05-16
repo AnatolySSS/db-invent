@@ -256,6 +256,7 @@ export const AuthController = {
       let { login, password } = request.body;
       let users;
       connection.query(`SELECT * FROM users`, (err, rows, fields) => {
+        rows == undefined ? rows = [] : rows = rows
         users = Object.values(JSON.parse(JSON.stringify(rows)));
         users = users.map((v) => {
           // if (v.showFilterMenu == 1) {
@@ -312,6 +313,7 @@ export const AuthController = {
       let { login } = request.body;
       let users;
       connection.query(`SELECT * FROM users`, (err, rows, fields) => {
+        rows == undefined ? rows = [] : rows = rows
         users = Object.values(JSON.parse(JSON.stringify(rows)));
         users = users.map((v) => {
           // if (v.showFilterMenu == 1) {
