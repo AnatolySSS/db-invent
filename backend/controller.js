@@ -358,6 +358,7 @@ export const AuthController = {
         connection.query(
           `SELECT * FROM users WHERE login = "${login}"`,
           (err, rows, fields) => {
+            rows == undefined ? rows = [] : rows = rows
             let user = Object.values(JSON.parse(JSON.stringify(rows)))[0];
             let resultCode
             if (user) {
