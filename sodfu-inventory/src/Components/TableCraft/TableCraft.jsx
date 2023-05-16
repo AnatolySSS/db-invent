@@ -568,6 +568,16 @@ const TableCraft = (props) => {
     setItem(_item);
   };
 
+  const getUserLogo = () => {
+    try {
+      return require(`../../img/${
+        props.userAuth.isAuth ? props.userAuth.login : ""
+      }.png`)
+    } catch (error) {
+      return ""
+    }
+  }
+
   const renderHeader = () => {
     return (
       <div className="flex flex-wrap align-content-center justify-content-between">
@@ -639,9 +649,8 @@ const TableCraft = (props) => {
                 onClick={(e) => userMenu.current.toggle(e)}
               >
                 <Avatar
-                  image={require(`../..//img/${
-                    props.userAuth.isAuth ? props.userAuth.login : ""
-                  }.png`)}
+                  image={getUserLogo()}
+                  icon="pi pi-user"
                   size="large"
                   shape="circle"
                 />
