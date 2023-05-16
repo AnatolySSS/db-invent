@@ -9,6 +9,7 @@ router.put("/updateData", DataController.updateData);
 router.post("/uploadData", DataController.uploadData);
 
 router.post("/auth/login", AuthController.login);
+router.post("/auth/logout", AuthController.logout);
 router.post("/auth/me", AuthController.auth);
 
 export default router

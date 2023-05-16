@@ -306,6 +306,51 @@ export const AuthController = {
       responce.status(500).json(error);
     }
   },
+
+  logout(request, responce) {
+    try {
+      let { login } = request.body;
+      let users;
+      connection.query(`SELECT * FROM users`, (err, rows, fields) => {
+        users = Object.values(JSON.parse(JSON.stringify(rows)));
+        users = users.map((v) => {
+          // if (v.showFilterMenu == 1) {
+          //   v.showFilterMenu = true;
+          // } else {
+          //   v.showFilterMenu = false;
+          // }
+          Object.keys(v).forEach((element) => {
+            if (element.includes("last_logon")) {
+              if (v[element] !== null) {
+                v[element] = new Date(v[element]).toLocaleString("ru-RU", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                  timeZone: "Europe/Moscow",
+                });
+                v[element] = changeDateType(v[element]);
+                v[element] = new Date(v[element]);
+              }
+            }
+          });
+          return v;
+        });
+        let resultCode, message, user
+        for (let i = 0; i < users.length; i++) {
+            if (users[i].login === login) {
+              connection.query(
+                `UPDATE users SET is_auth = 0 WHERE login = "${login}";`
+              );
+              resultCode = 0
+              message = "Сессия завершена";
+            }
+        }
+        responce.json({resultCode, message});
+      });
+    } catch (error) {
+      responce.status(500).json(error);
+    }
+  },
   
   auth(request, responce) {
     try {
@@ -315,14 +360,15 @@ export const AuthController = {
           (err, rows, fields) => {
             let user = Object.values(JSON.parse(JSON.stringify(rows)))[0];
             let resultCode
-            if (user.is_auth == 1) {
+            if (user) {
+              if (user.is_auth == 1) {
                 user.is_auth = true;
                 resultCode = 0
             } else {
                 user.is_auth = false;
                 resultCode = 1
             }
-            console.log(user);
+            }
             responce.json({ resultCode, message: "", user });
           }
         );

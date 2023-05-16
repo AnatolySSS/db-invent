@@ -3,6 +3,7 @@ import { compose } from "redux";
 import TableCraft from "./TableCraft";
 import { requestData, addData, updateData } from "../../redux/reducers/it-data-reducer";
 import { setVisible } from "../../redux/reducers/side-bar-reducer";
+import { logout } from "../../redux/reducers/auth-reducer";
 import { withAuthNavigate } from "../../hoc/withAuthNavigate";
 
 let mapStateToProps = (state) => {
@@ -13,6 +14,7 @@ let mapStateToProps = (state) => {
     values: state.itData.values,
     filters: state.itData.filters,
     name: state.itData.name,
+    userAuth: state.auth,
   };
 };
 
@@ -21,6 +23,7 @@ let mapDispatchToProps =  {
     addData,
     updateData,
     setVisible,
+    logout,
 };
 
 export default compose(

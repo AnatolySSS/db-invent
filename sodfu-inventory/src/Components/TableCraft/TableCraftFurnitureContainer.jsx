@@ -4,6 +4,7 @@ import TableCraft from "./TableCraft";
 import { requestData, addData, updateData } from "../../redux/reducers/furniture-data-reducer";
 import { setVisible } from "../../redux/reducers/side-bar-reducer";
 import { withAuthNavigate } from "../../hoc/withAuthNavigate";
+import { logout } from "../../redux/reducers/auth-reducer";
 
 let mapStateToProps = (state) => {
 
@@ -13,6 +14,7 @@ let mapStateToProps = (state) => {
     values: state.furnitureData.values,
     filters: state.furnitureData.filters,
     name: state.furnitureData.name,
+    userAuth: state.auth,
   };
 };
 
@@ -21,6 +23,7 @@ let mapDispatchToProps =  {
     addData,
     updateData,
     setVisible,
+    logout,
 };
 
 // export default connect(mapStateToProps, mapDispatchToProps)(TableCraft)

@@ -36,8 +36,8 @@ export const login = (login, password) => (dispatch) => {
   AuthAPI.login(login, password).then((data) => {
     switch (data.resultCode) {
       case 0:
-        console.log(data.message);
         dispatch(getAuthUserData(login));
+        localStorage.setItem('user', data.user.login)
         break;
       case 1:
         console.log(data.message);
@@ -51,12 +51,13 @@ export const login = (login, password) => (dispatch) => {
   });
 };
 
-// export const logout = () => (dispatch) => {
-//   AuthAPI.logout().then((data) => {
-//     if (data.resultCode === 0) {
-//       dispatch(setAuthUserData(null, null, null, false));
-//     }
-//   });
-// };
+export const logout = (login) => (dispatch) => {
+  AuthAPI.logout(login).then((data) => {
+    if (data.resultCode === 0) {
+      dispatch(setAuth(null, null, false));
+      localStorage.removeItem('user')
+    }
+  });
+};
 
 export default authReducer;

@@ -19,11 +19,12 @@ class App extends React.Component {
     return (
       <BrowserRouter>
         <div>
-          <div>
+          {/* <div> */}
             <SidebarCraftContainer />
-          </div>
+          {/* </div> */}
           <div className="max-w-screen h-screen">
             <Routes>
+              <Route path="/" element={<LoginCraftContainer />} />
               <Route path="/login" element={<LoginCraftContainer />} />
               <Route path="/it" element={<TableCraftItContainer />} />
               <Route path="/furniture" element={<TableCraftFurnitureContainer />} />

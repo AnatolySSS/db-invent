@@ -29,14 +29,19 @@ export const DataAPI = {
 }
 
 export const AuthAPI = {
+  async me(login) {
+    const responce = await instance
+      .post(`auth/me`, { login });
+    return responce.data;
+  },
   async login(login, password) {
     const responce = await instance
       .post(`auth/login`, { login, password });
     return responce.data;
   },
-  async me(login) {
+  async logout(login) {
     const responce = await instance
-      .post(`auth/me`, { login });
+      .post(`auth/logout`, { login });
     return responce.data;
   },
 }

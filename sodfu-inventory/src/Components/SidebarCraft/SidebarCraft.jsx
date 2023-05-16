@@ -7,8 +7,8 @@ import PanelMenuCraft from "../PanelMenuCraft/PanelMenuCraft";
 
 const SidebarCraft = (props) => {
   return (
-    <div>
-      <Sidebar visible={props.visible} onHide={() => props.setVisible(false)}>
+    <div className="">
+      <Sidebar className="flex" visible={props.visible} onHide={() => props.setVisible(false)}>
         <PanelMenuCraft />
       </Sidebar>
     </div>

@@ -17,15 +17,18 @@ import { MultiStateCheckbox } from 'primereact/multistatecheckbox';
 import { Calendar } from 'primereact/calendar';
 import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
+import { Avatar } from 'primereact/avatar';
+import { Menu } from 'primereact/menu';
 import changeDateType from './../../function-helpers/changeDateType'
 
 const TableCraft = (props) => {
-  let { name, data, columns, values, requestData, addData, updateData, setVisible } = props;
+  let { name, data, columns, values, requestData, addData, updateData, setVisible, logout } = props;
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filters, setFilters] = useState(props.filters);
   const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [ItemDialog, setItemDialog] = useState(false);
   const toast = useRef(null);
+  const userMenu = useRef(null);
   let emptyItem, location, type, serviceable, workplace_type, globalFilterColumns
   emptyItem = {}
   
@@ -625,11 +628,46 @@ const TableCraft = (props) => {
                 data-pr-tooltip="XLS"
               />
             </div>
+            <div
+              className="col-fixed flex align-items-center"
+              // onMouseEnter={() => this.someHandler}
+              // onClick={showUserMenu}
+            >
+              <Menu model={userMenuItems} popup ref={userMenu} />
+              <Button
+                className="bg-gray-50 hover:bg-gray-400 border-gray-50 px-2 py-1"
+                onClick={(e) => userMenu.current.toggle(e)}
+              >
+                <Avatar
+                  image={require(`../..//img/${
+                    props.userAuth.isAuth ? props.userAuth.login : ""
+                  }.png`)}
+                  size="large"
+                  shape="circle"
+                />
+                <i
+                  className="pi pi-angle-down ml-2"
+                  style={{ color: "#4a4a4a" }}
+                ></i>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
     );
   };
+
+  const showUserMenu = () => {
+    logout(props.userAuth.login)
+  }
+
+  const userMenuItems = [
+    {
+        label: 'Logout',
+        icon: 'pi pi-sign-out',
+        command: showUserMenu
+    },
+];
 
   const header = renderHeader();
 

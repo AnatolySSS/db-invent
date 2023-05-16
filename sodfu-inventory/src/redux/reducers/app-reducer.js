@@ -26,7 +26,7 @@ export const initializedSuccess = () => {
 
 export const initializeApp = () => {
   return (dispatch) => {
-    let promis = dispatch(getAuthUserData("chupligin"))
+    let promis = dispatch(getAuthUserData(localStorage.getItem('user')))
     promis.then(() => {
       dispatch(initializedSuccess())
     })
