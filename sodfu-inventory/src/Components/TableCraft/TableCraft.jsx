@@ -135,6 +135,13 @@ const TableCraft = (props) => {
     document.getElementsByClassName('p-datatable-wrapper')[0].style.height = `${tableHeight}px`
   }, [dataWasReceived]);
 
+  window.onresize = function(event) {
+    var headerWidth = document.getElementsByClassName('p-datatable-header')[0].offsetHeight
+    var paginatorWidth = document.getElementsByClassName('p-paginator-bottom')[0].offsetHeight
+    tableHeight = window.innerHeight - headerWidth - paginatorWidth
+    document.getElementsByClassName('p-datatable-wrapper')[0].style.height = `${tableHeight}px`
+  };
+
   const getSeverity = (value) => {
     switch (value) {
       case "Исправно":
@@ -672,11 +679,46 @@ const TableCraft = (props) => {
 
   const userMenuItems = [
     {
-        label: 'Logout',
-        icon: 'pi pi-sign-out',
-        command: showUserMenu
+      command: () => {
+        toast.current.show({
+          severity: "info",
+          summary: "Info",
+          detail: "Item Selected",
+          life: 3000,
+        });
+      },
+      template: (item, options) => {
+        return (
+          <button
+            onClick={(e) => options.onClick(e)}
+            className={classNames(
+              options.className,
+              "w-full p-link flex align-items-center"
+            )}
+          >
+            <Avatar
+              image={getUserLogo()}
+              className="mr-2"
+              icon="pi pi-user"
+              shape="circle"
+            />
+            <div className="flex flex-column align">
+              <span className="font-bold">{`${
+                props.userAuth.fullName.split(" ")[0]
+              } ${Array.from(props.userAuth.fullName.split(" ")[1])[0]}.${
+                Array.from(props.userAuth.fullName.split(" ")[2])[0]
+              }.`}</span>
+            </div>
+          </button>
+        );
+      },
     },
-];
+    {
+      label: "Logout",
+      icon: "pi pi-sign-out",
+      command: showUserMenu,
+    },
+  ];
 
   const header = renderHeader();
 
