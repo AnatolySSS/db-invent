@@ -5,6 +5,7 @@ let initialState = {
   login: "",
   fullName: "",
   isAuth: false,
+  role: "",
 };
 
 const authReducer = (state = initialState, action) => {
@@ -19,15 +20,16 @@ const authReducer = (state = initialState, action) => {
   }
 };
 
-export const setAuth = (login, fullName, isAuth) => ({ type: IS_AUTH, data: {login, fullName, isAuth}, });
+export const setAuth = (login, fullName, isAuth, role) => ({ type: IS_AUTH, data: {login, fullName, isAuth, role}, });
 
 export const getAuthUserData = () => {
   return (dispatch) => {
     return AuthAPI.me().then((data) => {
       switch (data.resultCode) {
         case 0:
-          let { login, full_name } = data.user;
-          dispatch(setAuth(login, full_name, true));
+          console.log(data.user);
+          let { login, full_name, role } = data.user;
+          dispatch(setAuth(login, full_name, true, role));
           console.log(data.message);
           break;
         case 1:

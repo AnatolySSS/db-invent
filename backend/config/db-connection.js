@@ -1,5 +1,5 @@
 import { networkInterfaces } from "os";
-import { createConnection } from "mysql";
+import { createConnection } from "mysql2";
 
 const setConnection = () => {
   const nets = networkInterfaces();

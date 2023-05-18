@@ -296,7 +296,7 @@ export const AuthController = {
             }
           });
           User.update(
-            { is_auth: 1 },
+            { is_auth: 1, last_logon: new Date },
             {
               where: {
                 login: login,
@@ -305,6 +305,7 @@ export const AuthController = {
           ).then((res) => {
             const accessToken = jwt.sign({ login: user.login, role: user.role }, authConfig.secret);
             console.log(user);
+            user.last_logon = new Date
             responce.json({
               resultCode: 0,
               accessToken: accessToken,

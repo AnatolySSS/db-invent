@@ -21,23 +21,45 @@ import { Menu } from 'primereact/menu';
 import changeDateType from './../../function-helpers/changeDateType'
 
 const TableCraft = (props) => {
-  let { name, data, columns, values, requestData, addData, updateData, setVisible, logout } = props;
+  console.log(props);
+  let {
+    name,
+    data,
+    columns,
+    values,
+    requestData,
+    addData,
+    updateData,
+    setVisible,
+    logout,
+    userAuth,
+  } = props;
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filters, setFilters] = useState(props.filters);
-  const [globalFilterValue, setGlobalFilterValue] = useState('');
+  const [globalFilterValue, setGlobalFilterValue] = useState("");
   const [ItemDialog, setItemDialog] = useState(false);
+  const [deleteItemDialog, setDeleteItemDialog] = useState(false);
   const toast = useRef(null);
   const userMenu = useRef(null);
-  let emptyItem, location, type, serviceable, workplace_type, globalFilterColumns
-  emptyItem = {}
-  
+  let emptyItem,
+    location,
+    type,
+    serviceable,
+    workplace_type,
+    globalFilterColumns;
+  emptyItem = {};
+
   if (values) {
     // emptyItem = columns.map(obj => obj.field)
-    location = values.map(obj => obj.location).filter(obj => obj !== null)
-    type = values.map(obj => obj.type).filter(obj => obj !== null)
-    serviceable = values.map(obj => obj.serviceable).filter(obj => obj !== null)
-    workplace_type = values.map(obj => obj.workplace_type).filter(obj => obj !== null)
-    globalFilterColumns = visibleColumns.map(obj => obj.field)
+    location = values.map((obj) => obj.location).filter((obj) => obj !== null);
+    type = values.map((obj) => obj.type).filter((obj) => obj !== null);
+    serviceable = values
+      .map((obj) => obj.serviceable)
+      .filter((obj) => obj !== null);
+    workplace_type = values
+      .map((obj) => obj.workplace_type)
+      .filter((obj) => obj !== null);
+    globalFilterColumns = visibleColumns.map((obj) => obj.field);
   }
 
   columns.map((obj) => {
@@ -71,18 +93,22 @@ const TableCraft = (props) => {
     setItemDialog(false);
   };
 
+  const hideDeleteItemDialog = () => {
+    setDeleteItemDialog(false);
+  };
+
   const saveItem = () => {
     if (item.name.trim()) {
       let _item = { ...item };
 
-      Object.keys(_item).forEach(element => {
+      Object.keys(_item).forEach((element) => {
         if (element.includes("date")) {
           if (_item[element] !== null) {
-            _item[element] = formatDate(_item[element])
-            _item[element] = changeDateType(_item[element])
+            _item[element] = formatDate(_item[element]);
+            _item[element] = changeDateType(_item[element]);
           }
         }
-      })
+      });
 
       if (_item.id) {
         updateData(_item, _item.id);
@@ -112,8 +138,35 @@ const TableCraft = (props) => {
     setItemDialog(true);
   };
 
+  const confirmDeleteItem = (rowData) => {
+    setItem(rowData);
+    setDeleteItemDialog(true);
+  };
+
+  const deleteItem = () => {
+    let _data = data.filter((val) => val.id !== item.id);
+
+    // setProducts(_products);
+    setDeleteItemDialog(false);
+    
+    toast.current.show({
+      severity: "success",
+      summary: "Successful",
+      detail: `${item.name} Deleted`,
+      life: 3000,
+    });
+    setItem(emptyItem)
+  };
+
+  const deleteItemDialogFooter = (
+    <React.Fragment>
+        <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteItemDialog} />
+        <Button label="Yes" icon="pi pi-check" severity="danger" onClick={deleteItem} />
+    </React.Fragment>
+);
+
   const createId = () => {
-    return data.length + 1
+    return data.length + 1;
   };
 
   let dataWasReceived = false;
@@ -125,22 +178,34 @@ const TableCraft = (props) => {
     initFilters();
   }, []);
 
-  let tableHeight
+  let tableHeight;
   useEffect(() => {
-    setVisibleColumns(columns)
-    var headerWidth = document.getElementsByClassName('p-datatable-header')[0].offsetHeight
-    var paginatorWidth = document.getElementsByClassName('p-paginator-bottom')[0].offsetHeight
-    let scrollHeight = window.innerHeight - document.documentElement.clientHeight
-    tableHeight = window.innerHeight - headerWidth - paginatorWidth - scrollHeight
-    document.getElementsByClassName('p-datatable-wrapper')[0].style.height = `${tableHeight}px`
+    setVisibleColumns(columns);
+    var headerWidth =
+      document.getElementsByClassName("p-datatable-header")[0].offsetHeight;
+    var paginatorWidth =
+      document.getElementsByClassName("p-paginator-bottom")[0].offsetHeight;
+    let scrollHeight =
+      window.innerHeight - document.documentElement.clientHeight;
+    tableHeight =
+      window.innerHeight - headerWidth - paginatorWidth - scrollHeight;
+    document.getElementsByClassName(
+      "p-datatable-wrapper"
+    )[0].style.height = `${tableHeight}px`;
   }, [dataWasReceived]);
 
-  window.onresize = function(event) {
-    var headerWidth = document.getElementsByClassName('p-datatable-header')[0].offsetHeight
-    var paginatorWidth = document.getElementsByClassName('p-paginator-bottom')[0].offsetHeight
-    let scrollHeight = window.innerHeight - document.documentElement.clientHeight
-    tableHeight = window.innerHeight - headerWidth - paginatorWidth - scrollHeight
-    document.getElementsByClassName('p-datatable-wrapper')[0].style.height = `${tableHeight}px`
+  window.onresize = function (event) {
+    var headerWidth =
+      document.getElementsByClassName("p-datatable-header")[0].offsetHeight;
+    var paginatorWidth =
+      document.getElementsByClassName("p-paginator-bottom")[0].offsetHeight;
+    let scrollHeight =
+      window.innerHeight - document.documentElement.clientHeight;
+    tableHeight =
+      window.innerHeight - headerWidth - paginatorWidth - scrollHeight;
+    document.getElementsByClassName(
+      "p-datatable-wrapper"
+    )[0].style.height = `${tableHeight}px`;
   };
 
   const getSeverity = (value) => {
@@ -213,13 +278,17 @@ const TableCraft = (props) => {
       case "dropdown":
         switch (col.field) {
           case "serviceable":
-            return dropdownFilterTemplate(serviceable.filter(obj => obj !== ""));
+            return dropdownFilterTemplate(
+              serviceable.filter((obj) => obj !== "")
+            );
           case "location":
-            return dropdownFilterTemplate(location.filter(obj => obj !== ""));
+            return dropdownFilterTemplate(location.filter((obj) => obj !== ""));
           case "type":
-            return dropdownFilterTemplate(type.filter(obj => obj !== ""));
-            case "workplace_type":
-            return dropdownFilterTemplate(workplace_type.filter(obj => obj !== ""));
+            return dropdownFilterTemplate(type.filter((obj) => obj !== ""));
+          case "workplace_type":
+            return dropdownFilterTemplate(
+              workplace_type.filter((obj) => obj !== "")
+            );
           default:
             break;
         }
@@ -263,25 +332,25 @@ const TableCraft = (props) => {
         if (!serviceable.includes("")) {
           serviceable.push("");
         }
-        return serviceable
+        return serviceable;
 
       case "location":
         if (!location.includes("")) {
           location.push("");
         }
-        return location
+        return location;
 
       case "type":
         if (!type.includes("")) {
           type.push("");
         }
-        return type
+        return type;
 
       case "workplace_type":
         if (!workplace_type.includes("")) {
           workplace_type.push("");
         }
-        return workplace_type
+        return workplace_type;
 
       default:
     }
@@ -330,12 +399,12 @@ const TableCraft = (props) => {
   const clearFilter = () => {
     requestData();
     initFilters();
-};
+  };
 
   const initFilters = () => {
     setFilters(props.filters);
-    setGlobalFilterValue('');
-};
+    setGlobalFilterValue("");
+  };
 
   const onGlobalFilterChange = (e) => {
     const value = e.target.value;
@@ -353,35 +422,36 @@ const TableCraft = (props) => {
 
     _data[index] = newData;
 
-    Object.keys(newData).forEach(element => {
+    Object.keys(newData).forEach((element) => {
       if (element.includes("date")) {
         if (newData[element] !== null) {
-          newData[element] = formatDate(newData[element])
-          newData[element] = changeDateType(newData[element])
+          newData[element] = formatDate(newData[element]);
+          newData[element] = changeDateType(newData[element]);
         }
       }
-    })
+    });
 
     updateData(newData, newData.id);
   };
 
   const formatDate = (date) => {
-    date ?
-    date = new Date(date).toLocaleString("ru-RU", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      timeZone: "Europe/Moscow",
-    }) :  date = null
-    return date
-  }
+    date
+      ? (date = new Date(date).toLocaleString("ru-RU", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          timeZone: "Europe/Moscow",
+        }))
+      : (date = null);
+    return date;
+  };
 
   //EDITORS
   const textEditor = (options) => {
     return (
       <InputText
         type="text"
-        value={options.value || ''}
+        value={options.value || ""}
         onChange={(e) => options.editorCallback(e.target.value)}
       />
     );
@@ -396,7 +466,7 @@ const TableCraft = (props) => {
         // placeholder={`Select ${options.field}`}
         placeholder={options.value}
         itemTemplate={(option) => {
-          return option //<Tag value={option} severity={getSeverity(option)}></Tag>;
+          return option; //<Tag value={option} severity={getSeverity(option)}></Tag>;
         }}
       />
     );
@@ -450,42 +520,43 @@ const TableCraft = (props) => {
 
   //ItemTemplates
   const dropdownItemTemplate = (option) => {
-    return option
+    return option;
     // return <Tag value={option} severity={getSeverity(option)} />;
   };
 
   //BodyTemplates
   const dropdownBodyTemplate = (dropdownType) => {
     return (rowData) => {
-      return (
-        rowData[dropdownType]
-        // <Tag
-        //   value={rowData[dropdownType]}
-        //   severity={getSeverity(rowData[dropdownType])}
-        // ></Tag>
-      );
+      return rowData[dropdownType];
+      // <Tag
+      //   value={rowData[dropdownType]}
+      //   severity={getSeverity(rowData[dropdownType])}
+      // ></Tag>
     };
-  }
+  };
 
   const checkboxBodyTemplate = (checkboxType) => {
     return (rowData) => {
       return (
         <i
           className={classNames("pi", {
-            "true-icon text-green-500 pi-check-circle": rowData[checkboxType] === "null" ? false : rowData[checkboxType],
-            "false-icon text-red-500 pi-times-circle": rowData[checkboxType] === "null" ? false : !rowData[checkboxType],
-            "text-grey-500 pi-question-circle": rowData[checkboxType] === "null" ? true : false,
+            "true-icon text-green-500 pi-check-circle":
+              rowData[checkboxType] === "null" ? false : rowData[checkboxType],
+            "false-icon text-red-500 pi-times-circle":
+              rowData[checkboxType] === "null" ? false : !rowData[checkboxType],
+            "text-grey-500 pi-question-circle":
+              rowData[checkboxType] === "null" ? true : false,
           })}
         ></i>
       );
     };
-  }
+  };
 
   const dateBodyTemplate = (dateType) => {
     return (rowData) => {
-      return formatDate(rowData[dateType])
+      return formatDate(rowData[dateType]);
     };
-  }
+  };
 
   const priceBodyTemplate = (rowData) => {
     return new Intl.NumberFormat("ru-RU", {
@@ -498,15 +569,15 @@ const TableCraft = (props) => {
   const dropdownFilterTemplate = (dropdownType) => {
     return (options) => {
       return (
-          <MultiSelect
-            value={options.value}
-            options={dropdownType}
-            itemTemplate={dropdownItemTemplate}
-            onChange={(e) => options.filterCallback(e.value)}
-            placeholder="Select One"
-            className="p-column-filter"
-            showClear
-          />
+        <MultiSelect
+          value={options.value}
+          options={dropdownType}
+          itemTemplate={dropdownItemTemplate}
+          onChange={(e) => options.filterCallback(e.value)}
+          placeholder="Select One"
+          className="p-column-filter"
+          showClear
+        />
       );
     };
   };
@@ -580,11 +651,11 @@ const TableCraft = (props) => {
     try {
       return require(`../../img/${
         props.userAuth.isAuth ? props.userAuth.login : ""
-      }.png`)
+      }.png`);
     } catch (error) {
-      return ""
+      return "";
     }
-  }
+  };
 
   const renderHeader = () => {
     return (
@@ -675,8 +746,8 @@ const TableCraft = (props) => {
   };
 
   const makeLogout = () => {
-    logout()
-  }
+    logout();
+  };
 
   const userMenuItems = [
     {
@@ -723,16 +794,25 @@ const TableCraft = (props) => {
 
   const header = renderHeader();
 
-  const actionBodyTemplate = (rowData) => {
+  const editColumnBodyTemplate = (rowData) => {
     return (
       <React.Fragment>
         <Button
           icon="pi pi-pencil"
           rounded
           outlined
-          className="mr-2"
+          // className="mr-2"
           onClick={() => editItem(rowData)}
         />
+        {userAuth.role === "admin" &&
+        <Button
+          icon="pi pi-trash"
+          rounded
+          outlined
+          className="ml-2"
+          severity="danger"
+          onClick={() => confirmDeleteItem(rowData)}
+        />}
       </React.Fragment>
     );
   };
@@ -908,7 +988,11 @@ const TableCraft = (props) => {
             <div className="field col-6 mb-0">
               <MultiStateCheckbox
                 inputid="is_workplace"
-                value={item.is_workplace != undefined ? item.is_workplace.toString(): null}
+                value={
+                  item.is_workplace != undefined
+                    ? item.is_workplace.toString()
+                    : null
+                }
                 onChange={(e) => onInputChange(e, "is_workplace")}
                 options={multiStateCheckboxOptions}
                 optionValue="value"
@@ -920,7 +1004,11 @@ const TableCraft = (props) => {
             <div className="field col-6 mb-0">
               <MultiStateCheckbox
                 inputid="was_deleted"
-                value={item.was_deleted != undefined ? item.was_deleted.toString(): null}
+                value={
+                  item.was_deleted != undefined
+                    ? item.was_deleted.toString()
+                    : null
+                }
                 onChange={(e) => onInputChange(e, "was_deleted")}
                 options={multiStateCheckboxOptions}
                 optionValue="value"
@@ -945,8 +1033,8 @@ const TableCraft = (props) => {
           />
         </div>
       </Dialog>
-    )
-  }
+    );
+  };
 
   const DialogCraftFurniture = renderDialogCraftFurniture();
 
@@ -1226,7 +1314,11 @@ const TableCraft = (props) => {
             <div className="field col-6 mb-0">
               <MultiStateCheckbox
                 inputid="is_workplace"
-                value={item.is_workplace != undefined ? item.is_workplace.toString(): null}
+                value={
+                  item.is_workplace != undefined
+                    ? item.is_workplace.toString()
+                    : null
+                }
                 onChange={(e) => onInputChange(e, "is_workplace")}
                 options={multiStateCheckboxOptions}
                 optionValue="value"
@@ -1238,7 +1330,11 @@ const TableCraft = (props) => {
             <div className="field col-6 mb-0">
               <MultiStateCheckbox
                 inputid="was_deleted"
-                value={item.was_deleted != undefined ? item.was_deleted.toString(): null}
+                value={
+                  item.was_deleted != undefined
+                    ? item.was_deleted.toString()
+                    : null
+                }
                 onChange={(e) => onInputChange(e, "was_deleted")}
                 options={multiStateCheckboxOptions}
                 optionValue="value"
@@ -1263,9 +1359,9 @@ const TableCraft = (props) => {
           />
         </div>
       </Dialog>
-    )
-  }
-  
+    );
+  };
+
   const DialogCraftIt = renderDialogCraftIt();
 
   return (
@@ -1307,16 +1403,38 @@ const TableCraft = (props) => {
           />
         ))}
         <Column
-          body={actionBodyTemplate}
+          body={editColumnBodyTemplate}
           exportable={false}
           alignFrozen="right"
           frozen
           headerStyle={{ width: "10%", minWidth: "8rem" }}
           bodyStyle={{ textAlign: "center" }}
+          style={userAuth.role === "admin" ? { minWidth: "12rem" }: { minWidth: "3rem" }}
         ></Column>
       </DataTable>
       {name === "Мебель" ? DialogCraftFurniture : DialogCraftIt}
-      
+
+      <Dialog
+        visible={deleteItemDialog}
+        style={{ width: "32rem" }}
+        breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+        header="Confirm"
+        modal
+        footer={deleteItemDialogFooter}
+        onHide={hideDeleteItemDialog}
+      >
+        <div className="confirmation-content">
+          <i
+            className="pi pi-exclamation-triangle mr-3"
+            style={{ fontSize: "2rem" }}
+          />
+          {item && (
+            <span>
+              Are you sure you want to delete <b>{item.name}</b>?
+            </span>
+          )}
+        </div>
+      </Dialog>
     </div>
   );
 };
