@@ -11,7 +11,6 @@ import { InputNumber } from 'primereact/inputnumber';
 import { MultiSelect } from "primereact/multiselect";
 import { Button } from "primereact/button";
 import { Dropdown } from 'primereact/dropdown';
-import { Tag } from 'primereact/tag';
 import { TriStateCheckbox } from 'primereact/tristatecheckbox';
 import { MultiStateCheckbox } from 'primereact/multistatecheckbox';
 import { Calendar } from 'primereact/calendar';
@@ -131,14 +130,16 @@ const TableCraft = (props) => {
     setVisibleColumns(columns)
     var headerWidth = document.getElementsByClassName('p-datatable-header')[0].offsetHeight
     var paginatorWidth = document.getElementsByClassName('p-paginator-bottom')[0].offsetHeight
-    tableHeight = window.innerHeight - headerWidth - paginatorWidth
+    let scrollHeight = window.innerHeight - document.documentElement.clientHeight
+    tableHeight = window.innerHeight - headerWidth - paginatorWidth - scrollHeight
     document.getElementsByClassName('p-datatable-wrapper')[0].style.height = `${tableHeight}px`
   }, [dataWasReceived]);
 
   window.onresize = function(event) {
     var headerWidth = document.getElementsByClassName('p-datatable-header')[0].offsetHeight
     var paginatorWidth = document.getElementsByClassName('p-paginator-bottom')[0].offsetHeight
-    tableHeight = window.innerHeight - headerWidth - paginatorWidth
+    let scrollHeight = window.innerHeight - document.documentElement.clientHeight
+    tableHeight = window.innerHeight - headerWidth - paginatorWidth - scrollHeight
     document.getElementsByClassName('p-datatable-wrapper')[0].style.height = `${tableHeight}px`
   };
 
@@ -613,7 +614,7 @@ const TableCraft = (props) => {
             />
           </div>
 
-          <div className="flex align-items-center justify-content-center">
+          <div className="flex align-items-center justify-content-center min-w-max px-4">
             <h2>{props.name}</h2>
           </div>
           <div className="flex align-items-center justify-content-center">
@@ -673,8 +674,8 @@ const TableCraft = (props) => {
     );
   };
 
-  const showUserMenu = () => {
-    logout(props.userAuth.login)
+  const makeLogout = () => {
+    logout()
   }
 
   const userMenuItems = [
@@ -683,7 +684,7 @@ const TableCraft = (props) => {
         toast.current.show({
           severity: "info",
           summary: "Info",
-          detail: "Item Selected",
+          detail: props.userAuth.fullName,
           life: 3000,
         });
       },
@@ -716,7 +717,7 @@ const TableCraft = (props) => {
     {
       label: "Logout",
       icon: "pi pi-sign-out",
-      command: showUserMenu,
+      command: makeLogout,
     },
   ];
 

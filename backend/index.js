@@ -1,7 +1,7 @@
 import express from "express";
 import path from 'path';
 import { fileURLToPath } from 'url';
-import setConnection from "./db-connection.js";
+import setConnection from "./config/db-connection.js";
 import router from "./router.js";
 
 const app = express();

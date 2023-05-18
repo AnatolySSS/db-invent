@@ -3,6 +3,9 @@ import axios from "axios";
 const instance = axios.create({
   withCredentials: true,
   baseURL: '/',
+  headers: {
+    "x-access-token": localStorage.getItem('accessToken'),
+  }
 });
 
 export const DataAPI = {
@@ -29,9 +32,11 @@ export const DataAPI = {
 }
 
 export const AuthAPI = {
-  async me(login) {
+  async me() {
     const responce = await instance
-      .post(`auth/me`, { login });
+      .get(`auth/me`, {headers: {
+        "x-access-token": localStorage.getItem('accessToken'),
+      }});
     return responce.data;
   },
   async login(login, password) {
@@ -39,9 +44,11 @@ export const AuthAPI = {
       .post(`auth/login`, { login, password });
     return responce.data;
   },
-  async logout(login) {
+  async logout() {
     const responce = await instance
-      .post(`auth/logout`, { login });
+      .post(`auth/logout`, {headers: {
+        "x-access-token": localStorage.getItem('accessToken'),
+      }});
     return responce.data;
   },
 }
