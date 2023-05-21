@@ -46,7 +46,7 @@ export const AuthAPI = {
   },
   async logout() {
     const responce = await instance
-      .post(`auth/logout`, {headers: {
+      .get(`auth/logout`, {headers: {
         "x-access-token": localStorage.getItem('accessToken'),
       }});
     return responce.data;

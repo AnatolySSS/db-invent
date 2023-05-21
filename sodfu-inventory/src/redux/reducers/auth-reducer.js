@@ -1,16 +1,23 @@
 import { AuthAPI } from "../../api/api";
-const IS_AUTH = "sodfu-inventory/authReducer/IS_AUTH";
+const SET_AUTH = "sodfu-inventory/authReducer/IS_AUTH";
+const SET_MESSAGE = "sodfu-inventory/authReducer/IS_AUTH";
 
 let initialState = {
   login: "",
   fullName: "",
   isAuth: false,
   role: "",
+  message: ""
 };
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
-    case IS_AUTH:
+    case SET_AUTH:
+      return {
+        ...state,
+        ...action.data,
+      };
+    case SET_MESSAGE:
       return {
         ...state,
         ...action.data,
@@ -20,7 +27,9 @@ const authReducer = (state = initialState, action) => {
   }
 };
 
-export const setAuth = (login, fullName, isAuth, role) => ({ type: IS_AUTH, data: {login, fullName, isAuth, role}, });
+const setAuth = (login, fullName, isAuth, role, message) => ({ type: SET_AUTH, data: {login, fullName, isAuth, role, message} });
+
+const setMessage = (message) => ({ type: SET_MESSAGE, data: {message} })
 
 export const getAuthUserData = () => {
   return (dispatch) => {
@@ -29,13 +38,15 @@ export const getAuthUserData = () => {
         case 0:
           console.log(data.user);
           let { login, full_name, role } = data.user;
-          dispatch(setAuth(login, full_name, true, role));
+          dispatch(setAuth(login, full_name, true, role, data.message));
           console.log(data.message);
           break;
         case 1:
+          dispatch(setMessage(data.message));
           console.log(data.message);
           break;
         default:
+          dispatch(setMessage(data.message));
           console.log(data);
           break;
       }
@@ -53,9 +64,11 @@ export const login = (login, password) => (dispatch) => {
         console.log(data.user);
         break;
       case 1:
+        dispatch(setMessage(data.message));
         console.log(data.message);
         break;
       case 2:
+        dispatch(setMessage(data.message));
         console.log(data.message);
         break;
       default:
@@ -68,7 +81,7 @@ export const logout = () => (dispatch) => {
   AuthAPI.logout().then((data) => {
     if (data.resultCode === 0) {
       console.log(data.message);
-      dispatch(setAuth(null, null, false));
+      dispatch(setAuth(null, null, false, null));
       localStorage.removeItem('accessToken')
     }
   });

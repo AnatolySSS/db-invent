@@ -117,7 +117,7 @@ export const DataController = {
         );
       });
     } catch (error) {
-      responce.status(500).json(error);
+      responce.json(error);
     }
   },
 
@@ -160,7 +160,7 @@ export const DataController = {
         }
       );
     } catch (error) {
-      responce.status(500).json(error);
+      responce.json(error);
     }
   },
 
@@ -189,7 +189,7 @@ export const DataController = {
         }
       );
     } catch (error) {
-      responce.status(500).json(error);
+      responce.json(error);
     }
   },
 
@@ -249,7 +249,7 @@ export const DataController = {
       }
       responce.json(data);
     } catch (error) {
-      responce.status(500).json(error);
+      responce.json(error);
     }
   },
 
@@ -314,15 +314,16 @@ export const AuthController = {
             });
           });
         })
-        .catch((err) => responce.status(500).json(err));
+        .catch((err) => responce.json(err));
     } catch (error) {
-      responce.status(500).json(error);
+      responce.json(error);
     }
   },
 
   logout(request, responce) {
     try {
       let { login } = request.body;
+      console.log(login);
       User.update(
         { is_auth: 0 },
         {
@@ -338,9 +339,9 @@ export const AuthController = {
             message: "Сессия завершена",
           });
         })
-        .catch((err) => responce.status(500).json(err));
+        .catch((err) => responce.json(err));
     } catch (error) {
-      responce.status(500).json(error);
+      responce.json(error);
     }
   },
 
@@ -366,9 +367,9 @@ export const AuthController = {
             });
           }
         })
-        .catch((err) => responce.status(500).json(err));
+        .catch((err) => responce.json(err));
     } catch (error) {
-      responce.status(500).json(error);
+      responce.json(error);
     }
   },
 };

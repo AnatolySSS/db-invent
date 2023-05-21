@@ -6,6 +6,7 @@ let mapStateToProps = (state) => {
   return {
     isAuth: state.auth.isAuth,
     fullName: state.auth.fullName,
+    message: state.auth.message
   };
 };
 

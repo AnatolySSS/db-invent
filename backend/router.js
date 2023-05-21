@@ -10,7 +10,7 @@ router.put("/updateData", DataController.updateData);
 router.post("/uploadData", DataController.uploadData);
 
 router.post("/auth/login", AuthController.login);
-router.post("/auth/logout", authJwt.verifyToken, AuthController.logout);
+router.get("/auth/logout", authJwt.verifyToken, AuthController.logout);
 router.get("/auth/me", authJwt.verifyToken, AuthController.auth);
 
 export default router
