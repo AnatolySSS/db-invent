@@ -24,6 +24,11 @@ export const DataAPI = {
       .put(`updateData`, { type, rowData, rowId });
     return responce.data;
   },
+  async deleteData(type, rowId) {
+    const responce = await instance
+      .delete(`deleteData`, {data: { type, rowId }});
+    return responce.data;
+  },
   async uploadData(type, data) {
     const responce = await instance
       .post(`uploadData`, { type, data });

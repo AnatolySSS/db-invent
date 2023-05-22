@@ -36,18 +36,14 @@ export const getAuthUserData = () => {
     return AuthAPI.me().then((data) => {
       switch (data.resultCode) {
         case 0:
-          console.log(data.user);
           let { login, full_name, role } = data.user;
           dispatch(setAuth(login, full_name, true, role, data.message));
-          console.log(data.message);
           break;
         case 1:
           dispatch(setMessage(data.message));
-          console.log(data.message);
           break;
         default:
           dispatch(setMessage(data.message));
-          console.log(data);
           break;
       }
     });
@@ -60,16 +56,12 @@ export const login = (login, password) => (dispatch) => {
       case 0:
         localStorage.setItem('accessToken', data.accessToken)
         dispatch(getAuthUserData());
-        console.log(data.message);
-        console.log(data.user);
         break;
       case 1:
         dispatch(setMessage(data.message));
-        console.log(data.message);
         break;
       case 2:
         dispatch(setMessage(data.message));
-        console.log(data.message);
         break;
       default:
         break;
@@ -80,7 +72,6 @@ export const login = (login, password) => (dispatch) => {
 export const logout = () => (dispatch) => {
   AuthAPI.logout().then((data) => {
     if (data.resultCode === 0) {
-      console.log(data.message);
       dispatch(setAuth(null, null, false, null));
       localStorage.removeItem('accessToken')
     }

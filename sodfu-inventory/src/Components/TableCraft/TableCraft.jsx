@@ -21,15 +21,16 @@ import { Menu } from 'primereact/menu';
 import changeDateType from './../../function-helpers/changeDateType'
 
 const TableCraft = (props) => {
-  console.log(props);
   let {
     name,
+    message,
     data,
     columns,
     values,
     requestData,
     addData,
     updateData,
+    deleteData,
     setVisible,
     logout,
     userAuth,
@@ -144,10 +145,8 @@ const TableCraft = (props) => {
   };
 
   const deleteItem = () => {
-    let _data = data.filter((val) => val.id !== item.id);
-
-    // setProducts(_products);
-    setDeleteItemDialog(false);
+    let _item = { ...item };
+    deleteData(_item.id)
     
     toast.current.show({
       severity: "success",
@@ -155,6 +154,7 @@ const TableCraft = (props) => {
       detail: `${item.name} Deleted`,
       life: 3000,
     });
+    setDeleteItemDialog(false);
     setItem(emptyItem)
   };
 
@@ -664,6 +664,7 @@ const TableCraft = (props) => {
           <div className="flex align-items-center col-fixed">
             <Button icon="pi pi-bars" onClick={() => setVisible(true)} />
           </div>
+          {userAuth.role === "admin" &&
           <div className="flex align-items-center justify-content-center">
             <Button
               label="New"
@@ -671,7 +672,7 @@ const TableCraft = (props) => {
               severity="success"
               onClick={openNew}
             />
-          </div>
+          </div>}
         </div>
         <div className="col flex flex-wrap justify-content-between align-content-center">
           <div className="flex align-items-center justify-content-center">
@@ -804,7 +805,6 @@ const TableCraft = (props) => {
           // className="mr-2"
           onClick={() => editItem(rowData)}
         />
-        {userAuth.role === "admin" &&
         <Button
           icon="pi pi-trash"
           rounded
@@ -812,7 +812,7 @@ const TableCraft = (props) => {
           className="ml-2"
           severity="danger"
           onClick={() => confirmDeleteItem(rowData)}
-        />}
+        />
       </React.Fragment>
     );
   };
@@ -1402,15 +1402,17 @@ const TableCraft = (props) => {
             body={getColumnBody(col)}
           />
         ))}
+        {userAuth.role === "admin" &&
         <Column
           body={editColumnBodyTemplate}
+          header={"Редактирование"}
           exportable={false}
           alignFrozen="right"
           frozen
           headerStyle={{ width: "10%", minWidth: "8rem" }}
           bodyStyle={{ textAlign: "center" }}
-          style={userAuth.role === "admin" ? { minWidth: "12rem" }: { minWidth: "3rem" }}
-        ></Column>
+          style={{ minWidth: "12rem" }}
+        ></Column>}
       </DataTable>
       {name === "Мебель" ? DialogCraftFurniture : DialogCraftIt}
 

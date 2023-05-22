@@ -35,6 +35,7 @@ let initialState = {
   },
   uploadedStatus: false,
   name: "",
+  message: "",
 };
 
 const itDataReducer = (state = initialState, action) => {
@@ -47,6 +48,7 @@ const itDataReducer = (state = initialState, action) => {
         values: action.data.values,
         filters: {...state.filters},
         name: action.data.name,
+        message: action.message,
       };
       case SET_UPLOAD_STATUS:
       return {
@@ -58,11 +60,11 @@ const itDataReducer = (state = initialState, action) => {
   }
 };
 
-const setData = (data) => ({ type: SET_DATA, data: data });
+const setData = (data, message) => ({ type: SET_DATA, data, message });
 const setUploadStatus = (status) => ({ type: SET_UPLOAD_STATUS, uploadedStatus: status });
 
 //Изменение формата даты со строки на объект Date (необходимо для правильной фильтрации)
-const getCustomers = (data) => {
+const changeDateFormat = (data) => {
   data.lib = data.lib.map((v) => {
     Object.keys(v).forEach((element) => {
       if (element.includes("date")) {
@@ -88,16 +90,26 @@ const getCustomers = (data) => {
 export const requestData = () => {
   return (dispatch) => {
     DataAPI.getData("it").then((data) => {
-      dispatch(setData(getCustomers(data)));
+      dispatch(setData(changeDateFormat(data)));
     });
   };
 };
 
 export const updateData = (rowData, rowId) => {
   return (dispatch) => {
-    DataAPI.updateData("it", rowData, rowId).then((data) => {
+    DataAPI.updateData("it", rowData, rowId).then((message) => {
       DataAPI.getData("it").then((data) => {
-        dispatch(setData(getCustomers(data)));
+        dispatch(setData(changeDateFormat(data), message.message));
+      });
+    });
+  };
+};
+
+export const deleteData = (rowId) => {
+  return (dispatch) => {
+    DataAPI.deleteData("it", rowId).then((message) => {
+      DataAPI.getData("it").then((data) => {
+        dispatch(setData(changeDateFormat(data), message.message));
       });
     });
   };
@@ -107,7 +119,7 @@ export const addData = (rowData) => {
   return (dispatch) => {
     DataAPI.addData("it", rowData).then((data) => {
       DataAPI.getData("it").then((data) => {
-        dispatch(setData(getCustomers(data)));
+        dispatch(setData(changeDateFormat(data)));
       });
     });
   };

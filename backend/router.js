@@ -7,6 +7,7 @@ const router = new Router()
 router.post("/getData", DataController.getData);
 router.post("/addData", DataController.addData);
 router.put("/updateData", DataController.updateData);
+router.delete("/deleteData", DataController.deleteData);
 router.post("/uploadData", DataController.uploadData);
 
 router.post("/auth/login", AuthController.login);

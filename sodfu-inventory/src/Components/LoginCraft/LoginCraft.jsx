@@ -29,7 +29,15 @@ const LoginInput = ({ field, form, form: { touched, errors }, ...props }) => {
     <div
       className={"mb-2"}
       onInput={() => {
-        if ((errors.login) || (!errors.login && errors.password) || !touched.login) {
+        if ((errors.login) || (errors.login && errors.password) || !touched.login) {
+          setPasswordMt("mt-2");
+        }
+        if ((!errors.login && !errors.password && touched.login && touched.password)) {
+          setPasswordMt("mt-4");
+        }
+      }}
+      onBlur={() => {
+        if ((errors.login) || (errors.login && errors.password) || !touched.login) {
           setPasswordMt("mt-2");
         }
         if ((!errors.login && !errors.password && touched.login && touched.password)) {
@@ -75,7 +83,7 @@ const PasswordInput = ({ field, form, form: { touched, errors }, ...props }) => 
       <span
         className="p-input-icon-right p-float-label"
         onBlur={() => {
-          if ((errors.login) || (!errors.login && errors.password) || !touched.login && errors.password) {
+          if ((errors.login) || (errors.login && errors.password) || !touched.login && errors.password) {
             setPasswordMt("mt-2");
           }
         }}
@@ -110,11 +118,7 @@ const PasswordInput = ({ field, form, form: { touched, errors }, ...props }) => 
 
 const LoginCraft = (props) => {
   const [passwordMt, setPasswordMt] = useState("mt-2");
-  const ref = useRef(null)
-  if (ref.current) {
-    console.log(ref.current.offsetWidth);
-  }
-  
+  const messageRef = useRef(null)
   const { login, isAuth, message } = props;
 
   const submit = (values) => {
@@ -125,7 +129,7 @@ const LoginCraft = (props) => {
 
   return (
     <div className="h-screen flex align-items-center justify-content-center">
-      <div ref={ref} className="flex flex-column">
+      <div ref={messageRef} className="flex flex-column">
         <Formik
           initialValues={{
             login: "",
@@ -150,7 +154,7 @@ const LoginCraft = (props) => {
               setPasswordMt={setPasswordMt}
             />
             <div className="mb-2">
-              {message && <Message style={{width: ref.current.offsetWidth}} severity="error" text={message} /> }
+              {message && <Message style={{width: messageRef.current.offsetWidth}} severity="error" text={message} /> }
             </div>
              <div className='justify-content-center'>
               <Button type="submit" className='w-full justify-content-center' onClick={submit}>Login</Button>

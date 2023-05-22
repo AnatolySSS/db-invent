@@ -193,6 +193,36 @@ export const DataController = {
     }
   },
 
+  deleteData(request, responce) {
+    console.log(request.body);
+    try {
+      let { type, rowId } = request.body;
+      let tableName;
+
+      switch (type) {
+        case "it":
+          tableName = "it_lib";
+          break;
+        case "furniture":
+          tableName = "furniture_lib";
+          break;
+        default:
+          break;
+      }
+
+      connection.query(
+        `DELETE FROM ${tableName} WHERE id = ${rowId};`,
+        function (error, result) {
+          if (error) throw error;
+          console.log(`Row ${rowId} was deleted from Table ${tableName}`);
+          responce.json({message: `Row ${rowId} was deleted from Table ${tableName}`});
+        }
+      );
+    } catch (error) {
+      responce.json(error);
+    }
+  },
+
   uploadData(request, responce) {
     try {
       let { type, data } = request.body;
@@ -323,7 +353,6 @@ export const AuthController = {
   logout(request, responce) {
     try {
       let { login } = request.body;
-      console.log(login);
       User.update(
         { is_auth: 0 },
         {
