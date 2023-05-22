@@ -24,13 +24,16 @@ const LoginSchema = Yup.object().shape({
 });
 
 const LoginInput = ({ field, form, form: { touched, errors }, ...props }) => {
-  const [loginMb, setLoginMb] = useState("mb-2");
+  const { setPasswordMt} = props
   return (
     <div
-      className={classNames(loginMb, "mb-2")}
-      onBlur={() => {
-        if (touched.login && !errors.login && !errors.password) {
-          // setLoginMb("mb-4");
+      className={"mb-2"}
+      onInput={() => {
+        if ((errors.login) || (!errors.login && errors.password) || !touched.login) {
+          setPasswordMt("mt-2");
+        }
+        if ((!errors.login && !errors.password && touched.login && touched.password)) {
+          setPasswordMt("mt-4");
         }
       }}
     >
@@ -65,13 +68,14 @@ const LoginInput = ({ field, form, form: { touched, errors }, ...props }) => {
 };
 
 const PasswordInput = ({ field, form, form: { touched, errors }, ...props }) => {
-  const [passwordMt, setPasswordMt] = useState("mt-2");
+  const {passwordMt, setPasswordMt} = props
+  // const [passwordMt, setPasswordMt] = useState("mt-2");
   return (
     <div className={classNames(passwordMt, "mb-2")}>
       <span
         className="p-input-icon-right p-float-label"
         onBlur={() => {
-          if ((errors.login) || (!errors.login && errors.password) || !touched.login) {
+          if ((errors.login) || (!errors.login && errors.password) || !touched.login && errors.password) {
             setPasswordMt("mt-2");
           }
         }}
@@ -105,6 +109,7 @@ const PasswordInput = ({ field, form, form: { touched, errors }, ...props }) => 
 };
 
 const LoginCraft = (props) => {
+  const [passwordMt, setPasswordMt] = useState("mt-2");
   const ref = useRef(null)
   if (ref.current) {
     console.log(ref.current.offsetWidth);
@@ -134,11 +139,15 @@ const LoginCraft = (props) => {
               name="login"
               component={LoginInput}
               message={message}
+              passwordMt={passwordMt}
+              setPasswordMt={setPasswordMt}
             />
             <Field
               name="password"
               component={PasswordInput}
               message={message}
+              passwordMt={passwordMt}
+              setPasswordMt={setPasswordMt}
             />
             <div className="mb-2">
               {message && <Message style={{width: ref.current.offsetWidth}} severity="error" text={message} /> }
