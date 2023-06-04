@@ -4,7 +4,7 @@ const instance = axios.create({
   withCredentials: true,
   baseURL: '/',
   headers: {
-    "x-access-token": localStorage.getItem('accessToken'),
+    "x-access-token": 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6ImNodXBsaWdpbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY4NTM2NjU5N30.9ydObqTVMPPKX6PhKBi8PYra1sUcy39TvJJvwaeLeaA',
   }
 });
 

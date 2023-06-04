@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize";
 import userModel from "./user.model.js";
+import currentYearInventaryModel from "./currentYearInventary.model.js";
 import setConnection from "../config/db-config.js";
 
 const { config } = setConnection()
@@ -10,13 +11,19 @@ const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
   operatorsAliases: 0,
 });
 
-sequelize.sync()
-
 const db = {}
 
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.user = userModel(sequelize, Sequelize)
+db.user.sync()
+
+const currentYear = new Date().getFullYear()
+
+db.currentYearInventaryIt = {}
+db.currentYearInventaryFurniture = {}
+db.currentYearInventaryIt[currentYear] = currentYearInventaryModel(sequelize, Sequelize, "it", currentYear)
+db.currentYearInventaryFurniture[currentYear] = currentYearInventaryModel(sequelize, Sequelize, "furniture", currentYear)
 
 export default db

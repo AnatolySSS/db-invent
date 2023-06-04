@@ -4,6 +4,7 @@ import changeDateType from "../../function-helpers/changeDateType";
 
 const SET_DATA = "sodfu-inventory/it-download-reducer/SET_DATA";
 const SET_UPLOAD_STATUS = "sodfu-inventory/it-download-reducer/SET_UPLOAD_STATUS";
+const TOGGLE_IS_FETCHING = "sodfu-inventory/it-download-reducer/TOGGLE_IS_FETCHING";
 
 let initialState = {
   columns: [],
@@ -36,6 +37,7 @@ let initialState = {
   uploadedStatus: false,
   name: "",
   message: "",
+  isFetching: false,
 };
 
 const itDataReducer = (state = initialState, action) => {
@@ -55,6 +57,11 @@ const itDataReducer = (state = initialState, action) => {
         ...state,
         uploadedStatus: action.uploadedStatus,
       };
+      case TOGGLE_IS_FETCHING:
+      return {
+        ...state,
+        isFetching: action.isFetching,
+      };
     default:
       return state;
   }
@@ -62,6 +69,7 @@ const itDataReducer = (state = initialState, action) => {
 
 const setData = (data, message) => ({ type: SET_DATA, data, message });
 const setUploadStatus = (status) => ({ type: SET_UPLOAD_STATUS, uploadedStatus: status });
+const toggleIsFetching = (isFetching) => ({ type: TOGGLE_IS_FETCHING, isFetching: isFetching });
 
 //Изменение формата даты со строки на объект Date (необходимо для правильной фильтрации)
 const changeDateFormat = (data) => {
@@ -89,7 +97,9 @@ const changeDateFormat = (data) => {
 
 export const requestData = () => {
   return (dispatch) => {
+    dispatch(toggleIsFetching(true));
     DataAPI.getData("it").then((data) => {
+      dispatch(toggleIsFetching(false));
       dispatch(setData(changeDateFormat(data)));
     });
   };
@@ -97,8 +107,10 @@ export const requestData = () => {
 
 export const updateData = (rowData, rowId) => {
   return (dispatch) => {
+    dispatch(toggleIsFetching(true));
     DataAPI.updateData("it", rowData, rowId).then((message) => {
       DataAPI.getData("it").then((data) => {
+        dispatch(toggleIsFetching(false));
         dispatch(setData(changeDateFormat(data), message.message));
       });
     });
@@ -107,8 +119,10 @@ export const updateData = (rowData, rowId) => {
 
 export const deleteData = (rowId) => {
   return (dispatch) => {
+    dispatch(toggleIsFetching(true));
     DataAPI.deleteData("it", rowId).then((message) => {
       DataAPI.getData("it").then((data) => {
+        dispatch(toggleIsFetching(false));
         dispatch(setData(changeDateFormat(data), message.message));
       });
     });
@@ -117,8 +131,10 @@ export const deleteData = (rowId) => {
 
 export const addData = (rowData) => {
   return (dispatch) => {
+    dispatch(toggleIsFetching(true));
     DataAPI.addData("it", rowData).then((data) => {
       DataAPI.getData("it").then((data) => {
+        dispatch(toggleIsFetching(false));
         dispatch(setData(changeDateFormat(data)));
       });
     });
@@ -127,7 +143,9 @@ export const addData = (rowData) => {
 
 export const uploadData = (data) => {
   return (dispatch) => {
+    dispatch(toggleIsFetching(true));
     DataAPI.uploadData("it", data).then((data) => {
+      dispatch(toggleIsFetching(false));
       dispatch(setUploadStatus(true));
     });
   };

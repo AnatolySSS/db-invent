@@ -19,6 +19,7 @@ import { Toast } from 'primereact/toast';
 import { Avatar } from 'primereact/avatar';
 import { Menu } from 'primereact/menu';
 import changeDateType from './../../function-helpers/changeDateType'
+import Preloader from "../Common/Preloader/Preloader";
 
 const TableCraft = (props) => {
   let {
@@ -34,6 +35,7 @@ const TableCraft = (props) => {
     setVisible,
     logout,
     userAuth,
+    isFetching,
   } = props;
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filters, setFilters] = useState(props.filters);
@@ -178,35 +180,42 @@ const TableCraft = (props) => {
     initFilters();
   }, []);
 
-  let tableHeight;
+  useEffect(() => {
+    try {
+      getTableHeight()
+    } catch (error) {
+
+    }
+  }, [isFetching]);
+
   useEffect(() => {
     setVisibleColumns(columns);
-    var headerWidth =
-      document.getElementsByClassName("p-datatable-header")[0].offsetHeight;
-    var paginatorWidth =
-      document.getElementsByClassName("p-paginator-bottom")[0].offsetHeight;
-    let scrollHeight =
-      window.innerHeight - document.documentElement.clientHeight;
-    tableHeight =
-      window.innerHeight - headerWidth - paginatorWidth - scrollHeight;
-    document.getElementsByClassName(
-      "p-datatable-wrapper"
-    )[0].style.height = `${tableHeight}px`;
   }, [dataWasReceived]);
 
-  window.onresize = function (event) {
-    var headerWidth =
-      document.getElementsByClassName("p-datatable-header")[0].offsetHeight;
-    var paginatorWidth =
-      document.getElementsByClassName("p-paginator-bottom")[0].offsetHeight;
-    let scrollHeight =
-      window.innerHeight - document.documentElement.clientHeight;
-    tableHeight =
-      window.innerHeight - headerWidth - paginatorWidth - scrollHeight;
-    document.getElementsByClassName(
-      "p-datatable-wrapper"
-    )[0].style.height = `${tableHeight}px`;
-  };
+const getTableHeight = () => {
+  try {
+    let headerWidth = document.getElementsByClassName("p-datatable-header")[0].offsetHeight;
+    let paginatorWidth = document.getElementsByClassName("p-paginator-bottom")[0].offsetHeight;
+    let scrollHeight = window.innerHeight - document.documentElement.clientHeight;
+    let tableHeight = window.innerHeight - headerWidth - paginatorWidth - scrollHeight;
+    document.getElementsByClassName("p-datatable-wrapper")[0].style.height = `${tableHeight}px`;
+    return `${tableHeight}px`
+  } catch (error) {
+
+  }
+}
+
+window.onresize = function (event) {
+  try {
+    let headerWidth = document.getElementsByClassName("p-datatable-header")[0].offsetHeight;
+    let paginatorWidth = document.getElementsByClassName("p-paginator-bottom")[0].offsetHeight;
+    let scrollHeight = window.innerHeight - document.documentElement.clientHeight;
+    let tableHeight = window.innerHeight - headerWidth - paginatorWidth - scrollHeight;
+    document.getElementsByClassName("p-datatable-wrapper")[0].style.height = `${tableHeight}px`;
+  } catch (error) {
+
+  }
+};
 
   const getSeverity = (value) => {
     switch (value) {
@@ -397,8 +406,12 @@ const TableCraft = (props) => {
   };
 
   const clearFilter = () => {
-    requestData();
-    initFilters();
+    let _filters = { ...filters };
+    _filters["global"].value = "";
+
+    console.log(_filters);
+    setFilters(_filters);
+    setGlobalFilterValue("");
   };
 
   const initFilters = () => {
@@ -576,6 +589,8 @@ const TableCraft = (props) => {
           onChange={(e) => options.filterCallback(e.value)}
           placeholder="Select One"
           className="p-column-filter"
+          display="chip"
+          filter
           showClear
         />
       );
@@ -1365,7 +1380,13 @@ const TableCraft = (props) => {
   const DialogCraftIt = renderDialogCraftIt();
 
   return (
-    <div className="card">
+    isFetching 
+    ? <div className="h-screen flex align-items-center justify-content-center">
+        <div className="flex flex-column">
+          <Preloader />
+        </div>
+      </div>
+    : <div className="card">
       <Toast ref={toast} />
       <DataTable
         value={data}
@@ -1383,7 +1404,7 @@ const TableCraft = (props) => {
         stripedRows
         removableSort
         scrollable
-        scrollHeight={`${tableHeight}px`}
+        scrollHeight={getTableHeight}
         style={{ minWidth: "50rem" }}
       >
         {visibleColumns.map((col, i) => (
