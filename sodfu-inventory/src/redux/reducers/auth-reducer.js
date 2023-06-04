@@ -1,6 +1,6 @@
 import { AuthAPI } from "../../api/api";
 const SET_AUTH = "sodfu-inventory/authReducer/IS_AUTH";
-const SET_MESSAGE = "sodfu-inventory/authReducer/IS_AUTH";
+const SET_MESSAGE = "sodfu-inventory/authReducer/SET_MESSAGE";
 
 let initialState = {
   login: "",
