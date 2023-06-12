@@ -3,9 +3,9 @@ import axios from "axios";
 const instance = axios.create({
   withCredentials: true,
   baseURL: '/',
-  headers: {
-    "x-access-token": 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6ImNodXBsaWdpbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY4NTM2NjU5N30.9ydObqTVMPPKX6PhKBi8PYra1sUcy39TvJJvwaeLeaA',
-  }
+  // headers: {
+  //   "x-access-token": 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6ImNodXBsaWdpbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY4NTM2NjU5N30.9ydObqTVMPPKX6PhKBi8PYra1sUcy39TvJJvwaeLeaA',
+  // }
 });
 
 export const DataAPI = {
@@ -54,6 +54,19 @@ export const AuthAPI = {
       .get(`auth/logout`, {headers: {
         "x-access-token": localStorage.getItem('accessToken'),
       }});
+    return responce.data;
+  },
+}
+
+export const InventoryAPI = {
+  async getYears() {
+    const responce = await instance
+      .get(`years`);
+    return responce.data;
+  },
+  async getData(tableName, year) {
+    const responce = await instance
+      .post(`getYearData`, { tableName, year });
     return responce.data;
   },
 }

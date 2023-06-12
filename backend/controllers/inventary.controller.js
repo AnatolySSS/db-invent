@@ -94,5 +94,69 @@ export const InventaryController = {
     } catch (error) {
       responce.json(error);
     }
+  },
+
+  async findQRCode(request, responce) {
+    try {
+      let { userName, tableName, qrCode } = request.body;
+      console.log(userName);
+      const currentYear = new Date().getFullYear()
+      let itemName
+      switch (tableName) {
+        case "it":
+          await CurrentYearInventaryIt[currentYear].update({ checked: true }, {
+            where: {
+              qr_code: qrCode
+            }
+          });
+          await CurrentYearInventaryIt[currentYear].update({ user: userName }, {
+            where: {
+              qr_code: qrCode
+            }
+          });
+          await CurrentYearInventaryIt[currentYear].update({ scan_date: new Date() }, {
+            where: {
+              qr_code: qrCode
+            }
+          });
+
+          itemName = await CurrentYearInventaryIt[currentYear].findOne({ where: { qr_code: qrCode } })
+          responce.json({
+            tableName: tableName,
+            message: `${itemName.name} инвентаризован в таблице ${tableName} за ${currentYear} год`,
+            name: itemName.name
+          });
+          break;
+        case "furniture":
+          await CurrentYearInventaryFurniture[currentYear].update({ checked: true }, {
+            where: {
+              qr_code: qrCode
+            }
+          });
+          await CurrentYearInventaryFurniture[currentYear].update({ user: userName }, {
+            where: {
+              qr_code: qrCode
+            }
+          });
+          await CurrentYearInventaryFurniture[currentYear].update({ scan_date: new Date() }, {
+            where: {
+              qr_code: qrCode
+            }
+          });
+
+          itemName = await CurrentYearInventaryFurniture[currentYear].findOne({ where: { qr_code: qrCode } })
+          responce.json({
+            tableName: tableName,
+            message: `${itemName.name} инвентаризован в таблице ${tableName} за ${currentYear} год`,
+            name: itemName.name
+          });
+          break;
+        default:
+          break;
+      }
+      
+    } catch (error) {
+      
+    }
   }
 };

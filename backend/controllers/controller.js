@@ -382,6 +382,7 @@ export const AuthController = {
           if (!user) return;
           if (user.is_auth == 1) {
             user.is_auth = true;
+            console.log(user);
             responce.json({
               resultCode: 0,
               message: "Авторизация прошла успешно",

@@ -702,7 +702,7 @@ window.onresize = function (event) {
           </div>
 
           <div className="flex align-items-center justify-content-center min-w-max px-4">
-            <h2>{props.name}</h2>
+          <h2>{`${props.name}  (общая)`}</h2>
           </div>
           <div className="flex align-items-center justify-content-center">
             <span className="p-input-icon-left">
@@ -1398,7 +1398,7 @@ window.onresize = function (event) {
         paginator
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} items"
-        rows={3}
+        rows={10}
         rowsPerPageOptions={[3, 5, 10, 25, 50]}
         tableStyle={{ minWidth: "50rem" }}
         stripedRows
