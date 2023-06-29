@@ -594,10 +594,10 @@ const doc = new Document({
       properties: {
         page: {
           margin: {
-            top: convertInchesToTwip(0.75),
-            right: convertInchesToTwip(0.5),
-            bottom: convertInchesToTwip(0.75),
-            left: convertInchesToTwip(1),
+            top: convertInchesToTwip(0.8),
+            right: convertInchesToTwip(0.6),
+            bottom: convertInchesToTwip(0.8),
+            left: convertInchesToTwip(1.2),
           },
         },
       },
@@ -803,6 +803,10 @@ const doc = new Document({
               ],
             }),
           ],
+          width: {
+            size: 100,
+            type: WidthType.PERCENTAGE,
+          },
           columnWidths: [convertInchesToTwip(4), convertInchesToTwip(6)],
         }),
         new Paragraph({
@@ -1010,7 +1014,7 @@ const doc = new Document({
                         style: "myCustomStyle",
                         children: [
                           new TextRun({
-                            text: `${(index + 1)}`,
+                            text: `${index + 1}`,
                           }),
                         ],
                         alignment: AlignmentType.CENTER,
@@ -1096,6 +1100,10 @@ const doc = new Document({
               });
             }),
           ],
+          width: {
+            size: 100,
+            type: WidthType.PERCENTAGE,
+          },
           columnWidths: [
             convertInchesToTwip(0.5),
             convertInchesToTwip(3.5),
@@ -1262,6 +1270,10 @@ const doc = new Document({
               ],
             }),
           ],
+          width: {
+            size: 100,
+            type: WidthType.PERCENTAGE,
+          },
           columnWidths: [convertInchesToTwip(5), convertInchesToTwip(5)],
         }),
         new Paragraph({
