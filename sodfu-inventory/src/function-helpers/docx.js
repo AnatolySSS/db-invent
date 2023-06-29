@@ -1289,7 +1289,7 @@ const doc = new Document({
           style: "textStyle",
           children: [
             new TextRun({
-              text: `«_____» _____________________ 202   г.`,
+              text: `«_____» _____________________ 202    г.`,
             }),
           ],
         }),
