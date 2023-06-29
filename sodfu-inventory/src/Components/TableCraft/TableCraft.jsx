@@ -20,6 +20,7 @@ import { Avatar } from 'primereact/avatar';
 import { Menu } from 'primereact/menu';
 import changeDateType from './../../function-helpers/changeDateType'
 import Preloader from "../Common/Preloader/Preloader";
+import { makeCommitment } from "../../function-helpers/docx";
 
 const TableCraft = (props) => {
   let {
@@ -42,6 +43,7 @@ const TableCraft = (props) => {
   const [globalFilterValue, setGlobalFilterValue] = useState("");
   const [ItemDialog, setItemDialog] = useState(false);
   const [deleteItemDialog, setDeleteItemDialog] = useState(false);
+  const [selectedItems, setSelectedItems] = useState([]);
   const toast = useRef(null);
   const userMenu = useRef(null);
   let emptyItem,
@@ -187,6 +189,15 @@ const TableCraft = (props) => {
 
     }
   }, [isFetching]);
+
+  // useEffect(() => {
+  //   try {
+  //     console.log(selectedItems);
+  //     makeCommitment(selectedItems)
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }, [selectedItems]);
 
   useEffect(() => {
     setVisibleColumns(columns);
@@ -679,15 +690,16 @@ window.onresize = function (event) {
           <div className="flex align-items-center col-fixed">
             <Button icon="pi pi-bars" onClick={() => setVisible(true)} />
           </div>
-          {userAuth.role === "admin" &&
-          <div className="flex align-items-center justify-content-center">
-            <Button
-              label="New"
-              icon="pi pi-plus"
-              severity="success"
-              onClick={openNew}
-            />
-          </div>}
+          {/* {userAuth.role === "admin" && (
+            <div className="flex align-items-center justify-content-center">
+              <Button
+                label="New"
+                icon="pi pi-plus"
+                severity="success"
+                onClick={openNew}
+              />
+            </div>
+          )} */}
         </div>
         <div className="col flex flex-wrap justify-content-between align-content-center">
           <div className="flex align-items-center justify-content-center">
@@ -702,7 +714,7 @@ window.onresize = function (event) {
           </div>
 
           <div className="flex align-items-center justify-content-center min-w-max px-4">
-          <h2>{`${props.name}  (общая)`}</h2>
+            <h2>{`${props.name}  (общая)`}</h2>
           </div>
           <div className="flex align-items-center justify-content-center">
             <span className="p-input-icon-left">
@@ -723,7 +735,7 @@ window.onresize = function (event) {
                 onClick={clearFilter}
               />
             </div>
-            <div className="col-fixed">
+            {/* <div className="col-fixed">
               <Button
                 type="button"
                 icon="pi pi-file-excel"
@@ -732,13 +744,9 @@ window.onresize = function (event) {
                 onClick={exportExcel}
                 data-pr-tooltip="XLS"
               />
-            </div>
-            <div
-              className="col-fixed flex align-items-center"
-              // onMouseEnter={() => this.someHandler}
-              // onClick={showUserMenu}
-            >
-              <Menu model={userMenuItems} popup ref={userMenu} />
+            </div> */}
+            <div className="col-fixed flex align-items-center">
+              <Menu model={userMenuItems} popup ref={userMenu} style={{width: "max-content"}}/>
               <Button
                 className="bg-gray-50 hover:bg-gray-400 border-gray-50 px-2 py-1"
                 onClick={(e) => userMenu.current.toggle(e)}
@@ -764,6 +772,8 @@ window.onresize = function (event) {
   const makeLogout = () => {
     logout();
   };
+
+  const makeCommitmentHelper = () => makeCommitment(selectedItems)
 
   const userMenuItems = [
     {
@@ -802,11 +812,30 @@ window.onresize = function (event) {
       },
     },
     {
+      label: "Export Commitment",
+      icon: "pi pi-file-word",
+      command: makeCommitmentHelper,
+    },
+    {
+      label: "Export EXCEL",
+      icon: "pi pi-file-excel",
+      command: exportExcel,
+    },
+    { separator: true},
+    {
       label: "Logout",
       icon: "pi pi-sign-out",
       command: makeLogout,
     },
   ];
+
+  if (userAuth.role === "admin") {
+    userMenuItems.splice(1, 0, {
+      label: "New",
+      icon: "pi pi-plus",
+      command: openNew,
+    });
+  }
 
   const header = renderHeader();
 
@@ -1404,6 +1433,10 @@ window.onresize = function (event) {
         stripedRows
         removableSort
         scrollable
+        selectionMode="multiple"
+        showSelectAll={false}
+        selection={selectedItems}
+        onSelectionChange={(e) => setSelectedItems(e.value)}
         scrollHeight={getTableHeight}
         style={{ minWidth: "50rem" }}
       >
@@ -1419,6 +1452,7 @@ window.onresize = function (event) {
             filterElement={getColumnFilterElement(col)}
             filterApply={col.dataType == "boolean" ? filterApplyTemplate : null}
             showFilterMatchModes={col.showFilterMenu}
+            selectionMode={col.field == "id" ? "multiple" : null }
             style={{ minWidth: col.width }}
             body={getColumnBody(col)}
           />
