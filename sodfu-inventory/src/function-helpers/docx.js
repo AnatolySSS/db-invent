@@ -628,7 +628,6 @@ const doc = new Document({
                       alignment: AlignmentType.CENTER,
                     }),
                   ],
-                  margins,
                   columnSpan: 2,
                 }),
               ],
@@ -637,7 +636,6 @@ const doc = new Document({
               children: [
                 new TableCell({
                   children: [],
-                  margins,
                   columnSpan: 2,
                 }),
               ],
@@ -656,7 +654,6 @@ const doc = new Document({
                       alignment: AlignmentType.LEFT,
                     }),
                   ],
-                  margins,
                 }),
                 new TableCell({
                   children: [
@@ -671,7 +668,6 @@ const doc = new Document({
                       alignment: AlignmentType.CENTER,
                     }),
                   ],
-                  margins,
                 }),
               ],
             }),
@@ -689,7 +685,6 @@ const doc = new Document({
                       alignment: AlignmentType.LEFT,
                     }),
                   ],
-                  margins,
                 }),
                 new TableCell({
                   children: [
@@ -707,7 +702,6 @@ const doc = new Document({
                       alignment: AlignmentType.CENTER,
                     }),
                   ],
-                  margins,
                 }),
               ],
             }),
@@ -725,7 +719,6 @@ const doc = new Document({
                       alignment: AlignmentType.LEFT,
                     }),
                   ],
-                  margins,
                 }),
                 new TableCell({
                   children: [
@@ -735,7 +728,6 @@ const doc = new Document({
                       alignment: AlignmentType.LEFT,
                     }),
                   ],
-                  margins,
                 }),
               ],
             }),
@@ -753,7 +745,6 @@ const doc = new Document({
                       alignment: AlignmentType.LEFT,
                     }),
                   ],
-                  margins,
                 }),
                 new TableCell({
                   children: [
@@ -763,7 +754,6 @@ const doc = new Document({
                       alignment: AlignmentType.LEFT,
                     }),
                   ],
-                  margins,
                 }),
               ],
             }),
@@ -781,7 +771,6 @@ const doc = new Document({
                       alignment: AlignmentType.LEFT,
                     }),
                   ],
-                  margins,
                 }),
                 new TableCell({
                   children: [
@@ -791,7 +780,6 @@ const doc = new Document({
                       alignment: AlignmentType.LEFT,
                     }),
                   ],
-                  margins,
                 }),
               ],
             }),
@@ -809,7 +797,6 @@ const doc = new Document({
                       alignment: AlignmentType.LEFT,
                     }),
                   ],
-                  margins,
                 }),
                 new TableCell({
                   children: [
@@ -819,7 +806,6 @@ const doc = new Document({
                       alignment: AlignmentType.LEFT,
                     }),
                   ],
-                  margins,
                 }),
               ],
             }),
@@ -827,6 +813,12 @@ const doc = new Document({
           width: {
             size: 100,
             type: WidthType.PERCENTAGE,
+          },
+          margins: {
+            top: convertInchesToTwip(0.27),
+            bottom: convertInchesToTwip(0.27),
+            right: convertInchesToTwip(0.27),
+            left: convertInchesToTwip(0.27),
           },
           columnWidths: [convertInchesToTwip(4), convertInchesToTwip(6)],
         }),
