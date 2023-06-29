@@ -589,10 +589,10 @@ const borders = {
 };
 
 const margins = {
-  top: convertInchesToTwip(0.69),
-  bottom: convertInchesToTwip(0.69),
-  left: convertInchesToTwip(0.69),
-  right: convertInchesToTwip(0.69),
+  top: convertInchesToTwip(0.05),
+  bottom: convertInchesToTwip(0.05),
+  right: convertInchesToTwip(0.05),
+  left: convertInchesToTwip(0.05),
 };
 
 const doc = new Document({
@@ -814,12 +814,7 @@ const doc = new Document({
             size: 100,
             type: WidthType.PERCENTAGE,
           },
-          margins: {
-            top: convertInchesToTwip(0.27),
-            bottom: convertInchesToTwip(0.27),
-            right: convertInchesToTwip(0.27),
-            left: convertInchesToTwip(0.27),
-          },
+          margins,
           columnWidths: [convertInchesToTwip(4), convertInchesToTwip(6)],
         }),
         new Paragraph({
@@ -1113,6 +1108,7 @@ const doc = new Document({
               });
             }),
           ],
+          margins,
           width: {
             size: 100,
             type: WidthType.PERCENTAGE,
