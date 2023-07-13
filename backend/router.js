@@ -22,5 +22,6 @@ router.post("/getYearData", InventaryWebController.getYearData);
 router.get("/currentYearInventary", InventaryController.hasCurrentYearInventary);
 router.post("/beginInventary", InventaryController.beginInventary);
 router.post("/findQRCode", InventaryController.findQRCode);
+router.post("/checkQRCode", InventaryController.checkQRCode);
 
 export default router

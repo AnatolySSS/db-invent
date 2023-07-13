@@ -1,6 +1,8 @@
 import db from "../models/index.js";
 const CurrentYearInventaryIt = db.currentYearInventaryIt
 const CurrentYearInventaryFurniture = db.currentYearInventaryFurniture
+const libDataIt = db.libDataIt
+const libDataFurniture = db.libDataFurniture
 import setConnection from "../config/db-connection.js";
 
 //подключение в базе данных
@@ -98,8 +100,7 @@ export const InventaryController = {
 
   async findQRCode(request, responce) {
     try {
-      let { userName, tableName, qrCode } = request.body;
-      console.log(userName);
+      let { userName, tableName, roomNumber, qrCode } = request.body;
       const currentYear = new Date().getFullYear()
       let itemName
       switch (tableName) {
@@ -110,6 +111,11 @@ export const InventaryController = {
             }
           });
           await CurrentYearInventaryIt[currentYear].update({ user: userName }, {
+            where: {
+              qr_code: qrCode
+            }
+          });
+          await CurrentYearInventaryIt[currentYear].update({ location: roomNumber }, {
             where: {
               qr_code: qrCode
             }
@@ -138,6 +144,11 @@ export const InventaryController = {
               qr_code: qrCode
             }
           });
+          await CurrentYearInventaryFurniture[currentYear].update({ location: roomNumber }, {
+            where: {
+              qr_code: qrCode
+            }
+          });
           await CurrentYearInventaryFurniture[currentYear].update({ scan_date: new Date() }, {
             where: {
               qr_code: qrCode
@@ -158,5 +169,23 @@ export const InventaryController = {
     } catch (error) {
       
     }
-  }
+  },
+
+  async checkQRCode(request, responce) {
+    try {
+      let { qrCode } = request.body;
+      let object
+      object = await libDataIt.findOne({ where: { qr_code: qrCode } })
+      if (!object) {
+        object = await libDataFurniture.findOne({ where: { qr_code: qrCode } })
+      }
+      responce.json({
+        message: `Объект ${object.dataValues.name} найден`,
+        object: object.dataValues,
+      });
+      
+    } catch (error) {
+      
+    }
+  },
 };

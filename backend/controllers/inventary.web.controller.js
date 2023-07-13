@@ -70,14 +70,14 @@ export const InventaryWebController = {
         //Преобразование TINYINT в BOOLEAN
         
         data.lib = data.lib.map((v) => {
-          ;
-          connection.query(`SELECT user, scan_date, checked FROM inv_${year}_${tableName} WHERE qr_code=${v.qr_code}` , (err, rows, fields) => {
+          connection.query(`SELECT user, scan_date, checked, location FROM inv_${year}_${tableName} WHERE qr_code=${v.qr_code}` , (err, rows, fields) => {
             // console.log(rows)
             if (err) throw err;
             
             if (rows[0]) {
               v.user = rows[0].user
               v.scan_date = rows[0].scan_date
+              v.location = rows[0].location
               switch (rows[0].checked) {
                 case 1:
                   v.checked = true;
