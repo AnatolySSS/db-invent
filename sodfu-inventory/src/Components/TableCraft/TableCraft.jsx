@@ -66,7 +66,6 @@ const TableCraft = (props) => {
       .filter((obj) => obj !== null);
     globalFilterColumns = visibleColumns.map((obj) => obj.field);
   }
-
   columns.map((obj) => {
     let dataType;
     switch (obj.dataType) {
@@ -440,23 +439,23 @@ window.onresize = function (event) {
     setGlobalFilterValue(value);
   };
 
-  const onRowEditComplete = (e) => {
-    let _data = [...data];
-    let { newData, index } = e;
+  // const onRowEditComplete = (e) => {
+  //   let _data = [...data];
+  //   let { newData, index } = e;
 
-    _data[index] = newData;
+  //   _data[index] = newData;
 
-    Object.keys(newData).forEach((element) => {
-      if (element.includes("date")) {
-        if (newData[element] !== null) {
-          newData[element] = formatDate(newData[element]);
-          newData[element] = changeDateType(newData[element]);
-        }
-      }
-    });
+  //   Object.keys(newData).forEach((element) => {
+  //     if (element.includes("date")) {
+  //       if (newData[element] !== null) {
+  //         newData[element] = formatDate(newData[element]);
+  //         newData[element] = changeDateType(newData[element]);
+  //       }
+  //     }
+  //   });
 
-    updateData(newData, newData.id);
-  };
+  //   updateData(newData, newData.id);
+  // };
 
   const formatDate = (date) => {
     date
