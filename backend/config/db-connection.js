@@ -33,7 +33,7 @@ const setConnection = () => {
       connection = createConnection({
         host: "localhost",
         port: 3306,
-        user: "root",
+        user: "Anatoly",
         password: "",
         database: "test_db",
       });

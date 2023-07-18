@@ -60,7 +60,7 @@ const setConnection = () => {
       config = {
         HOST: "91.220.109.180",
         PORT: 3306,
-        USER: "root",
+        USER: "Anatoly",
         PASSWORD: "Haimdall",
         DB: "inventory",
         dialect: "mysql",
