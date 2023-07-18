@@ -36,10 +36,10 @@ const setConnection = () => {
         PASSWORD: "",
         DB: "test_db",
         dialect: "mysql",
-      }
+      };
       break;
 
-    case "10.205.24.14": // поправить
+    case "10.205.24.14":
       console.log("Это sodfu");
       PORT = 3005;
       //Подключение к базе данных sodfu
@@ -50,7 +50,21 @@ const setConnection = () => {
         PASSWORD: "inventory1983!",
         DB: "inventory",
         dialect: "mysql",
-      }
+      };
+      break;
+
+    case "91.220.109.180":
+      console.log("Это timeweb");
+      PORT = 3005;
+      //Подключение к базе данных timeweb
+      config = {
+        HOST: "91.220.109.180",
+        PORT: 3306,
+        USER: "root",
+        PASSWORD: "Haimdall",
+        DB: "inventory",
+        dialect: "mysql",
+      };
       break;
 
     default:
@@ -63,11 +77,11 @@ const setConnection = () => {
         PASSWORD: "",
         DB: "test_db",
         dialect: "mysql",
-      }
+      };
       break;
   }
 
-  return {PORT, config}
+  return { PORT, config };
 };
 
 export default setConnection;

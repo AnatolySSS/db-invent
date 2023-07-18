@@ -39,7 +39,7 @@ const setConnection = () => {
       });
       break;
 
-    case "10.205.24.14": // поправить
+    case "10.205.24.14":
       console.log("Это sodfu");
       PORT = 3005;
       //Подключение к базе данных sodfu
@@ -49,6 +49,19 @@ const setConnection = () => {
         user: "inventorydb",
         database: "inventory",
         password: "inventory1983!",
+      });
+      break;
+
+    case "91.220.109.180":
+      console.log("Это timeweb");
+      PORT = 3005;
+      //Подключение к базе данных timeweb
+      connection = createConnection({
+        host: "91.220.109.180",
+        port: 3306,
+        user: "root",
+        database: "inventory",
+        password: "Haimdall",
       });
       break;
 
@@ -72,7 +85,7 @@ const setConnection = () => {
       console.log("Подключение прошло успешно");
     }
   });
-  return {PORT, connection}
+  return { PORT, connection };
 };
 
 export default setConnection;
