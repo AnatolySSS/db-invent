@@ -2,6 +2,7 @@ import db from "../models/index.js";
 const CurrentYearInventaryIt = db.currentYearInventaryIt
 const CurrentYearInventaryFurniture = db.currentYearInventaryFurniture
 const libDataIt = db.libDataIt
+const valuesDataIt = db.valuesDataIt
 const libDataFurniture = db.libDataFurniture
 import setConnection from "../config/db-connection.js";
 
@@ -14,6 +15,8 @@ export const InventaryController = {
       const currentYear = new Date().getFullYear()
       const [resultsIt] = await db.sequelize.query(`SHOW TABLES LIKE 'inv_${currentYear}_it'`);
       const [resultsFurniture] = await db.sequelize.query(`SHOW TABLES LIKE 'inv_${currentYear}_furniture'`);
+      const locations_from_db = await valuesDataIt.findAll({attributes: ['location'], raw : true})
+      let locations = locations_from_db.map(value => value.location)
       let resultCodeIt, messageIt, resultCodeFurniture, messageFurniture
 
       if (resultsIt.length == 0) {
@@ -36,7 +39,8 @@ export const InventaryController = {
         resultCodeIt: resultCodeIt,
         resultCodeFurniture: resultCodeFurniture,
         messageIt: messageIt,
-        messageFurniture: messageFurniture
+        messageFurniture: messageFurniture,
+        locations: locations,
       });
       
     } catch (error) {
