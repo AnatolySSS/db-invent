@@ -1,5 +1,5 @@
 import { networkInterfaces } from "os";
-import { createConnection } from "mysql2";
+import { createConnection, createPool } from "mysql2";
 
 const setConnection = () => {
   const nets = networkInterfaces();
@@ -30,7 +30,8 @@ const setConnection = () => {
       console.log("Это localhost");
       PORT = 3005;
       //Подключение к localhost
-      connection = createConnection({
+      connection = createPool({
+        connectionLimit : 10,
         host: "localhost",
         port: 3306,
         user: "Anatoly",
@@ -43,7 +44,8 @@ const setConnection = () => {
       console.log("Это sodfu");
       PORT = 3005;
       //Подключение к базе данных sodfu
-      connection = createConnection({
+      connection = createPool({
+        connectionLimit : 10,
         host: "10.205.24.14",
         port: 3306,
         user: "inventorydb",
@@ -56,7 +58,8 @@ const setConnection = () => {
       console.log("Это timeweb");
       PORT = 3005;
       //Подключение к базе данных timeweb
-      connection = createConnection({
+      connection = createPool({
+        connectionLimit : 10,
         host: "91.220.109.180",
         port: 3306,
         user: "root",
@@ -68,7 +71,8 @@ const setConnection = () => {
     default:
       PORT = 3005;
       //Подключение к localhost
-      connection = createConnection({
+      connection = createPool({
+        connectionLimit : 10,
         host: "localhost",
         port: 3306,
         user: "root",
@@ -78,7 +82,7 @@ const setConnection = () => {
       break;
   }
 
-  connection.connect(function (error) {
+  connection.getConnection(function (error) {
     if (error) {
       return console.error("Ошибка " + error.message);
     } else {
