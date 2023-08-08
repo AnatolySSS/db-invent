@@ -1057,7 +1057,7 @@ window.onresize = function (event) {
                 optionValue="value"
               />
               <span htmlFor="was_deleted" className="font-bold ml-2">
-                Удалено
+                Списано
               </span>
             </div>
           </div>
@@ -1383,7 +1383,7 @@ window.onresize = function (event) {
                 optionValue="value"
               />
               <span htmlFor="was_deleted" className="font-bold ml-2">
-                Удалено
+                Списано
               </span>
             </div>
           </div>

@@ -1,7 +1,7 @@
 //Формирование Word файла
 import { Document, Packer, Paragraph, AlignmentType, LineRuleType, TextRun, Table, TableRow, 
          TableCell, BorderStyle, VerticalAlign, HeightRule, ImageRun, PageNumber, Header, WidthType,
-         convertInchesToTwip, UnderlineType } from 'docx'
+         convertInchesToTwip, UnderlineType, Footer, TabStopType, Tab } from 'docx'
 import { saveAs } from 'file-saver';
 
 export function makeCommitment(selectedItems) {
@@ -607,8 +607,102 @@ const doc = new Document({
             left: convertInchesToTwip(1.2),
           },
         },
+        titlePage: true,
+      },
+      footers: {
+        default: new Footer({
+          children: [
+            new Paragraph({
+              style: "myCustomStyle",
+              children: [
+                new TextRun({
+                  text: "________________________________________",
+                }),
+              ],
+              spacing: {
+                after: 150,
+                line: 300,
+                lineRule: LineRuleType.AUTO,
+              },
+            }),
+            new Paragraph({
+              style: "myCustomStyle",
+              children: [
+                new TextRun({
+                  text: "1 ",
+                  superScript: true,
+                  italics: true,
+                }),
+                new TextRun({
+                  text: " Распечатывается на одном листе с оборотом.",
+                  italics: true,
+                }),
+              ],
+            }),
+          ],
+        }),
       },
       children: [
+        new Paragraph({
+          style: "myCustomStyle",
+          children: [
+            new TextRun({
+              text: `\tПриложение`,
+            }),
+          ],
+          tabStops: [
+            {
+              type: TabStopType.LEFT,
+              position: 6000,
+            },
+          ],
+          spacing: {
+            after: 10,
+            line: 300,
+            lineRule: LineRuleType.AUTO,
+          },
+          alignment: AlignmentType.LEFT,
+        }),
+        new Paragraph({
+          style: "myCustomStyle",
+          children: [
+            new TextRun({
+              text: `\tк приказу АНО «СОДФУ»`,
+            }),
+          ],
+          tabStops: [
+            {
+              type: TabStopType.LEFT,
+              position: 6000,
+            },
+          ],
+          spacing: {
+            after: 10,
+            line: 300,
+            lineRule: LineRuleType.AUTO,
+          },
+          alignment: AlignmentType.LEFT,
+        }),
+        new Paragraph({
+          style: "myCustomStyle",
+          children: [
+            new TextRun({
+              text: `\tот 17.02.2021 № ОД-2102173`,
+            }),
+          ],
+          tabStops: [
+            {
+              type: TabStopType.LEFT,
+              position: 6000,
+            },
+          ],
+          spacing: {
+            after: 250,
+            line: 300,
+            lineRule: LineRuleType.AUTO,
+          },
+          alignment: AlignmentType.LEFT,
+        }),
         new Table({
           style: "myCustomStyle",
           alignment: AlignmentType.CENTER,
@@ -621,7 +715,16 @@ const doc = new Document({
                       style: "myCustomStyle",
                       children: [
                         new TextRun({
-                          text: "ОБЯЗАТЕЛЬСТВО* № _______________",
+                          text: "ОБЯЗАТЕЛЬСТВО*",
+                          bold: true,
+                        }),
+                        new TextRun({
+                          text: "1",
+                          superScript: true,
+                          bold: true,
+                        }),
+                        new TextRun({
+                          text: " № _______________",
                           bold: true,
                         }),
                       ],
