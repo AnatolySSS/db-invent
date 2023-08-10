@@ -106,6 +106,10 @@ const TableCraft = (props) => {
       let _item = { ...item };
 
       Object.keys(_item).forEach((element) => {
+        //Изменение пустой строки на null для избежания ошибки при сохранении в базе данных
+        if (_item[element] == "" || _item[element] == 0) {
+          _item[element] = null 
+        }
         if (element.includes("date")) {
           if (_item[element] !== null) {
             _item[element] = formatDate(_item[element]);
@@ -1081,7 +1085,7 @@ window.onresize = function (event) {
             </div>
             <div className="field col-6 mb-0">
               <label htmlFor="deleted_grounds" className="font-bold">
-                Основания для списания
+                Основание для списания
               </label>
               <InputTextarea
                 id="deleted_grounds"
@@ -1437,7 +1441,7 @@ window.onresize = function (event) {
             </div>
             <div className="field col-6 mb-0">
               <label htmlFor="deleted_grounds" className="font-bold">
-                Основания для списания
+                Основание для списания
               </label>
               <InputTextarea
                 id="deleted_grounds"

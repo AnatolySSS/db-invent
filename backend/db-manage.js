@@ -49,11 +49,12 @@ export const insertData = (tableName, data) => {
 
 //Изменение данных в таблице
 export const updateData = (tableName, rowData, rowId) => {
+  console.log(rowData);
   let query = ``;
   let columnNames = ``;
   for (let j = 0; j < Object.values(rowData).length; j++) {
-    if (Object.keys(rowData)[j] !== "id" && Object.values(rowData)[j] !== null) {
-        if (Object.keys(rowData)[j] == "is_workplace" || Object.keys(rowData)[j] == "was_deleted") {
+    if (Object.keys(rowData)[j] !== "id") {
+        if (Object.keys(rowData)[j] == "is_workplace" || Object.keys(rowData)[j] == "was_deleted" || Object.values(rowData)[j] == null) {
             columnNames = `${columnNames}${Object.keys(rowData)[j]} = ${Object.values(rowData)[j]}, `
         } else {
             columnNames = `${columnNames}${Object.keys(rowData)[j]} = '${Object.values(rowData)[j]}', `
