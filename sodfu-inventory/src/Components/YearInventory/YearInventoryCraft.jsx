@@ -285,6 +285,8 @@ window.onresize = function (event) {
             return dateBodyTemplate("incoming_date");
           case "last_setup_date":
             return dateBodyTemplate("last_setup_date");
+          case "deleted_date":
+            return dateBodyTemplate("deleted_date");
           case "scan_date":
             return dateBodyTemplate("scan_date");
           default:

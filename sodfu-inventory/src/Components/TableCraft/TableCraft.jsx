@@ -283,6 +283,8 @@ window.onresize = function (event) {
             return dateBodyTemplate("incoming_date");
           case "last_setup_date":
             return dateBodyTemplate("last_setup_date");
+            case "deleted_date":
+            return dateBodyTemplate("deleted_date");
           default:
             break;
         }
@@ -1063,6 +1065,36 @@ window.onresize = function (event) {
           </div>
         </div>
         <div className="field">
+          <div className="grid">
+            <div className="field col-6 mb-0">
+              <label htmlFor="deleted_date" className="font-bold">
+                Дата списания
+              </label>
+              <Calendar
+                id="deleted_date"
+                value={item.deleted_date || null}
+                onChange={(e) => onInputChange(e, "deleted_date")}
+                dateFormat="dd.mm.yy"
+                placeholder={formatDate(item.deleted_date || null)}
+                mask="99.99.9999"
+              />
+            </div>
+            <div className="field col-6 mb-0">
+              <label htmlFor="deleted_grounds" className="font-bold">
+                Основания для списания
+              </label>
+              <InputTextarea
+                id="deleted_grounds"
+                value={item.deleted_grounds || ""}
+                onChange={(e) => onInputChange(e, "deleted_grounds")}
+                required
+                rows={1}
+                cols={20}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="field">
           <label htmlFor="note" className="font-bold">
             Описание
           </label>
@@ -1389,6 +1421,36 @@ window.onresize = function (event) {
           </div>
         </div>
         <div className="field">
+          <div className="grid">
+            <div className="field col-6 mb-0">
+              <label htmlFor="deleted_date" className="font-bold">
+                Дата списания
+              </label>
+              <Calendar
+                id="deleted_date"
+                value={item.deleted_date || null}
+                onChange={(e) => onInputChange(e, "deleted_date")}
+                dateFormat="dd.mm.yy"
+                placeholder={formatDate(item.deleted_date || null)}
+                mask="99.99.9999"
+              />
+            </div>
+            <div className="field col-6 mb-0">
+              <label htmlFor="deleted_grounds" className="font-bold">
+                Основания для списания
+              </label>
+              <InputTextarea
+                id="deleted_grounds"
+                value={item.deleted_grounds || ""}
+                onChange={(e) => onInputChange(e, "deleted_grounds")}
+                required
+                rows={1}
+                cols={20}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="field">
           <label htmlFor="note" className="font-bold">
             Описание
           </label>
@@ -1406,6 +1468,15 @@ window.onresize = function (event) {
   };
 
   const DialogCraftIt = renderDialogCraftIt();
+
+  const onRowSelect = (event) => {
+    toast.current.show({
+      severity: "info",
+      summary: "Cell Selected",
+      detail: `Name: ${event.value}`,
+      life: 3000,
+    });
+  };
 
   return (
     isFetching 
@@ -1436,6 +1507,7 @@ window.onresize = function (event) {
         showSelectAll={false}
         selection={selectedItems}
         onSelectionChange={(e) => setSelectedItems(e.value)}
+        onRowSelect={onRowSelect}
         scrollHeight={getTableHeight}
         style={{ minWidth: "50rem" }}
       >

@@ -32,6 +32,8 @@ let initialState = {
     is_workplace: { value: null, matchMode: FilterMatchMode.EQUALS },
     location: { value: null, matchMode: FilterMatchMode.IN },
     was_deleted: { value: null, matchMode: FilterMatchMode.EQUALS },
+    deleted_date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
+    deleted_grounds: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] },
     release_date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
   },
   uploadedStatus: false,

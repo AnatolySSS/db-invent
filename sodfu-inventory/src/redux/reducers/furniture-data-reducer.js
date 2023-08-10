@@ -25,6 +25,8 @@ let initialState = {
     serviceable: { value: null, matchMode: FilterMatchMode.IN },
     type: { value: null, matchMode: FilterMatchMode.IN },
     was_deleted: { value: null, matchMode: FilterMatchMode.EQUALS },
+    deleted_date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
+    deleted_grounds: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] },
   },
   uploadedStatus: false,
   name: "",
