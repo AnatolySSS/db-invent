@@ -107,7 +107,7 @@ const TableCraft = (props) => {
 
       Object.keys(_item).forEach((element) => {
         //Изменение пустой строки на null для избежания ошибки при сохранении в базе данных
-        if (_item[element] == "" || _item[element] == 0) {
+        if (_item[element] == "") {
           _item[element] = null 
         }
         if (element.includes("date")) {
