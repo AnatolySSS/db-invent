@@ -1469,15 +1469,6 @@ window.onresize = function (event) {
 
   const DialogCraftIt = renderDialogCraftIt();
 
-  const onRowSelect = (event) => {
-    toast.current.show({
-      severity: "info",
-      summary: "Cell Selected",
-      detail: `Name: ${event.value}`,
-      life: 3000,
-    });
-  };
-
   return (
     isFetching 
     ? <div className="h-screen flex align-items-center justify-content-center">
@@ -1507,7 +1498,6 @@ window.onresize = function (event) {
         showSelectAll={false}
         selection={selectedItems}
         onSelectionChange={(e) => setSelectedItems(e.value)}
-        onRowSelect={onRowSelect}
         scrollHeight={getTableHeight}
         style={{ minWidth: "50rem" }}
       >
