@@ -107,7 +107,7 @@ const TableCraft = (props) => {
 
       Object.keys(_item).forEach((element) => {
         //Изменение пустой строки на null для избежания ошибки при сохранении в базе данных
-        if (_item[element] == "") {
+        if (_item[element] === "") {
           _item[element] = null 
         }
         if (element.includes("date")) {
@@ -1038,7 +1038,7 @@ window.onresize = function (event) {
               <MultiStateCheckbox
                 inputid="is_workplace"
                 value={
-                  item.is_workplace != undefined
+                  item.is_workplace !== undefined
                     ? item.is_workplace.toString()
                     : null
                 }
@@ -1054,7 +1054,7 @@ window.onresize = function (event) {
               <MultiStateCheckbox
                 inputid="was_deleted"
                 value={
-                  item.was_deleted != undefined
+                  item.was_deleted !== undefined
                     ? item.was_deleted.toString()
                     : null
                 }
@@ -1394,7 +1394,7 @@ window.onresize = function (event) {
               <MultiStateCheckbox
                 inputid="is_workplace"
                 value={
-                  item.is_workplace != undefined
+                  item.is_workplace !== undefined
                     ? item.is_workplace.toString()
                     : null
                 }
@@ -1410,7 +1410,7 @@ window.onresize = function (event) {
               <MultiStateCheckbox
                 inputid="was_deleted"
                 value={
-                  item.was_deleted != undefined
+                  item.was_deleted !== undefined
                     ? item.was_deleted.toString()
                     : null
                 }
@@ -1515,9 +1515,9 @@ window.onresize = function (event) {
             filterField={col.field}
             dataType={col.dataType}
             filterElement={getColumnFilterElement(col)}
-            filterApply={col.dataType == "boolean" ? filterApplyTemplate : null}
+            filterApply={col.dataType === "boolean" ? filterApplyTemplate : null}
             showFilterMatchModes={col.showFilterMenu}
-            selectionMode={col.field == "id" ? "multiple" : null }
+            selectionMode={col.field === "id" ? "multiple" : null }
             style={{ minWidth: col.width }}
             body={getColumnBody(col)}
           />
