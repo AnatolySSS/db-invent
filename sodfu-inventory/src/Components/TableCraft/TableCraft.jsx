@@ -1014,7 +1014,7 @@ window.onresize = function (event) {
                 onChange={(e) => onInputChange(e, "purchase_date")}
                 dateFormat="dd.mm.yy"
                 placeholder={formatDate(item.purchase_date || null)}
-                mask="99.99.9999"
+                // mask="99.99.9999"
               />
             </div>
             <div className="field col-6 mb-0">
@@ -1027,7 +1027,7 @@ window.onresize = function (event) {
                 onChange={(e) => onInputChange(e, "release_date")}
                 dateFormat="dd.mm.yy"
                 placeholder={formatDate(item.release_date || null)}
-                mask="99.99.9999"
+                // mask="99.99.9999"
               />
             </div>
           </div>
@@ -1080,7 +1080,7 @@ window.onresize = function (event) {
                 onChange={(e) => onInputChange(e, "deleted_date")}
                 dateFormat="dd.mm.yy"
                 placeholder={formatDate(item.deleted_date || null)}
-                mask="99.99.9999"
+                // mask="99.99.9999"
               />
             </div>
             <div className="field col-6 mb-0">
@@ -1340,7 +1340,7 @@ window.onresize = function (event) {
                 onChange={(e) => onInputChange(e, "purchase_date")}
                 dateFormat="dd.mm.yy"
                 placeholder={formatDate(item.purchase_date || null)}
-                mask="99.99.9999"
+                // mask="99.99.9999"
               />
             </div>
             <div className="field col-6 mb-0">
@@ -1353,7 +1353,7 @@ window.onresize = function (event) {
                 onChange={(e) => onInputChange(e, "release_date")}
                 dateFormat="dd.mm.yy"
                 placeholder={formatDate(item.release_date || null)}
-                mask="99.99.9999"
+                // mask="99.99.9999"
               />
             </div>
           </div>
@@ -1370,7 +1370,7 @@ window.onresize = function (event) {
                 onChange={(e) => onInputChange(e, "incoming_date")}
                 dateFormat="dd.mm.yy"
                 placeholder={formatDate(item.incoming_date || null)}
-                mask="99.99.9999"
+                // mask="99.99.9999"
               />
             </div>
             <div className="field col-6 mb-0">
@@ -1383,7 +1383,7 @@ window.onresize = function (event) {
                 onChange={(e) => onInputChange(e, "last_setup_date")}
                 dateFormat="dd.mm.yy"
                 placeholder={formatDate(item.last_setup_date || null)}
-                mask="99.99.9999"
+                // mask="99.99.9999"
               />
             </div>
           </div>
@@ -1436,7 +1436,7 @@ window.onresize = function (event) {
                 onChange={(e) => onInputChange(e, "deleted_date")}
                 dateFormat="dd.mm.yy"
                 placeholder={formatDate(item.deleted_date || null)}
-                mask="99.99.9999"
+                // mask="99.99.9999"
               />
             </div>
             <div className="field col-6 mb-0">
