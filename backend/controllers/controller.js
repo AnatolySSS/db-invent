@@ -125,7 +125,7 @@ export const DataController = {
     try {
       let { type, rowData } = request.body;
       let tableName;
-
+      let data = {};
       switch (type) {
         case "it":
           tableName = "it_lib";
@@ -150,13 +150,35 @@ export const DataController = {
         }
       }
 
+      // connection.query(
+      //   `SELECT inventary_number FROM ${tableName} WHERE inventary_number = '${rowData.inventary_number}';`,
+      //   (err, rows, fields) => {
+      //     if (rows != undefined) {
+      //       data.inventary_number = true
+      //     }
+      //   }
+      // )
+      // connection.query(
+      //   `SELECT qr_code FROM ${tableName} WHERE qr_code = '${rowData.qr_code}';`,
+      //   (err, rows, fields) => {
+      //     if (rows != undefined) {
+      //       data.qr_code = true
+      //     }
+      //   }
+      // );
+      
+      // if (data.inventary_number || data.qr_code) {
+      //   console.log("true");
+      // } else {
+      //   console.log("false");
+      // }
       connection.query(
         insertData(tableName, rowData),
         Object.values(rowData),
         (error, result) => {
           if (error) throw error;
           console.log(`Add item to ${tableName} Table`);
-          responce.json({});
+          responce.json(data);
         }
       );
     } catch (error) {
