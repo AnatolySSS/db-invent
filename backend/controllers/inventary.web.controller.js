@@ -52,7 +52,7 @@ export const InventaryWebController = {
           tableLibName = "it_lib";
           tableMetaName = "it_meta";
           tableValuesName = "it_values";
-          data.name = "IT оборудование";
+          data.name = "Оборудование";
           break;
         case "furniture":
           tableLibName = "furniture_lib";
