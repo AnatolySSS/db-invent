@@ -1112,7 +1112,7 @@ window.onresize = function (event) {
         </div>
         <div className="field">
           <label htmlFor="note" className="font-bold">
-            Описание
+            Информация
           </label>
           <InputTextarea
             id="note"
@@ -1468,7 +1468,7 @@ window.onresize = function (event) {
         </div>
         <div className="field">
           <label htmlFor="note" className="font-bold">
-            Описание
+            Информация
           </label>
           <InputTextarea
             id="note"
