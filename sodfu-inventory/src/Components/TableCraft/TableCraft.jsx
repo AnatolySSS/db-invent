@@ -448,7 +448,6 @@ window.onresize = function (event) {
     let _filters = { ...filters };
     _filters["global"].value = "";
 
-    console.log(_filters);
     setFilters(_filters);
     setGlobalFilterValue("");
   };
@@ -1539,6 +1538,8 @@ window.onresize = function (event) {
         selection={selectedItems}
         onSelectionChange={(e) => setSelectedItems(e.value)}
         scrollHeight={getTableHeight}
+        stateStorage="session"
+        stateKey="inventory-sodfu-state-table"
         style={{ minWidth: "50rem" }}
       >
         {visibleColumns.map((col, i) => (

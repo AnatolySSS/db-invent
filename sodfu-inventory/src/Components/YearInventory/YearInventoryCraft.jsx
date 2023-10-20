@@ -717,7 +717,7 @@ window.onresize = function (event) {
               <InputText
                 value={globalFilterValue}
                 onChange={onGlobalFilterChange}
-                placeholder="Search..."
+                placeholder="Поиск..."
               />
             </span>
             <div className="flex align-items-center justify-content-center">
@@ -725,12 +725,12 @@ window.onresize = function (event) {
                 className="ml-2"
                 type="button"
                 icon="pi pi-filter-slash"
-                label="Clear"
+                label="Очистить"
                 outlined
                 onClick={clearFilter}
               />
             </div>
-            <div className="col-fixed">
+            {/* <div className="col-fixed">
               <Button
                 type="button"
                 icon="pi pi-file-excel"
@@ -739,12 +739,8 @@ window.onresize = function (event) {
                 onClick={exportExcel}
                 data-pr-tooltip="XLS"
               />
-            </div>
-            <div
-              className="col-fixed flex align-items-center"
-              // onMouseEnter={() => this.someHandler}
-              // onClick={showUserMenu}
-            >
+            </div> */}
+            <div className="col-fixed flex align-items-center" >
               <Menu model={userMenuItems} popup ref={userMenu} />
               <Button
                 className="bg-gray-50 hover:bg-gray-400 border-gray-50 px-2 py-1"
@@ -809,6 +805,12 @@ window.onresize = function (event) {
       },
     },
     {
+      label: "Export EXCEL",
+      icon: "pi pi-file-excel",
+      command: exportExcel,
+    },
+    { separator: true},
+    {
       label: "Logout",
       icon: "pi pi-sign-out",
       command: makeLogout,
@@ -835,7 +837,7 @@ window.onresize = function (event) {
         header={header}
         paginator
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} items"
+        currentPageReportTemplate="Показаны с {first} по {last} из {totalRecords} объектов"
         rows={10}
         rowsPerPageOptions={[3, 5, 10, 25, 50]}
         tableStyle={{ minWidth: "50rem" }}
@@ -843,6 +845,8 @@ window.onresize = function (event) {
         removableSort
         scrollable
         scrollHeight={getTableHeight}
+        stateStorage="session"
+        stateKey="inventory-sodfu-state-year"
         style={{ minWidth: "50rem" }}
       >
         {visibleColumns.map((col, i) => (
