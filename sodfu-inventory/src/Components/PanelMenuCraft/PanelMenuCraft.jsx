@@ -100,11 +100,6 @@ const PanelMenuCraft = (props) => {
           })
         }
       ]
-      
-      
-      
-      
-      
       // years.map((year) => {
       //   return {
       //     label: year,
@@ -144,27 +139,27 @@ const PanelMenuCraft = (props) => {
       //   }
       // })
     },
-    {
-      label: "Загрузить данные",
-      icon: "pi pi-fw pi-download",
-      items: [
-        {
-          template: (item, options) => {
-            return (
-                <NavLink to="/upload"
-                  className={classNames(options.className,"w-full p-link flex align-items-center")}
-                  style={{
-                    textDecoration: "none",
-                    color: "#495057",
-                  }}>
-                  <i className="pi pi-fw pi-download mr-2"></i>
-                  Загрузить данные
-                </NavLink>
-            );
-          },
-        },
-      ],
-    },
+    // {
+    //   label: "Загрузить данные",
+    //   icon: "pi pi-fw pi-download",
+    //   items: [
+    //     {
+    //       template: (item, options) => {
+    //         return (
+    //             <NavLink to="/upload"
+    //               className={classNames(options.className,"w-full p-link flex align-items-center")}
+    //               style={{
+    //                 textDecoration: "none",
+    //                 color: "#495057",
+    //               }}>
+    //               <i className="pi pi-fw pi-download mr-2"></i>
+    //               Загрузить данные
+    //             </NavLink>
+    //         );
+    //       },
+    //     },
+    //   ],
+    // },
   ];
 
   return (

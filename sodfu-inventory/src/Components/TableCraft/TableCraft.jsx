@@ -18,6 +18,7 @@ import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
 import { Avatar } from 'primereact/avatar';
 import { Menu } from 'primereact/menu';
+import { Image } from 'primereact/image';
 import changeDateType from './../../function-helpers/changeDateType'
 import Preloader from "../Common/Preloader/Preloader";
 import { makeCommitment } from "../../function-helpers/docx";
@@ -256,6 +257,7 @@ window.onresize = function (event) {
     }
   };
 
+  //Вид 
   const getColumnBody = (col) => {
     switch (col.editingType) {
       case "dropdown":
@@ -305,11 +307,20 @@ window.onresize = function (event) {
             break;
         }
 
+      case "img":
+      switch (col.field) {
+        case "qr_code_img":
+          return imgBodyTemplate;
+        default:
+          break;
+      }
+
       default:
         return null;
     }
   };
 
+  //Вид фильтра в таблице
   const getColumnFilterElement = (col) => {
     switch (col.editingType) {
       case "dropdown":
@@ -344,24 +355,24 @@ window.onresize = function (event) {
     }
   };
 
-  const getColumnEditor = (col) => {
-    switch (col.editingType) {
-      case "dropdown":
-        return (options) => dropdownEditor(options);
+  // const getColumnEditor = (col) => {
+  //   switch (col.editingType) {
+  //     case "dropdown":
+  //       return (options) => dropdownEditor(options);
 
-      case "checkbox":
-        return (options) => checkboxEditor(options);
+  //     case "checkbox":
+  //       return (options) => checkboxEditor(options);
 
-      case "inputCurrency":
-        return (options) => priceEditor(options);
+  //     case "inputCurrency":
+  //       return (options) => priceEditor(options);
 
-      case "date":
-        return (options) => dateEditor(options);
+  //     case "date":
+  //       return (options) => dateEditor(options);
 
-      default:
-        return (options) => textEditor(options);
-    }
-  };
+  //     default:
+  //       return (options) => textEditor(options);
+  //   }
+  // };
 
   const getDropdownOptions = (col) => {
     switch (col) {
@@ -488,63 +499,63 @@ window.onresize = function (event) {
   };
 
   //EDITORS
-  const textEditor = (options) => {
-    return (
-      <InputText
-        type="text"
-        value={options.value || ""}
-        onChange={(e) => options.editorCallback(e.target.value)}
-      />
-    );
-  };
+  // const textEditor = (options) => {
+  //   return (
+  //     <InputText
+  //       type="text"
+  //       value={options.value || ""}
+  //       onChange={(e) => options.editorCallback(e.target.value)}
+  //     />
+  //   );
+  // };
 
-  const dropdownEditor = (options) => {
-    return (
-      <Dropdown
-        value={options.value}
-        options={getDropdownOptions(options.field)}
-        onChange={(e) => options.editorCallback(e.value)}
-        // placeholder={`Select ${options.field}`}
-        placeholder={options.value}
-        itemTemplate={(option) => {
-          return option; //<Tag value={option} severity={getSeverity(option)}></Tag>;
-        }}
-      />
-    );
-  };
+  // const dropdownEditor = (options) => {
+  //   return (
+  //     <Dropdown
+  //       value={options.value}
+  //       options={getDropdownOptions(options.field)}
+  //       onChange={(e) => options.editorCallback(e.value)}
+  //       // placeholder={`Select ${options.field}`}
+  //       placeholder={options.value}
+  //       itemTemplate={(option) => {
+  //         return option; //<Tag value={option} severity={getSeverity(option)}></Tag>;
+  //       }}
+  //     />
+  //   );
+  // };
 
-  const checkboxEditor = (options) => {
-    return (
-      <TriStateCheckbox
-        value={options.value}
-        onChange={(e) => options.editorCallback(e.target.value)}
-      />
-    );
-  };
+  // const checkboxEditor = (options) => {
+  //   return (
+  //     <TriStateCheckbox
+  //       value={options.value}
+  //       onChange={(e) => options.editorCallback(e.target.value)}
+  //     />
+  //   );
+  // };
 
-  const priceEditor = (options) => {
-    return (
-      <InputNumber
-        value={options.value}
-        onValueChange={(e) => options.editorCallback(e.value)}
-        mode="currency"
-        currency="RUB"
-        locale="ru-RU"
-      />
-    );
-  };
+  // const priceEditor = (options) => {
+  //   return (
+  //     <InputNumber
+  //       value={options.value}
+  //       onValueChange={(e) => options.editorCallback(e.value)}
+  //       mode="currency"
+  //       currency="RUB"
+  //       locale="ru-RU"
+  //     />
+  //   );
+  // };
 
-  const dateEditor = (options) => {
-    return (
-      <Calendar
-        value={formatDate(options.value)}
-        onChange={(e) => options.editorCallback(e.value)}
-        dateFormat="dd.mm.yy"
-        placeholder={formatDate(options.value)}
-        mask="99.99.9999"
-      />
-    );
-  };
+  // const dateEditor = (options) => {
+  //   return (
+  //     <Calendar
+  //       value={formatDate(options.value)}
+  //       onChange={(e) => options.editorCallback(e.value)}
+  //       dateFormat="dd.mm.yy"
+  //       placeholder={formatDate(options.value)}
+  //       mask="99.99.9999"
+  //     />
+  //   );
+  // };
 
   const filterApplyTemplate = (options) => {
     return (
@@ -605,6 +616,19 @@ window.onresize = function (event) {
       currency: "RUB",
     }).format(rowData.purchase_price);
   };
+
+  const getQrCodeImg = (qr_code) => {
+    try {
+      return require(`../../img/qr_code/${qr_code}.png`)
+    } catch (error) {
+      return require(`../../img/qr_code/no_data.png`)
+    }
+    
+  }
+  const imgBodyTemplate = (rowData) => {
+    return <Image src={getQrCodeImg(rowData.qr_code)} zoomSrc={getQrCodeImg(rowData.qr_code)} alt="No Image" width="60" height="60" preview />
+  };
+  
 
   //FilterTemplates
   const dropdownFilterTemplate = (dropdownType) => {
@@ -739,7 +763,7 @@ window.onresize = function (event) {
               <InputText
                 value={globalFilterValue}
                 onChange={onGlobalFilterChange}
-                placeholder="Search..."
+                placeholder="Поиск..."
               />
             </span>
             <div className="flex align-items-center justify-content-center">
@@ -747,7 +771,7 @@ window.onresize = function (event) {
                 className="ml-2"
                 type="button"
                 icon="pi pi-filter-slash"
-                label="Clear"
+                label="Очистить"
                 outlined
                 onClick={clearFilter}
               />
@@ -1503,7 +1527,7 @@ window.onresize = function (event) {
         header={header}
         paginator
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} items"
+        currentPageReportTemplate="Показаны с {first} по {last} из {totalRecords} объектов"
         rows={10}
         rowsPerPageOptions={[3, 5, 10, 25, 50]}
         tableStyle={{ minWidth: "50rem" }}
@@ -1534,6 +1558,15 @@ window.onresize = function (event) {
             body={getColumnBody(col)}
           />
         ))}
+        <Column
+            key={visibleColumns.qr_code}
+            field={visibleColumns.qr_code}
+            header={"QRCODE IMG"}
+            dataType={"text"}
+            style={{ minWidth: "10rem" }}
+            body={imgBodyTemplate}
+            bodyClassName="text-center"
+          />
         {userAuth.role === "admin" &&
         <Column
           body={editColumnBodyTemplate}
