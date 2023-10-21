@@ -20,5 +20,10 @@
   "homepage": "https://github.com/AnatolySSS/db-invent#readme",
   "devDependencies": {
     "nodemon": "^2.0.22"
+  },
+  "dependencies": {
+    "docx": "^8.2.3",
+    "file-saver": "^2.0.5",
+    "fs-js": "^1.0.6"
   }
 }

@@ -11,7 +11,6 @@ import { InputNumber } from 'primereact/inputnumber';
 import { MultiSelect } from "primereact/multiselect";
 import { Button } from "primereact/button";
 import { Dropdown } from 'primereact/dropdown';
-import { TriStateCheckbox } from 'primereact/tristatecheckbox';
 import { MultiStateCheckbox } from 'primereact/multistatecheckbox';
 import { Calendar } from 'primereact/calendar';
 import { Dialog } from 'primereact/dialog';
@@ -21,7 +20,7 @@ import { Menu } from 'primereact/menu';
 import { Image } from 'primereact/image';
 import changeDateType from './../../function-helpers/changeDateType'
 import Preloader from "../Common/Preloader/Preloader";
-import { makeCommitment } from "../../function-helpers/docx";
+import { makeCommitment, makeQRCodeWordDocx } from "../../function-helpers/docx";
 
 const TableCraft = (props) => {
   let {
@@ -622,7 +621,6 @@ window.onresize = function (event) {
     } catch (error) {
       return require(`../../img/qr_code/no_data.png`)
     }
-    
   }
   const imgBodyTemplate = (rowData) => {
     return <Image src={getQrCodeImg(rowData.qr_code)} zoomSrc={getQrCodeImg(rowData.qr_code)} alt="No Image" width="60" height="60" preview />
@@ -815,6 +813,8 @@ window.onresize = function (event) {
 
   const makeCommitmentHelper = () => makeCommitment(selectedItems)
 
+  const makeQRCodeWordDocxHelper = () => makeQRCodeWordDocx(selectedItems)
+
   const userMenuItems = [
     {
       command: () => {
@@ -855,6 +855,11 @@ window.onresize = function (event) {
       label: "Export Commitment",
       icon: "pi pi-file-word",
       command: makeCommitmentHelper,
+    },
+    {
+      label: "Export QR-Codes",
+      icon: "pi pi-qrcode",
+      command: makeQRCodeWordDocxHelper,
     },
     {
       label: "Export EXCEL",
@@ -1534,7 +1539,8 @@ window.onresize = function (event) {
         removableSort
         scrollable
         selectionMode="multiple"
-        showSelectAll={false}
+        showSelectAll={true}
+        selectionPageOnly={true}
         selection={selectedItems}
         onSelectionChange={(e) => setSelectedItems(e.value)}
         scrollHeight={getTableHeight}
@@ -1542,6 +1548,7 @@ window.onresize = function (event) {
         stateKey="inventory-sodfu-state-table"
         style={{ minWidth: "50rem" }}
       >
+        <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
         {visibleColumns.map((col, i) => (
           <Column
             key={col.field}
@@ -1554,7 +1561,7 @@ window.onresize = function (event) {
             filterElement={getColumnFilterElement(col)}
             filterApply={col.dataType == "boolean" ? filterApplyTemplate : null}
             showFilterMatchModes={col.showFilterMenu}
-            selectionMode={col.field == "id" ? "multiple" : null }
+            // selectionMode={col.field == "id" ? "multiple" : null }
             style={{ minWidth: col.width }}
             body={getColumnBody(col)}
           />

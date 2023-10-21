@@ -1,7 +1,10 @@
 {
   "files": {
     "main.css": "/static/css/main.aba3b935.css",
-    "main.js": "/static/js/main.d0d34fc5.js",
+    "main.js": "/static/js/main.b76b6fc0.js",
+    "static/js/498.a45dbc1a.chunk.js": "/static/js/498.a45dbc1a.chunk.js",
+    "static/js/703.a54af031.chunk.js": "/static/js/703.a54af031.chunk.js",
+    "static/js/513.9ff28090.chunk.js": "/static/js/513.9ff28090.chunk.js",
     "static/js/787.423df0db.chunk.js": "/static/js/787.423df0db.chunk.js",
     "static/media/primeicons.svg": "/static/media/primeicons.e1441b135b3ca9ad643c.svg",
     "static/media/030008.png": "/static/media/030008.f535535fd9c8f64ae087.png",
@@ -186,11 +189,14 @@
     "static/media/logoInfinity_3.svg": "/static/media/logoInfinity_3.8247a10b09987a6fa817b51cbb5fba43.svg",
     "index.html": "/index.html",
     "main.aba3b935.css.map": "/static/css/main.aba3b935.css.map",
-    "main.d0d34fc5.js.map": "/static/js/main.d0d34fc5.js.map",
+    "main.b76b6fc0.js.map": "/static/js/main.b76b6fc0.js.map",
+    "498.a45dbc1a.chunk.js.map": "/static/js/498.a45dbc1a.chunk.js.map",
+    "703.a54af031.chunk.js.map": "/static/js/703.a54af031.chunk.js.map",
+    "513.9ff28090.chunk.js.map": "/static/js/513.9ff28090.chunk.js.map",
     "787.423df0db.chunk.js.map": "/static/js/787.423df0db.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.aba3b935.css",
-    "static/js/main.d0d34fc5.js"
+    "static/js/main.b76b6fc0.js"
   ]
 }
