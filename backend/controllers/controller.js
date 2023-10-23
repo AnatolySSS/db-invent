@@ -67,21 +67,24 @@ export const DataController = {
           }
 
           Object.keys(v).forEach((element) => {
-            if (element.includes("date")) {
-              if (v[element] !== null) {
-                v[element] = new Date(v[element]).toLocaleString("ru-RU", {
-                  day: "2-digit",
-                  month: "2-digit",
-                  year: "numeric",
-                  timeZone: "Europe/Moscow",
-                });
-                v[element] = changeDateType(v[element]);
-                v[element] = new Date(v[element]);
+            if (element != "createdAt" && element != "updatedAt") {
+              if (element.includes("date")) {
+                if (v[element] !== null) {
+                  v[element] = new Date(v[element]).toLocaleString("ru-RU", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                    timeZone: "Europe/Moscow",
+                  });
+                  v[element] = changeDateType(v[element]);
+                  v[element] = new Date(v[element]);
+                }
               }
             }
           });
           return v;
         });
+       
         connection.query(
           `SELECT * FROM ${tableMetaName}`,
           (err, rows, fields) => {
@@ -216,7 +219,7 @@ export const DataController = {
   },
 
   deleteData(request, responce) {
-    console.log(request.body);
+    // console.log(request.body);
     try {
       let { type, rowId } = request.body;
       let tableName;

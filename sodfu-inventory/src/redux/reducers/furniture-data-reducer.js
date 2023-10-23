@@ -27,6 +27,7 @@ let initialState = {
     was_deleted: { value: null, matchMode: FilterMatchMode.EQUALS },
     deleted_date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
     deleted_grounds: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] },
+    updatedAt: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
   },
   uploadedStatus: false,
   name: "",
@@ -69,9 +70,10 @@ const toggleIsFetching = (isFetching) => ({ type: TOGGLE_IS_FETCHING, isFetching
 const changeDateFormat = (data) => {
   data.lib = data.lib.map((v) => {
     Object.keys(v).forEach((element) => {
-      if (element.includes("date")) {
-        if (v[element] !== null) {
-          v[element] = new Date(v[element]);
+      if (element != "createdAt" && element != "updatedAt") {
+        if (element.includes("date")) {
+          if (v[element] !== null) {
+            v[element] = new Date(v[element]);
             v[element] = new Date(v[element]).toLocaleString("ru-RU", {
               day: "2-digit",
               month: "2-digit",
@@ -79,13 +81,18 @@ const changeDateFormat = (data) => {
               timeZone: "Europe/Moscow",
             });
             v[element] = changeDateType(v[element]);
-            v[element] = Date.parse(v[element] + 'T00:00:00')
+            v[element] = Date.parse(v[element] + "T00:00:00");
             v[element] = new Date(v[element]);
+          }
+        }
+      } else {
+        if (v[element] != null) {
+          v[element] = new Date(v[element]);
         }
       }
-    })
+    });
     return v;
-  })
+  });
   return data
 };
 

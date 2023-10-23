@@ -53,7 +53,7 @@ export const updateData = (tableName, rowData, rowId) => {
   let query = ``;
   let columnNames = ``;
   for (let j = 0; j < Object.values(rowData).length; j++) {
-    if (Object.keys(rowData)[j] !== "id") {
+    if (Object.keys(rowData)[j] !== "id" && Object.keys(rowData)[j] !== "createdAt") {
         if (Object.keys(rowData)[j] == "is_workplace" || Object.keys(rowData)[j] == "was_deleted" || Object.values(rowData)[j] == null) {
             columnNames = `${columnNames}${Object.keys(rowData)[j]} = ${Object.values(rowData)[j]}, `
         } else {

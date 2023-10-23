@@ -155,14 +155,19 @@ const TableCraft = (props) => {
         if (_item[element] === "") {
           _item[element] = null 
         }
-        if (element.includes("date")) {
-          if (_item[element] !== null) {
-            _item[element] = formatDate(_item[element]);
-            _item[element] = changeDateType(_item[element]);
+        if (element != "createdAt" && element != "updatedAt") {
+          if (element.includes("date")) {
+            if (_item[element] !== null) {
+              _item[element] = formatDate(_item[element]);
+              _item[element] = changeDateType(_item[element]);
+            }
           }
         }
       });
 
+      //Присвоение переменной updatedAt текущего даты и времени в формате sql (местное время)
+      //https://stackoverflow.com/questions/10830357/javascript-toisostring-ignores-timezone-offset
+      _item.updatedAt = new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000).toISOString().slice(0, 19).replace('T', ' ');
       if (_item.id) {
         updateData(_item, _item.id);
         toast.current.show({
@@ -173,6 +178,7 @@ const TableCraft = (props) => {
         });
       } else {
         _item.id = createId();
+        _item.createdAt = new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000).toISOString().slice(0, 19).replace('T', ' ');
         addData(_item);
         toast.current.show({
           severity: "success",
@@ -229,7 +235,6 @@ const TableCraft = (props) => {
     }
     //добавление к массиву пропущенных значений следующего за последним значения
     missing.push(Math.max(...id_array) + 1)
-    console.log(missing);
     return missing[0];
   };
 
@@ -345,8 +350,10 @@ window.onresize = function (event) {
             return dateBodyTemplate("incoming_date");
           case "last_setup_date":
             return dateBodyTemplate("last_setup_date");
-            case "deleted_date":
+          case "deleted_date":
             return dateBodyTemplate("deleted_date");
+          case "updatedAt":
+            return dateBodyTemplate("updatedAt");
           default:
             break;
         }
@@ -529,9 +536,19 @@ window.onresize = function (event) {
   //   updateData(newData, newData.id);
   // };
 
-  const formatDate = (date) => {
-    date
-      ? (date = new Date(date).toLocaleString("ru-RU", {
+  const formatDate = (date, dateType) => {
+    date 
+      ? dateType == "updatedAt"
+        ? (date = new Date(date).toLocaleString("ru-RU", {
+          second: "2-digit",
+          minute: "2-digit",
+          hour: "2-digit",
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          timeZone: "Europe/Moscow",
+        }))
+        : (date = new Date(date).toLocaleString("ru-RU", {
           day: "2-digit",
           month: "2-digit",
           year: "numeric",
@@ -649,7 +666,7 @@ window.onresize = function (event) {
 
   const dateBodyTemplate = (dateType) => {
     return (rowData) => {
-      return formatDate(rowData[dateType]);
+      return formatDate(rowData[dateType], dateType);
     };
   };
 
@@ -668,7 +685,7 @@ window.onresize = function (event) {
     }
   }
   const imgBodyTemplate = (rowData) => {
-    return <Image src={getQrCodeImg(rowData.qr_code)} zoomSrc={getQrCodeImg(rowData.qr_code)} alt="No Image" width="60" height="60" preview />
+    return <Image src={getQrCodeImg(rowData.qr_code)} zoomSrc={getQrCodeImg(rowData.qr_code)} alt="No Image" width="60" height="70" preview />
   };
   
 
@@ -1593,14 +1610,14 @@ window.onresize = function (event) {
         stateStorage="session"
         stateKey="inventory-sodfu-state-table"
         // lazy
-        totalRecords={totalRecords}
-        first={lazyState.first}
-        onPage={onPage}
-        onSort={onSort}
-        sortField={lazyState.sortField}
-        sortOrder={lazyState.sortOrder}
-        onFilter={onFilter}
-        loading={loading}
+        // totalRecords={totalRecords}
+        // first={lazyState.first}
+        // onPage={onPage}
+        // onSort={onSort}
+        // sortField={lazyState.sortField}
+        // sortOrder={lazyState.sortOrder}
+        // onFilter={onFilter}
+        // loading={loading}
         style={{ minWidth: "50rem" }}
       >
         <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
