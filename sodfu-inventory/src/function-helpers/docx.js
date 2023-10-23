@@ -923,8 +923,8 @@ export function makeQRCodeWordDocx(selectedItems) {
   function addImagetoPDF(img) {
     let x
     isEven(x_index) ? x = 100 : x = 10
-    doc.addImage(img, "png", x, y, 80, 80, "", "MEDIUM");
-    isEven(x_index) ? y+=100 : y = y
+    doc.addImage(img, "png", x, y, 80, 90, "", "MEDIUM");
+    isEven(x_index) ? y+=95 : y = y
     x_index++
   }
 
