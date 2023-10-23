@@ -20,7 +20,8 @@ import { Menu } from 'primereact/menu';
 import { Image } from 'primereact/image';
 import changeDateType from './../../function-helpers/changeDateType'
 import Preloader from "../Common/Preloader/Preloader";
-import { makeCommitment, makeQRCodeWordDocx } from "../../function-helpers/docx";
+import { makeCommitment } from "../../function-helpers/makeCommitment";
+import { makeQRCode } from "../../function-helpers/makeQRCode";
 
 const TableCraft = (props) => {
   let {
@@ -53,6 +54,50 @@ const TableCraft = (props) => {
     workplace_type,
     globalFilterColumns;
   emptyItem = {};
+
+  const [totalRecords, setTotalRecords] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [lazyState, setlazyState] = useState({
+    first: 0,
+    rows: 10,
+    page: 1,
+    sortField: null,
+    sortOrder: null,
+    filters: filters,
+  });
+
+  const onPage = (event) => {
+    setlazyState(event);
+  };
+
+  const onSort = (event) => {
+    setlazyState(event);
+  };
+
+  const onFilter = (event) => {
+    event["first"] = 0;
+    setlazyState(event);
+  };
+
+  useEffect(() => {
+    loadLazyData();
+  }, [lazyState]);
+
+  const loadLazyData = () => {
+    // setLoading(true);
+    // requestData();
+
+    //imitate delay of a backend call
+    // networkTimeout = setTimeout(() => {
+    //   CustomerService.getCustomers({
+    //     lazyEvent: JSON.stringify(lazyState),
+    //   }).then((data) => {
+    //     setTotalRecords(data.totalRecords);
+    //     setCustomers(data.customers);
+    //     setLoading(false);
+    //   });
+    // }, Math.random() * 1000 + 250);
+  };
 
   if (values) {
     // emptyItem = columns.map(obj => obj.field)
@@ -813,7 +858,7 @@ window.onresize = function (event) {
 
   const makeCommitmentHelper = () => makeCommitment(selectedItems)
 
-  const makeQRCodeWordDocxHelper = () => makeQRCodeWordDocx(selectedItems)
+  const makeQRCodeHelper = () => makeQRCode(selectedItems)
 
   const userMenuItems = [
     {
@@ -859,7 +904,7 @@ window.onresize = function (event) {
     {
       label: "Export QR-Codes",
       icon: "pi pi-qrcode",
-      command: makeQRCodeWordDocxHelper,
+      command: makeQRCodeHelper,
     },
     {
       label: "Export EXCEL",
@@ -1525,6 +1570,7 @@ window.onresize = function (event) {
       <DataTable
         value={data}
         filters={filters}
+        // filters={lazyState.filters}
         filterDisplay="menu"
         globalFilterFields={globalFilterColumns}
         dataKey="id"
@@ -1546,6 +1592,15 @@ window.onresize = function (event) {
         scrollHeight={getTableHeight}
         stateStorage="session"
         stateKey="inventory-sodfu-state-table"
+        // lazy
+        totalRecords={totalRecords}
+        first={lazyState.first}
+        onPage={onPage}
+        onSort={onSort}
+        sortField={lazyState.sortField}
+        sortOrder={lazyState.sortOrder}
+        onFilter={onFilter}
+        loading={loading}
         style={{ minWidth: "50rem" }}
       >
         <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
