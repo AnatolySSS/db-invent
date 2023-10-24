@@ -17,6 +17,7 @@ let mapStateToProps = (state) => {
     message: state.furnitureData.message,
     userAuth: state.auth,
     isFetching: state.furnitureData.isFetching,
+    validationStatus: state.furnitureData.validationStatus,
   };
 };
 

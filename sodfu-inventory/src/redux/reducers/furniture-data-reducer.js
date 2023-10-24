@@ -5,6 +5,7 @@ import changeDateType from "../../function-helpers/changeDateType";
 const SET_DATA = "sodfu-inventory/furniture-download-reducer/SET_DATA";
 const SET_UPLOAD_STATUS = "sodfu-inventory/furniture-download-reducer/SET_UPLOAD_STATUS";
 const TOGGLE_IS_FETCHING = "sodfu-inventory/furniture-download-reducer/TOGGLE_IS_FETCHING";
+const SET_VALIDATION_STATUS = "sodfu-inventory/furniture-download-reducer/SET_VALIDATION_STATUS";
 
 let initialState = {
   columns: [],
@@ -33,6 +34,7 @@ let initialState = {
   name: "",
   message: "",
   isFetching: false,
+  validationStatus: {}
 };
 
 const furnitureDataReducer = (state = initialState, action) => {
@@ -57,6 +59,11 @@ const furnitureDataReducer = (state = initialState, action) => {
         ...state,
         isFetching: action.isFetching,
       };
+      case SET_VALIDATION_STATUS:
+      return {
+        ...state,
+        validationStatus: { ...action.validationStatus },
+      };
     default:
       return state;
   }
@@ -65,6 +72,7 @@ const furnitureDataReducer = (state = initialState, action) => {
 const setData = (data, message) => ({ type: SET_DATA, data, message });
 const setUploadStatus = (status) => ({ type: SET_UPLOAD_STATUS, uploadedStatus: status });
 const toggleIsFetching = (isFetching) => ({ type: TOGGLE_IS_FETCHING, isFetching: isFetching });
+const setValidationStatus = (validationStatus) => ({ type: SET_VALIDATION_STATUS, validationStatus: validationStatus });
 
 //Изменение формата даты со строки на объект Date (необходимо для правильной фильтрации)
 const changeDateFormat = (data) => {
@@ -134,6 +142,7 @@ export const addData = (rowData) => {
   return (dispatch) => {
     dispatch(toggleIsFetching(true));
     DataAPI.addData("furniture", rowData).then((data) => {
+      dispatch(setValidationStatus(data));
       DataAPI.getData("furniture").then((data) => {
         dispatch(toggleIsFetching(false));
         dispatch(setData(changeDateFormat(data)));

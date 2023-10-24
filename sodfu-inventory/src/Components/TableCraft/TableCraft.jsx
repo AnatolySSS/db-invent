@@ -38,6 +38,7 @@ const TableCraft = (props) => {
     logout,
     userAuth,
     isFetching,
+    validationStatus,
   } = props;
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filters, setFilters] = useState(props.filters);
@@ -129,19 +130,13 @@ const TableCraft = (props) => {
         toast.current.show({
           severity: "success",
           summary: "Successful",
-          detail: "Item Updated",
+          detail: "Объект успешно обновлен",
           life: 3000,
         });
       } else {
         _item.id = createId();
         _item.createdAt = new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000).toISOString().slice(0, 19).replace('T', ' ');
         addData(_item);
-        toast.current.show({
-          severity: "success",
-          summary: "Successful",
-          detail: "New Item Created",
-          life: 3000,
-        });
       }
       setItemDialog(false);
       setItem(emptyItem);
@@ -163,9 +158,9 @@ const TableCraft = (props) => {
     deleteData(_item.id)
     
     toast.current.show({
-      severity: "success",
-      summary: "Successful",
-      detail: `${item.name} Deleted`,
+      severity: "warn",
+      summary: "Warning",
+      detail: `${item.name} успешно удален`,
       life: 3000,
     });
     setDeleteItemDialog(false);
@@ -214,6 +209,34 @@ const TableCraft = (props) => {
   useEffect(() => {
     setVisibleColumns(columns);
   }, [dataWasReceived]);
+
+  useEffect(() => {
+    console.log(validationStatus);
+    if (validationStatus.inventary_number) {
+      toast.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: `Данный инвентарный номер уже имеется в базе данных`,
+        life: 3000,
+      });
+    } else if (validationStatus.qr_code) {
+      toast.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: `Данный qr-code уже имеется в базе данных`,
+        life: 3000,
+      });
+    } else if (validationStatus.inventary_number === false && validationStatus.qr_code === false) {
+      toast.current.show({
+        severity: "success",
+        summary: "Successful",
+        detail: "Новый объект добавлен в базу данных",
+        life: 3000,
+      });
+    }
+  }, [validationStatus]);
+
+        
 
 const getTableHeight = () => {
   try {
@@ -1447,6 +1470,7 @@ window.onresize = function (event) {
   return (
     isFetching 
     ? <div className="h-screen flex align-items-center justify-content-center">
+      <Toast ref={toast} />
         <div className="flex flex-column">
           <Preloader />
         </div>
