@@ -41,7 +41,6 @@ const YearInventoryCraft = (props) => {
     tableName,
     // year,
   } = props;
-  console.log(data);
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filters, setFilters] = useState(props.filters);
   const [globalFilterValue, setGlobalFilterValue] = useState("");

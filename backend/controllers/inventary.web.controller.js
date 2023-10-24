@@ -64,81 +64,149 @@ export const InventaryWebController = {
           break;
       }
 
-      connection.query(`SELECT * FROM ${tableLibName}`, (err, rows, fields) => {
+      //Получение данных из таблицы инвентаризационной ведомости по году
+      connection.query(`SELECT qr_code, user, scan_date, checked, location FROM inv_${year}_${tableName}`,(err, rows, fields) => {
         if (err) throw err;
-        data.lib = Object.values(JSON.parse(JSON.stringify(rows)));
-        //Преобразование TINYINT в BOOLEAN
-        
-        data.lib = data.lib.map((v) => {
-          connection.query(`SELECT user, scan_date, checked, location FROM inv_${year}_${tableName} WHERE qr_code=${v.qr_code}` , (err, rows, fields) => {
-            // console.log(rows)
-            if (err) throw err;
-            
-            if (rows[0]) {
-              v.user = rows[0].user
-              v.scan_date = rows[0].scan_date
-              v.location = rows[0].location
-              switch (rows[0].checked) {
-                case 1:
-                  v.checked = true;
-                  break;
-                case null:
-                  v.checked = false;
-                  break;
-                default:
-                  break;
-              }
-            } else {
-              v.checked = false
-            }
-            
-          })
-          switch (v.is_workplace) {
-            case 1:
-              v.is_workplace = true;
-              break;
-            case 0:
-              v.is_workplace = false;
-              break;
-            case null:
-              v.is_workplace = "null";
-              break;
-            default:
-              break;
-          }
-          switch (v.was_deleted) {
-            case 1:
-              v.was_deleted = true;
-              break;
-            case 0:
-              v.was_deleted = false;
-              break;
-            case null:
-              v.was_deleted = "null";
-              break;
-            default:
-              break;
-          }
+        // data.lib = Object.values(JSON.parse(JSON.stringify(rows)));
+        // //Преобразование TINYINT в BOOLEAN
+        // data.lib = data.lib.map((v) => {
+        //   connection.query(`SELECT qr_code, user, scan_date, checked, location FROM inv_${year}_${tableName} WHERE qr_code=${v.qr_code}` , (err, rows, fields) => {
+        //     // console.log(rows)
+        //     if (err) throw err;
 
-          Object.keys(v).forEach((element) => {
-            if (element.includes("date")) {
-              if (v[element] !== null) {
-                v[element] = new Date(v[element]).toLocaleString("ru-RU", {
-                  day: "2-digit",
-                  month: "2-digit",
-                  year: "numeric",
-                  timeZone: "Europe/Moscow",
+        //     if (rows[0]) {
+        //       v.user = rows[0].user
+        //       v.scan_date = rows[0].scan_date
+        //       v.location = rows[0].location
+        //       switch (rows[0].checked) {
+        //         case 1:
+        //           v.checked = true;
+        //           break;
+        //         case null:
+        //           v.checked = false;
+        //           break;
+        //         default:
+        //           break;
+        //       }
+        //     } else {
+        //       v.checked = false
+        //     }
+            
+        //   })
+        //   switch (v.is_workplace) {
+        //     case 1:
+        //       v.is_workplace = true;
+        //       break;
+        //     case 0:
+        //       v.is_workplace = false;
+        //       break;
+        //     case null:
+        //       v.is_workplace = "null";
+        //       break;
+        //     default:
+        //       break;
+        //   }
+        //   switch (v.was_deleted) {
+        //     case 1:
+        //       v.was_deleted = true;
+        //       break;
+        //     case 0:
+        //       v.was_deleted = false;
+        //       break;
+        //     case null:
+        //       v.was_deleted = "null";
+        //       break;
+        //     default:
+        //       break;
+        //   }
+
+        //   Object.keys(v).forEach((element) => {
+        //     if (element.includes("date")) {
+        //       if (v[element] !== null) {
+        //         v[element] = new Date(v[element]).toLocaleString("ru-RU", {
+        //           day: "2-digit",
+        //           month: "2-digit",
+        //           year: "numeric",
+        //           timeZone: "Europe/Moscow",
+        //         });
+        //         v[element] = changeDateType(v[element]);
+        //         v[element] = new Date(v[element]);
+        //       }
+        //     }
+        //   });
+        //   return v;
+         
+        // });
+        data.lib = rows.map((v) => {
+          //Соотнесение строк из ведомости по году с общей таблицей
+          connection.query(`SELECT * FROM ${tableLibName} WHERE qr_code=${v.qr_code}`,(err2, rows2, fields2) => {
+            if (rows2[0]) {
+              //Добавление значений из общей таблицы
+                Object.keys(rows2[0]).map((key, index) => v[key] = Object.values(rows2[0])[index]);
+                //Изменение значения checked
+                switch (v.checked) {
+                  case 1:
+                    v.checked = true;
+                    break;
+                  case null:
+                    v.checked = false;
+                    break;
+                  default:
+                    break;
+                }
+                //Изменение значения is_workplace
+                switch (v.is_workplace) {
+                  case 1:
+                    v.is_workplace = true;
+                    break;
+                  case 0:
+                    v.is_workplace = false;
+                    break;
+                  case null:
+                    v.is_workplace = "null";
+                    break;
+                  default:
+                    break;
+                }
+                //Изменение значения was_deleted
+                switch (v.was_deleted) {
+                  case 1:
+                    v.was_deleted = true;
+                    break;
+                  case 0:
+                    v.was_deleted = false;
+                    break;
+                  case null:
+                    v.was_deleted = "null";
+                    break;
+                  default:
+                    break;
+                }
+                //Форматирование даты
+                Object.keys(v).forEach((element) => {
+                  if (element.includes("date")) {
+                    if (v[element] !== null) {
+                      v[element] = new Date(v[element]).toLocaleString(
+                        "ru-RU",
+                        {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                          timeZone: "Europe/Moscow",
+                        }
+                      );
+                      v[element] = changeDateType(v[element]);
+                      v[element] = new Date(v[element]);
+                    }
+                  }
                 });
-                v[element] = changeDateType(v[element]);
-                v[element] = new Date(v[element]);
               }
-            }
-          });
+            })
           return v;
         });
-        connection.query(
-          `SELECT * FROM ${tableMetaName}`,
-          (err, rows, fields) => {
+        
+        //Получение столбцов
+        connection.query(`SELECT * FROM ${tableMetaName}`,(err, rows, fields) => {
             data.columns = Object.values(JSON.parse(JSON.stringify(rows)));
             data.columns = data.columns.map((v) => {
               if (v.showFilterMenu == 1) {
@@ -178,23 +246,16 @@ export const InventaryWebController = {
               dbFieldType: "date",
               editingType: "date",
             });
-            // data.columns.push({
-            //   id: 21,
-            //   field: "checked",
-            //   header: "Проверено",
-            //   width: "4rem",
-            //   showFilterMenu: false,
-            //   dataType: "boolean",
-            //   dbFieldType: "boolean",
-            //   editingType: "checkbox",
-            // })
+
+            //Удаление столбцов createdAt и updatedAt
+            data.columns = data.columns.filter((col) => (col.field != "createdAt" && col.field != "updatedAt"))
+
             let workplace_type = "";
             if (tableName == "it") {
               workplace_type = ", workplace_type ";
             }
-            connection.query(
-              `SELECT type, serviceable, location ${workplace_type}FROM ${tableValuesName}`,
-              (err, rows, fields) => {
+            //Получение значений для списков
+            connection.query(`SELECT type, serviceable, location ${workplace_type}FROM ${tableValuesName}`,(err, rows, fields) => {
                 data.values = Object.values(JSON.parse(JSON.stringify(rows)));
                 data.values = data.values.map((v) => {
                   if (v.showFilterMenu == 1) {
