@@ -55,50 +55,6 @@ const TableCraft = (props) => {
     globalFilterColumns;
   emptyItem = {};
 
-  const [totalRecords, setTotalRecords] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [lazyState, setlazyState] = useState({
-    first: 0,
-    rows: 10,
-    page: 1,
-    sortField: null,
-    sortOrder: null,
-    filters: filters,
-  });
-
-  const onPage = (event) => {
-    setlazyState(event);
-  };
-
-  const onSort = (event) => {
-    setlazyState(event);
-  };
-
-  const onFilter = (event) => {
-    event["first"] = 0;
-    setlazyState(event);
-  };
-
-  useEffect(() => {
-    loadLazyData();
-  }, [lazyState]);
-
-  const loadLazyData = () => {
-    // setLoading(true);
-    // requestData();
-
-    //imitate delay of a backend call
-    // networkTimeout = setTimeout(() => {
-    //   CustomerService.getCustomers({
-    //     lazyEvent: JSON.stringify(lazyState),
-    //   }).then((data) => {
-    //     setTotalRecords(data.totalRecords);
-    //     setCustomers(data.customers);
-    //     setLoading(false);
-    //   });
-    // }, Math.random() * 1000 + 250);
-  };
-
   if (values) {
     // emptyItem = columns.map(obj => obj.field)
     location = values.map((obj) => obj.location).filter((obj) => obj !== null);
@@ -254,15 +210,6 @@ const TableCraft = (props) => {
 
     }
   }, [isFetching]);
-
-  // useEffect(() => {
-  //   try {
-  //     console.log(selectedItems);
-  //     makeCommitment(selectedItems)
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }, [selectedItems]);
 
   useEffect(() => {
     setVisibleColumns(columns);
@@ -518,24 +465,6 @@ window.onresize = function (event) {
     setGlobalFilterValue(value);
   };
 
-  // const onRowEditComplete = (e) => {
-  //   let _data = [...data];
-  //   let { newData, index } = e;
-
-  //   _data[index] = newData;
-
-  //   Object.keys(newData).forEach((element) => {
-  //     if (element.includes("date")) {
-  //       if (newData[element] !== null) {
-  //         newData[element] = formatDate(newData[element]);
-  //         newData[element] = changeDateType(newData[element]);
-  //       }
-  //     }
-  //   });
-
-  //   updateData(newData, newData.id);
-  // };
-
   const formatDate = (date, dateType) => {
     date 
       ? dateType == "updatedAt"
@@ -557,65 +486,6 @@ window.onresize = function (event) {
       : (date = null);
     return date;
   };
-
-  //EDITORS
-  // const textEditor = (options) => {
-  //   return (
-  //     <InputText
-  //       type="text"
-  //       value={options.value || ""}
-  //       onChange={(e) => options.editorCallback(e.target.value)}
-  //     />
-  //   );
-  // };
-
-  // const dropdownEditor = (options) => {
-  //   return (
-  //     <Dropdown
-  //       value={options.value}
-  //       options={getDropdownOptions(options.field)}
-  //       onChange={(e) => options.editorCallback(e.value)}
-  //       // placeholder={`Select ${options.field}`}
-  //       placeholder={options.value}
-  //       itemTemplate={(option) => {
-  //         return option; //<Tag value={option} severity={getSeverity(option)}></Tag>;
-  //       }}
-  //     />
-  //   );
-  // };
-
-  // const checkboxEditor = (options) => {
-  //   return (
-  //     <TriStateCheckbox
-  //       value={options.value}
-  //       onChange={(e) => options.editorCallback(e.target.value)}
-  //     />
-  //   );
-  // };
-
-  // const priceEditor = (options) => {
-  //   return (
-  //     <InputNumber
-  //       value={options.value}
-  //       onValueChange={(e) => options.editorCallback(e.value)}
-  //       mode="currency"
-  //       currency="RUB"
-  //       locale="ru-RU"
-  //     />
-  //   );
-  // };
-
-  // const dateEditor = (options) => {
-  //   return (
-  //     <Calendar
-  //       value={formatDate(options.value)}
-  //       onChange={(e) => options.editorCallback(e.value)}
-  //       dateFormat="dd.mm.yy"
-  //       placeholder={formatDate(options.value)}
-  //       mask="99.99.9999"
-  //     />
-  //   );
-  // };
 
   const filterApplyTemplate = (options) => {
     return (
@@ -687,7 +557,6 @@ window.onresize = function (event) {
   const imgBodyTemplate = (rowData) => {
     return <Image src={getQrCodeImg(rowData.qr_code)} zoomSrc={getQrCodeImg(rowData.qr_code)} alt="No Image" width="60" height="70" preview />
   };
-  
 
   //FilterTemplates
   const dropdownFilterTemplate = (dropdownType) => {
@@ -1587,7 +1456,6 @@ window.onresize = function (event) {
       <DataTable
         value={data}
         filters={filters}
-        // filters={lazyState.filters}
         filterDisplay="menu"
         globalFilterFields={globalFilterColumns}
         dataKey="id"
@@ -1609,15 +1477,6 @@ window.onresize = function (event) {
         scrollHeight={getTableHeight}
         stateStorage="session"
         stateKey="inventory-sodfu-state-table"
-        // lazy
-        // totalRecords={totalRecords}
-        // first={lazyState.first}
-        // onPage={onPage}
-        // onSort={onSort}
-        // sortField={lazyState.sortField}
-        // sortOrder={lazyState.sortOrder}
-        // onFilter={onFilter}
-        // loading={loading}
         style={{ minWidth: "50rem" }}
       >
         <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
