@@ -226,14 +226,14 @@ const TableCraft = (props) => {
         detail: `Данный qr-code уже имеется в базе данных`,
         life: 3000,
       });
-    } else if (validationStatus.inventary_number === false && validationStatus.qr_code === false) {
-      toast.current.show({
-        severity: "success",
-        summary: "Successful",
-        detail: "Новый объект добавлен в базу данных",
-        life: 3000,
-      });
-    }
+    } //else if (validationStatus.inventary_number === false && validationStatus.qr_code === false) {
+    //   toast.current.show({
+    //     severity: "success",
+    //     summary: "Successful",
+    //     detail: "Новый объект добавлен в базу данных",
+    //     life: 3000,
+    //   });
+    // }
   }, [validationStatus]);
 
         
