@@ -104,7 +104,8 @@ const TableCraft = (props) => {
   };
 
   const saveItem = () => {
-    if (item.name.trim()) {
+
+    if (item.name != null) {
       let _item = { ...item };
 
       Object.keys(_item).forEach((element) => {
@@ -140,6 +141,13 @@ const TableCraft = (props) => {
       }
       setItemDialog(false);
       setItem(emptyItem);
+    } else {
+      toast.current.show({
+          severity: "warn",
+          summary: "Warning",
+          detail: "Необходимо ввести имя объекта",
+          life: 3000,
+        });
     }
   };
 
@@ -211,7 +219,6 @@ const TableCraft = (props) => {
   }, [dataWasReceived]);
 
   useEffect(() => {
-    console.log(validationStatus);
     if (validationStatus.inventary_number) {
       toast.current.show({
         severity: "error",
