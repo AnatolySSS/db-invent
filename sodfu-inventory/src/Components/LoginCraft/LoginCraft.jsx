@@ -11,6 +11,7 @@ import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import { Button } from "primereact/button";
 import { Message } from 'primereact/message'
+import { Image } from 'primereact/image';
 
 const LoginSchema = Yup.object().shape({
   login: Yup.string()
@@ -129,7 +130,11 @@ const LoginCraft = (props) => {
 
   return (
     <div className="h-screen flex align-items-center justify-content-center">
+      
       <div ref={messageRef} className="flex flex-column">
+      <div className="flex justify-content-center mb-3">
+        <Image src={require("./../../img/logo.png")} width="203" height="137" alt="No Image" />
+      </div>
         <Formik
           initialValues={{
             login: "",

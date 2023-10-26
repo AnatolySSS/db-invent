@@ -1507,7 +1507,7 @@ window.onresize = function (event) {
         onSelectionChange={(e) => setSelectedItems(e.value)}
         scrollHeight={getTableHeight}
         stateStorage="session"
-        stateKey="inventory-sodfu-state-table"
+        stateKey={name == "Оборудование" ? "inventory-sodfu-it-state" : "inventory-sodfu-furniture-state"}
         style={{ minWidth: "50rem" }}
       >
         <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>

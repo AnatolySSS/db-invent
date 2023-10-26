@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.aba3b935.css",
-    "main.js": "/static/js/main.5689fad6.js",
+    "main.js": "/static/js/main.ddad0b80.js",
     "static/js/498.a45dbc1a.chunk.js": "/static/js/498.a45dbc1a.chunk.js",
     "static/js/703.a54af031.chunk.js": "/static/js/703.a54af031.chunk.js",
     "static/js/513.9ff28090.chunk.js": "/static/js/513.9ff28090.chunk.js",
@@ -183,13 +183,14 @@
     "static/media/primeicons.ttf": "/static/media/primeicons.ea5358601d0a3fd6670b.ttf",
     "static/media/no_data.png": "/static/media/no_data.4d8829580a248a536b01.png",
     "static/media/primeicons.woff2": "/static/media/primeicons.78172950b335ccdb94e2.woff2",
+    "static/media/logo.png": "/static/media/logo.a2555732ab0341af7a6b.png",
     "static/media/chupligin.png": "/static/media/chupligin.39a0485159ef4e9e0d6c.png",
     "static/media/andreeva.png": "/static/media/andreeva.a7f7ca1e4c1a296add68.png",
     "static/media/color.png": "/static/media/color.6441e63a57ccc5105bad.png",
     "static/media/logoInfinity_3.svg": "/static/media/logoInfinity_3.8247a10b09987a6fa817b51cbb5fba43.svg",
     "index.html": "/index.html",
     "main.aba3b935.css.map": "/static/css/main.aba3b935.css.map",
-    "main.5689fad6.js.map": "/static/js/main.5689fad6.js.map",
+    "main.ddad0b80.js.map": "/static/js/main.ddad0b80.js.map",
     "498.a45dbc1a.chunk.js.map": "/static/js/498.a45dbc1a.chunk.js.map",
     "703.a54af031.chunk.js.map": "/static/js/703.a54af031.chunk.js.map",
     "513.9ff28090.chunk.js.map": "/static/js/513.9ff28090.chunk.js.map",
@@ -197,6 +198,6 @@
   },
   "entrypoints": [
     "static/css/main.aba3b935.css",
-    "static/js/main.5689fad6.js"
+    "static/js/main.ddad0b80.js"
   ]
 }
