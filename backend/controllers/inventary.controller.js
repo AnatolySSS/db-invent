@@ -1,10 +1,13 @@
 import db from "../models/index.js";
 const CurrentYearInventaryIt = db.currentYearInventaryIt
 const CurrentYearInventaryFurniture = db.currentYearInventaryFurniture
+const PreviousYearInventaryIt = db.previousYearInventaryIt
+const PreviousYearInventaryFurniture = db.previousYearInventaryFurniture
 const libDataIt = db.libDataIt
 const valuesDataIt = db.valuesDataIt
 const libDataFurniture = db.libDataFurniture
 import setConnection from "../config/db-connection.js";
+import changeDateType from "../changeDateType.js";
 
 //подключение в базе данных
 const { connection } = setConnection();
@@ -77,6 +80,7 @@ export const InventaryController = {
             });
             break;
           case "furniture":
+            console.log('here');
             await CurrentYearInventaryFurniture[currentYear].sync()
             await basicInventaryData.forEach(element => {
               CurrentYearInventaryFurniture[currentYear].create({ qr_code: element.qr_code, name: element.name });
@@ -186,6 +190,104 @@ export const InventaryController = {
       responce.json({
         message: `Объект ${object.dataValues.name} найден`,
         object: object.dataValues,
+      });
+      
+    } catch (error) {
+      
+    }
+  },
+
+  async checkRemains(request, responce) {
+    try {
+      const currentYear = new Date().getFullYear()
+      let { roomNumber } = request.body;
+      let it, furniture
+
+      //Проверяется наличие предыдущих инвентаризаций
+      const [results_it] = await db.sequelize.query(`SHOW TABLES LIKE 'inv_${currentYear - 1}_it'`);
+      const [results_furniture] = await db.sequelize.query(`SHOW TABLES LIKE 'inv_${currentYear - 1}_furniture'`);
+
+      //Если ранее инвентаризации не проводились, то данные запрашиваются из основных таблиц
+      if (results_it.length == 0 && results_furniture.length == 0) {
+        it = await libDataIt.findAll({ where: { location: roomNumber } })
+        furniture = await libDataFurniture.findAll({ where: { location: roomNumber } })
+      //Если инвентаризации ранее проводились, то данные запрашиваются из предыдущих инвентаризаций
+      } else {
+        it = await PreviousYearInventaryIt.findAll({ where: { location: roomNumber } })
+        furniture = await PreviousYearInventaryFurniture.findAll({ where: { location: roomNumber } })
+      }
+
+      //Форматирование данных по оборудованию
+      it = it.map(it => it.dataValues).map(v => {
+        //Изменение значения checked
+        switch (v.checked) {
+          case 1:
+            v.checked = true;
+            break;
+          case null:
+            v.checked = false;
+            break;
+          default:
+            break;
+        }
+        //Форматирование даты
+        Object.keys(v).forEach((element) => {
+          if (element.includes("date")) {
+            if (v[element] !== null) {
+              v[element] = new Date(v[element]).toLocaleString(
+                "ru-RU",
+                {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                  timeZone: "Europe/Moscow",
+                }
+              );
+              v[element] = changeDateType(v[element]);
+              v[element] = new Date(v[element]);
+            }
+          }
+        })
+        return v;
+      })
+
+      //Форматирование данных по мебели
+      furniture = furniture.map(furniture => furniture.dataValues).map(v => {
+        //Изменение значения checked
+        switch (v.checked) {
+          case 1:
+            v.checked = true;
+            break;
+          case null:
+            v.checked = false;
+            break;
+          default:
+            break;
+        }
+        //Форматирование даты
+        Object.keys(v).forEach((element) => {
+          if (element.includes("date")) {
+            if (v[element] !== null) {
+              v[element] = new Date(v[element]).toLocaleString(
+                "ru-RU",
+                {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                  timeZone: "Europe/Moscow",
+                }
+              );
+              v[element] = changeDateType(v[element]);
+              v[element] = new Date(v[element]);
+            }
+          }
+        })
+        return v;
+      })
+
+      responce.json({
+        message: `Объекты найдены`,
+        object: { it, furniture },
       });
       
     } catch (error) {

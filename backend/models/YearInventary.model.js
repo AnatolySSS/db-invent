@@ -1,5 +1,5 @@
-export default (sequelize, Sequelize, tableName, currentYear) => {
-  const currentYearInventary = sequelize.define(`currentYearInventary${currentYear}${tableName}`, {
+export default (sequelize, Sequelize, tableName, year) => {
+  const yearInventary = sequelize.define(`yearInventary${year}${tableName}`, {
     qr_code: {
       type: Sequelize.STRING,
     },
@@ -22,8 +22,8 @@ export default (sequelize, Sequelize, tableName, currentYear) => {
       type: Sequelize.BOOLEAN,
     },
   }, {
-    tableName: `inv_${currentYear}_${tableName}`
+    tableName: `inv_${year}_${tableName}`
   });
 
-  return currentYearInventary;
+  return yearInventary;
 };

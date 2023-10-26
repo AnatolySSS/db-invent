@@ -133,7 +133,7 @@ const LoginCraft = (props) => {
       
       <div ref={messageRef} className="flex flex-column">
       <div className="flex justify-content-center mb-3">
-        <Image src={require("./../../img/logo.png")} width="203" height="137" alt="No Image" />
+        <Image src={require("./../../img/logo1.png")} width="203" height="137" alt="No Image" />
       </div>
         <Formik
           initialValues={{

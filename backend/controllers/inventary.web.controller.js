@@ -142,7 +142,11 @@ export const InventaryWebController = {
           connection.query(`SELECT * FROM ${tableLibName} WHERE qr_code=${v.qr_code}`,(err2, rows2, fields2) => {
             if (rows2[0]) {
               //Добавление значений из общей таблицы
-                Object.keys(rows2[0]).map((key, index) => v[key] = Object.values(rows2[0])[index]);
+                Object.keys(rows2[0]).map((key, index) => {
+                  if (key != "location") {
+                    v[key] = Object.values(rows2[0])[index]
+                  }
+                });
                 //Изменение значения checked
                 switch (v.checked) {
                   case 1:
