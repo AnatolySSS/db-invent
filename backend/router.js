@@ -24,5 +24,6 @@ router.post("/beginInventary", InventaryController.beginInventary);
 router.post("/findQRCode", InventaryController.findQRCode);
 router.post("/checkQRCode", InventaryController.checkQRCode);
 router.post("/checkRemains", InventaryController.checkRemains);
+router.get("/getLocations", InventaryController.getLocations);
 
 export default router
