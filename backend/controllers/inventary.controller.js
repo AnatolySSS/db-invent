@@ -209,109 +209,147 @@ export const InventaryController = {
       const [results_furniture] = await db.sequelize.query(`SHOW TABLES LIKE 'inv_${currentYear - 1}_furniture'`);
 
       //Если ранее инвентаризации не проводились, то данные запрашиваются из основных таблиц
-      if (results_it.length == 0 && results_furniture.length == 0) {
-        it = await libDataIt.findAll({ where: { location: roomNumber } })
-        furniture = await libDataFurniture.findAll({ where: { location: roomNumber } })
+      if (results_it.length == 0) {
+        it = await libDataIt.findAll({ where: { location: roomNumber }, raw : true, })
       //Если инвентаризации ранее проводились, то данные запрашиваются из предыдущих инвентаризаций
       } else {
-        it = await PreviousYearInventaryIt.findAll({ where: { location: roomNumber } })
-        furniture = await PreviousYearInventaryFurniture.findAll({ where: { location: roomNumber } })
+        it = await PreviousYearInventaryIt.findAll({ where: { location: roomNumber }, raw : true, })
+      }
+
+      if (results_furniture.length == 0) {
+        furniture = await libDataFurniture.findAll({ where: { location: roomNumber }, raw : true, })
+      //Если инвентаризации ранее проводились, то данные запрашиваются из предыдущих инвентаризаций
+      } else {
+        furniture = await PreviousYearInventaryFurniture.findAll({ where: { location: roomNumber }, raw : true, })
       }
 
       it_status = await CurrentYearInventaryIt[currentYear].findAll({
-        attributes: ["qr_code", "checked"],
-        where: { location: roomNumber },
+        attributes: ["name", "qr_code", "checked", "location"], raw : true, 
+        // where: { location: roomNumber },
       });
+      
       furniture_status = await CurrentYearInventaryFurniture[currentYear].findAll({
-        attributes: ["qr_code", "checked"],
-        where: { location: roomNumber },
+        attributes: ["name", "qr_code", "checked", "location"],raw : true, 
+        // where: { location: roomNumber },
       });
-      it_status = it_status.map(it => it.dataValues)
-      furniture_status = furniture_status.map(it => it.dataValues)
+      
+      // it_status = it_status.map(it => it.dataValues)
+      // furniture_status = furniture_status.map(it => it.dataValues)
 
-      //Форматирование данных по оборудованию
-      it = it.map(it => it.dataValues).map(v => {
-        //Присвоение статусов проверки текущего года
-        it_status.forEach(it_status => {
-          if (v.qr_code == it_status.qr_code) {
-            v.checked = it_status.checked
-          }
-        });
-        //Изменение значения checked
-        switch (v.checked) {
-          case 1:
-            v.checked = true;
-            break;
-          case null:
-            v.checked = false;
-            break;
-          default:
-            break;
-        }
-        //Форматирование даты
-        Object.keys(v).forEach((element) => {
-          if (element.includes("date")) {
-            if (v[element] !== null) {
-              v[element] = new Date(v[element]).toLocaleString(
-                "ru-RU",
-                {
-                  day: "2-digit",
-                  month: "2-digit",
-                  year: "numeric",
-                  timeZone: "Europe/Moscow",
-                }
-              );
-              v[element] = changeDateType(v[element]);
-              v[element] = new Date(v[element]);
+      it_status = it_status.map(v => {
+        it.forEach(it => {
+          if (v.qr_code == it.qr_code) {
+            if (v.location == null && it.location != null) {
+              v.location = it.location
             }
           }
         })
         return v;
-      })
+      }).filter(v => v.location == roomNumber)
 
-      //Форматирование данных по мебели
-      furniture = furniture.map(furniture => furniture.dataValues).map(v => {
-        //Присвоение статусов проверки текущего года
-        furniture_status.forEach(furniture_status => {
-          if (v.qr_code == furniture_status.qr_code) {
-            v.checked = furniture_status.checked
-          }
-        });
-        //Изменение значения checked
-        switch (v.checked) {
-          case 1:
-            v.checked = true;
-            break;
-          case null:
-            v.checked = false;
-            break;
-          default:
-            break;
-        }
-        //Форматирование даты
-        Object.keys(v).forEach((element) => {
-          if (element.includes("date")) {
-            if (v[element] !== null) {
-              v[element] = new Date(v[element]).toLocaleString(
-                "ru-RU",
-                {
-                  day: "2-digit",
-                  month: "2-digit",
-                  year: "numeric",
-                  timeZone: "Europe/Moscow",
-                }
-              );
-              v[element] = changeDateType(v[element]);
-              v[element] = new Date(v[element]);
+      furniture_status = furniture_status.map(v => {
+        furniture.forEach(furniture => {
+          if (v.qr_code == furniture.qr_code) {
+            if (v.location == null && furniture.location != null) {
+              v.location = furniture.location
             }
           }
         })
         return v;
-      })
+      }).filter(v => v.location == roomNumber)
+
+      console.log(it_status);
+      console.log(furniture_status);
+
+      // //Форматирование данных по оборудованию
+      // it = it.map(v => {
+      //   //Присвоение статусов проверки текущего года
+      //   it_status.forEach(it_status => {
+      //     if (v.qr_code == it_status.qr_code) {
+      //       v.checked = it_status.checked
+      //       if (it_status.location != null) {
+      //         v.location = it_status.location
+      //       }
+      //     }
+      //   });
+      //   //Изменение значения checked
+      //   switch (v.checked) {
+      //     case 1:
+      //       v.checked = true;
+      //       break;
+      //     case null:
+      //       v.checked = false;
+      //       break;
+      //     default:
+      //       break;
+      //   }
+      //   //Форматирование даты
+      //   Object.keys(v).forEach((element) => {
+      //     if (element.includes("date")) {
+      //       if (v[element] !== null) {
+      //         v[element] = new Date(v[element]).toLocaleString(
+      //           "ru-RU",
+      //           {
+      //             day: "2-digit",
+      //             month: "2-digit",
+      //             year: "numeric",
+      //             timeZone: "Europe/Moscow",
+      //           }
+      //         );
+      //         v[element] = changeDateType(v[element]);
+      //         v[element] = new Date(v[element]);
+      //       }
+      //     }
+      //   })
+      //   return v;
+      // })
+
+      // //Форматирование данных по мебели
+      // furniture = furniture.map(v => {
+      //   //Присвоение статусов проверки текущего года
+      //   furniture_status.forEach(furniture_status => {
+      //     if (v.qr_code == furniture_status.qr_code) {
+      //       v.checked = furniture_status.checked
+      //       if (furniture_status.location != null) {
+      //         v.location = furniture_status.location
+      //       }
+      //     }
+      //   });
+      //   //Изменение значения checked
+      //   switch (v.checked) {
+      //     case 1:
+      //       v.checked = true;
+      //       break;
+      //     case null:
+      //       v.checked = false;
+      //       break;
+      //     default:
+      //       break;
+      //   }
+      //   //Форматирование даты
+      //   Object.keys(v).forEach((element) => {
+      //     if (element.includes("date")) {
+      //       if (v[element] !== null) {
+      //         v[element] = new Date(v[element]).toLocaleString(
+      //           "ru-RU",
+      //           {
+      //             day: "2-digit",
+      //             month: "2-digit",
+      //             year: "numeric",
+      //             timeZone: "Europe/Moscow",
+      //           }
+      //         );
+      //         v[element] = changeDateType(v[element]);
+      //         v[element] = new Date(v[element]);
+      //       }
+      //     }
+      //   })
+      //   return v;
+      // })
 
       responce.json({
         message: `Объекты найдены`,
-        object: { it, furniture },
+        object: { it: it_status, furniture: furniture_status },
       });
       
     } catch (error) {
@@ -326,7 +364,7 @@ export const InventaryController = {
       let it, furniture, it_status, furniture_status, checked_it = 0, checked_furniture = 0
 
       //Получение списка помещений
-      let locations = await valuesDataIt.findAll({attributes: ['location'], raw : true})
+      let locations = await valuesDataIt.findAll({attributes: ['location'], raw : true, })
       // locations = locations.map(location => location.location)
 
       //Проверяется наличие предыдущих инвентаризаций
@@ -334,112 +372,145 @@ export const InventaryController = {
       const [results_furniture] = await db.sequelize.query(`SHOW TABLES LIKE 'inv_${currentYear - 1}_furniture'`);
 
       //Если ранее инвентаризации не проводились, то данные запрашиваются из основных таблиц
-      if (results_it.length == 0 && results_furniture.length == 0) {
-        it = await libDataIt.findAll()
-        furniture = await libDataFurniture.findAll()
+      if (results_it.length == 0) {
+        it = await libDataIt.findAll({ attributes: ["qr_code", "location"], raw : true, })
+      //Если инвентаризации ранее проводились, то данные запрашиваются из предыдущих инвентаризаций
+      } else { 
+        it = await PreviousYearInventaryIt.findAll({ attributes: ["qr_code", "location"], raw : true, })
+      }
+
+      //Если ранее инвентаризации не проводились, то данные запрашиваются из основных таблиц
+      if (results_furniture.length == 0) {
+        furniture = await libDataFurniture.findAll({ attributes: ["qr_code", "location"], raw : true, })
       //Если инвентаризации ранее проводились, то данные запрашиваются из предыдущих инвентаризаций
       } else {
-        it = await PreviousYearInventaryIt.findAll()
-        furniture = await PreviousYearInventaryFurniture.findAll()
+        furniture = await PreviousYearInventaryFurniture.findAll({ attributes: ["qr_code", "location"], raw : true, })
       }
 
       it_status = await CurrentYearInventaryIt[currentYear].findAll({
-        attributes: ["qr_code", "checked"],
+        attributes: ["name", "qr_code", "checked", "location"], raw : true,
       });
       furniture_status = await CurrentYearInventaryFurniture[currentYear].findAll({
-        attributes: ["qr_code", "checked"],
+        attributes: ["name", "qr_code", "checked", "location"], raw : true,
       });
-      it_status = it_status.map(it => it.dataValues)
-      furniture_status = furniture_status.map(it => it.dataValues)
+
+      it_status = it_status.map(v => {
+        it.forEach(it => {
+          if (v.qr_code == it.qr_code) {
+            if (v.location == null && it.location != null) {
+              v.location = it.location
+            }
+          }
+        });
+        return v;
+      })
+
+      furniture_status = furniture_status.map(v => {
+        furniture.forEach(furniture => {
+          if (v.qr_code == furniture.qr_code) {
+            if (v.location == null && furniture.location != null) {
+              v.location = furniture.location
+            }
+          }
+        });
+        return v;
+      })
 
       //Форматирование данных по оборудованию
-      it = it.map(it => it.dataValues).map(v => {
-        //Присвоение статусов проверки текущего года
-        it_status.forEach(it_status => {
-          if (v.qr_code == it_status.qr_code) {
-            v.checked = it_status.checked
-          }
-        });
-        //Изменение значения checked
-        switch (v.checked) {
-          case 1:
-            v.checked = true;
-            break;
-          case null:
-            v.checked = false;
-            break;
-          default:
-            break;
-        }
-        //Форматирование даты
-        Object.keys(v).forEach((element) => {
-          if (element.includes("date")) {
-            if (v[element] !== null) {
-              v[element] = new Date(v[element]).toLocaleString(
-                "ru-RU",
-                {
-                  day: "2-digit",
-                  month: "2-digit",
-                  year: "numeric",
-                  timeZone: "Europe/Moscow",
-                }
-              );
-              v[element] = changeDateType(v[element]);
-              v[element] = new Date(v[element]);
-            }
-          }
-        })
-        return v;
-      })
+      // it = it.map(v => {
+      //   //Присвоение статусов проверки текущего года
+      //   it_status.forEach(it_status => {
+      //     if (v.qr_code == it_status.qr_code) {
+      //       v.checked = it_status.checked
+      //       if (it_status.location != null) {
+      //         v.location = it_status.location
+      //       }
+      //     }
+      //   });
+      //   //Изменение значения checked
+      //   switch (v.checked) {
+      //     case 1:
+      //       v.checked = true;
+      //       break;
+      //     case null:
+      //       v.checked = false;
+      //       break;
+      //     default:
+      //       break;
+      //   }
+      //   //Форматирование даты
+      //   Object.keys(v).forEach((element) => {
+      //     if (element.includes("date")) {
+      //       if (v[element] !== null) {
+      //         v[element] = new Date(v[element]).toLocaleString(
+      //           "ru-RU",
+      //           {
+      //             day: "2-digit",
+      //             month: "2-digit",
+      //             year: "numeric",
+      //             timeZone: "Europe/Moscow",
+      //           }
+      //         );
+      //         v[element] = changeDateType(v[element]);
+      //         v[element] = new Date(v[element]);
+      //       }
+      //     }
+      //   })
+      //   return v;
+      // })
 
       //Форматирование данных по мебели
-      furniture = furniture.map(furniture => furniture.dataValues).map(v => {
-        //Присвоение статусов проверки текущего года
-        furniture_status.forEach(furniture_status => {
-          if (v.qr_code == furniture_status.qr_code) {
-            v.checked = furniture_status.checked
-          }
-        });
-        //Изменение значения checked
-        switch (v.checked) {
-          case 1:
-            v.checked = true;
-            break;
-          case null:
-            v.checked = false;
-            break;
-          default:
-            break;
-        }
-        //Форматирование даты
-        Object.keys(v).forEach((element) => {
-          if (element.includes("date")) {
-            if (v[element] !== null) {
-              v[element] = new Date(v[element]).toLocaleString(
-                "ru-RU",
-                {
-                  day: "2-digit",
-                  month: "2-digit",
-                  year: "numeric",
-                  timeZone: "Europe/Moscow",
-                }
-              );
-              v[element] = changeDateType(v[element]);
-              v[element] = new Date(v[element]);
-            }
-          }
-        })
-        return v;
-      })
+      // furniture = furniture.map(v => {
+      //   //Присвоение статусов проверки текущего года
+      //   furniture_status.forEach(furniture_status => {
+      //     if (v.qr_code == furniture_status.qr_code) {
+      //       v.checked = furniture_status.checked
+      //       if (furniture_status.location != null) {
+      //         v.location = furniture_status.location
+      //       }
+      //     }
+      //   });
+      //   //Изменение значения checked
+      //   switch (v.checked) {
+      //     case 1:
+      //       v.checked = true;
+      //       break;
+      //     case null:
+      //       v.checked = false;
+      //       break;
+      //     default:
+      //       break;
+      //   }
+      //   //Форматирование даты
+      //   Object.keys(v).forEach((element) => {
+      //     if (element.includes("date")) {
+      //       if (v[element] !== null) {
+      //         v[element] = new Date(v[element]).toLocaleString(
+      //           "ru-RU",
+      //           {
+      //             day: "2-digit",
+      //             month: "2-digit",
+      //             year: "numeric",
+      //             timeZone: "Europe/Moscow",
+      //           }
+      //         );
+      //         v[element] = changeDateType(v[element]);
+      //         v[element] = new Date(v[element]);
+      //       }
+      //     }
+      //   })
+      //   return v;
+      // })
 
       //Формирование массива объектов инвентаризации по кабинетам
       locations.forEach((location) => {
-        location.it = it.filter(it => it.location == location.location)
-        location.furniture = furniture.filter(furniture => furniture.location == location.location)
+        location.it = it_status.filter(it => it.location == location.location)
+        location.furniture = furniture_status.filter(furniture => furniture.location == location.location)
       });
 
       //Получение количества инвентаризированных объектов
       locations.forEach((location) => {
+        console.log(location);
         location.checked_it = location.it.filter(it => it.checked == true).length
         location.checked_furniture = location.furniture.filter(furniture => furniture.checked == true).length
         checked_it = checked_it + location.checked_it
