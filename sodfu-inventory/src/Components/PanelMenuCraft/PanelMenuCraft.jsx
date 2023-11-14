@@ -23,34 +23,63 @@ const PanelMenuCraft = (props) => {
         {
           template: (item, options) => {
             return (
-                <NavLink to="/it"
-                  className={classNames(options.className,"w-full p-link flex align-items-center")}
-                  style={{
-                    textDecoration: "none",
-                    color: "#495057",
-                  }}>
-                  <i className="pi pi-fw pi-print mr-2"></i>
-                  Оборудование
-                </NavLink>
+              <NavLink
+                to="/it"
+                className={classNames(
+                  options.className,
+                  "w-full p-link flex align-items-center"
+                )}
+                style={{
+                  textDecoration: "none",
+                  color: "#495057",
+                }}
+              >
+                <i className="pi pi-fw pi-print mr-2"></i>
+                Оборудование
+              </NavLink>
             );
           },
         },
         {
-          icon: "pi pi-fw pi-box",
           template: (item, options) => {
             return (
-                <NavLink to="/furniture"
-                  className={classNames(options.className,"w-full p-link flex align-items-center")}
-                  style={{
-                    textDecoration: "none",
-                    color: "#495057",
-                  }}>
-                  <i className="pi pi-fw pi-box mr-2"></i>
-                  Мебель
-                </NavLink>
+              <NavLink
+                to="/furniture"
+                className={classNames(
+                  options.className,
+                  "w-full p-link flex align-items-center"
+                )}
+                style={{
+                  textDecoration: "none",
+                  color: "#495057",
+                }}
+              >
+                <i className="pi pi-fw pi-box mr-2"></i>
+                Мебель
+              </NavLink>
             );
           },
         },
+        // {
+        //   template: (item, options) => {
+        //     return (
+        //       <NavLink
+        //         to="/charts"
+        //         className={classNames(
+        //           options.className,
+        //           "w-full p-link flex align-items-center"
+        //         )}
+        //         style={{
+        //           textDecoration: "none",
+        //           color: "#495057",
+        //         }}
+        //       >
+        //         <i className="pi pi-fw pi-chart-pie mr-2"></i>
+        //         Графики
+        //       </NavLink>
+        //     );
+        //   },
+        // },
       ],
     },
     {
@@ -64,19 +93,24 @@ const PanelMenuCraft = (props) => {
             return {
               template: (item, options) => {
                 return (
-                  <NavLink to={`/it/${year}`}
-                    className={classNames(options.className,"w-full p-link flex align-items-center pl-4")}
+                  <NavLink
+                    to={`/it/${year}`}
+                    className={classNames(
+                      options.className,
+                      "w-full p-link flex align-items-center pl-4"
+                    )}
                     style={{
                       textDecoration: "none",
                       color: "#495057",
-                    }}>
+                    }}
+                  >
                     <i className="pi pi-fw pi-calendar mr-2"></i>
                     {year}
                   </NavLink>
                 );
               },
-            }
-          })
+            };
+          }),
         },
         {
           label: "Мебель",
@@ -85,59 +119,26 @@ const PanelMenuCraft = (props) => {
             return {
               template: (item, options) => {
                 return (
-                  <NavLink to={`/furniture/${year}`}
-                    className={classNames(options.className,"w-full p-link flex align-items-center pl-4")}
+                  <NavLink
+                    to={`/furniture/${year}`}
+                    className={classNames(
+                      options.className,
+                      "w-full p-link flex align-items-center pl-4"
+                    )}
                     style={{
                       textDecoration: "none",
                       color: "#495057",
-                    }}>
+                    }}
+                  >
                     <i className="pi pi-fw pi-calendar mr-2"></i>
                     {year}
                   </NavLink>
                 );
               },
-            }
-          })
-        }
-      ]
-      // years.map((year) => {
-      //   return {
-      //     label: year,
-      //     icon: "pi pi-fw pi-file",
-      //     items: [
-      //       {
-      //         template: (item, options) => {
-      //           return (
-      //               <NavLink to={`/${year}/it`}
-      //                 className={classNames(options.className,"w-full p-link flex align-items-center")}
-      //                 style={{
-      //                   textDecoration: "none",
-      //                   color: "#495057",
-      //                 }}>
-      //                 <i className="pi pi-fw pi-print mr-2"></i>
-      //                 Оборудование
-      //               </NavLink>
-      //           );
-      //         },
-      //       },
-      //       {
-      //         template: (item, options) => {
-      //           return (
-      //               <NavLink to={`/${year}/furniture`}
-      //                 className={classNames(options.className,"w-full p-link flex align-items-center")}
-      //                 style={{
-      //                   textDecoration: "none",
-      //                   color: "#495057",
-      //                 }}>
-      //                 <i className="pi pi-fw pi-box mr-2"></i>
-      //                 Мебель
-      //               </NavLink>
-      //           );
-      //         },
-      //       }
-      //     ]
-      //   }
-      // })
+            };
+          }),
+        },
+      ],
     },
     // {
     //   label: "Загрузить данные",

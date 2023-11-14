@@ -22,6 +22,9 @@ import changeDateType from './../../function-helpers/changeDateType'
 import Preloader from "../Common/Preloader/Preloader";
 import { makeCommitment } from "../../function-helpers/makeCommitment";
 import { makeQRCode } from "../../function-helpers/makeQRCode";
+import { creactLocale } from "../../function-helpers/addLocale";
+import { locale } from 'primereact/api';
+ 
 
 const TableCraft = (props) => {
   let {
@@ -105,7 +108,7 @@ const TableCraft = (props) => {
 
   const saveItem = () => {
 
-    if (item.name != null) {
+    if (item.name != null && item.name != "") {
       let _item = { ...item };
 
       Object.keys(_item).forEach((element) => {
@@ -204,7 +207,14 @@ const TableCraft = (props) => {
   useEffect(() => {
     requestData();
     initFilters();
+    creactLocale()
+    locale('ru')
   }, []);
+
+  //Это нужно для того, чтобы значение item обновлялось непосредственно после его обновления, а не после перерисовки страницы
+  useEffect(() => {
+    setItem(item);
+  })
 
   useEffect(() => {
     try {
@@ -521,7 +531,7 @@ window.onresize = function (event) {
     return (
       <Button
         // type="button"
-        label="Apply"
+        label="Принять"
         size="small"
         // icon="pi pi-check"
         onClick={options.filterApplyCallback}
@@ -597,7 +607,7 @@ window.onresize = function (event) {
           options={dropdownType}
           itemTemplate={dropdownItemTemplate}
           onChange={(e) => options.filterCallback(e.value)}
-          placeholder="Select One"
+          placeholder="Выбрать из списка"
           className="p-column-filter"
           display="chip"
           filter
@@ -617,7 +627,7 @@ window.onresize = function (event) {
     return (
       <div className="flex align-items-center gap-2">
         <label htmlFor="checkbox-filter" className="font-bold">
-          Check
+          Выбрать
         </label>
         <MultiStateCheckbox
           inputid="checkbox-filter"
@@ -636,7 +646,7 @@ window.onresize = function (event) {
         value={options.value}
         onChange={(e) => options.filterCallback(e.value, options.index)}
         dateFormat="dd.mm.yy"
-        placeholder="dd.mm.yyyy"
+        placeholder="дд.мм.гггг"
         mask="99.99.9999"
       />
     );
@@ -813,23 +823,23 @@ window.onresize = function (event) {
       },
     },
     {
-      label: "Export Commitment",
+      label: "Сформировать обязательство",
       icon: "pi pi-file-word",
       command: makeCommitmentHelper,
     },
     {
-      label: "Export QR-Codes",
+      label: "Сформировать QR-коды",
       icon: "pi pi-qrcode",
       command: makeQRCodeHelper,
     },
     {
-      label: "Export EXCEL",
+      label: "Сформировать EXCEL",
       icon: "pi pi-file-excel",
       command: exportExcel,
     },
     { separator: true},
     {
-      label: "Logout",
+      label: "Выйти",
       icon: "pi pi-sign-out",
       command: makeLogout,
     },
@@ -837,7 +847,7 @@ window.onresize = function (event) {
 
   if (userAuth.role === "admin") {
     userMenuItems.splice(1, 0, {
-      label: "New",
+      label: "Новое",
       icon: "pi pi-plus",
       command: openNew,
     });

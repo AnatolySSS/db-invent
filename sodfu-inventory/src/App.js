@@ -12,6 +12,7 @@ import TableCraftFurnitureContainer from "./Components/TableCraft/TableCraftFurn
 import UploadCraftContainer from "./Components/UploadCraft/UploadCraftContainer";
 import LoginCraftContainer from "./Components/LoginCraft/LoginCraftContainer";
 import YearInventoryContainer from "./Components/YearInventory/YearInventoryContainer";
+import ChartCraftContainer from "./Components/Charts/ChartCraftContainer";
 
 class App extends React.Component {
   componentDidMount() {
@@ -32,6 +33,7 @@ class App extends React.Component {
               <Route path="/it" element={<TableCraftItContainer />} />
               <Route path="/furniture" element={<TableCraftFurnitureContainer />} />
               <Route path="/upload" element={<UploadCraftContainer />} />
+              <Route path="/charts" element={<ChartCraftContainer />} />
               { this.props.yearsIt.map((year, index) => {
                 let id = 1000 + index
                 return (
