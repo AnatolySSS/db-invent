@@ -147,7 +147,7 @@ const TableCraft = (props) => {
     } else {
       toast.current.show({
           severity: "warn",
-          summary: "Warning",
+          summary: "Ошибка",
           detail: "Необходимо ввести имя объекта",
           life: 3000,
         });
@@ -169,8 +169,8 @@ const TableCraft = (props) => {
     deleteData(_item.id)
     
     toast.current.show({
-      severity: "warn",
-      summary: "Warning",
+      severity: "success",
+      summary: "Удалено",
       detail: `${item.name} успешно удален`,
       life: 3000,
     });
@@ -180,8 +180,8 @@ const TableCraft = (props) => {
 
   const deleteItemDialogFooter = (
     <React.Fragment>
-        <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteItemDialog} />
-        <Button label="Yes" icon="pi pi-check" severity="danger" onClick={deleteItem} />
+        <Button label="Нет" icon="pi pi-times" outlined onClick={hideDeleteItemDialog} />
+        <Button label="Да" icon="pi pi-check" severity="danger" onClick={deleteItem} />
     </React.Fragment>
 );
 
@@ -879,8 +879,8 @@ window.onresize = function (event) {
 
   const itemDialogFooter = (
     <React.Fragment>
-      <Button label="Cancel" icon="pi pi-times" outlined onClick={hideNew} />
-      <Button label="Save" icon="pi pi-check" onClick={saveItem} />
+      <Button label="Выйти" icon="pi pi-times" outlined onClick={hideNew} />
+      <Button label="Сохранить" icon="pi pi-check" onClick={saveItem} />
     </React.Fragment>
   );
 
@@ -1565,7 +1565,7 @@ window.onresize = function (event) {
         visible={deleteItemDialog}
         style={{ width: "32rem" }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-        header="Confirm"
+        header="Подтверждение"
         modal
         footer={deleteItemDialogFooter}
         onHide={hideDeleteItemDialog}
@@ -1577,7 +1577,7 @@ window.onresize = function (event) {
           />
           {item && (
             <span>
-              Are you sure you want to delete <b>{item.name}</b>?
+              Вы уверены, что хотите удалить <b>{item.name}</b>?
             </span>
           )}
         </div>

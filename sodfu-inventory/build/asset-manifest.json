@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.aba3b935.css",
-    "main.js": "/static/js/main.21e8aef6.js",
+    "main.js": "/static/js/main.14387fd9.js",
     "static/js/498.a57e57ab.chunk.js": "/static/js/498.a57e57ab.chunk.js",
     "static/js/703.745c4fe3.chunk.js": "/static/js/703.745c4fe3.chunk.js",
     "static/js/513.9d7ddcbf.chunk.js": "/static/js/513.9d7ddcbf.chunk.js",
@@ -411,7 +411,7 @@
     "static/media/logoInfinity_3.svg": "/static/media/logoInfinity_3.8247a10b09987a6fa817b51cbb5fba43.svg",
     "index.html": "/index.html",
     "main.aba3b935.css.map": "/static/css/main.aba3b935.css.map",
-    "main.21e8aef6.js.map": "/static/js/main.21e8aef6.js.map",
+    "main.14387fd9.js.map": "/static/js/main.14387fd9.js.map",
     "498.a57e57ab.chunk.js.map": "/static/js/498.a57e57ab.chunk.js.map",
     "703.745c4fe3.chunk.js.map": "/static/js/703.745c4fe3.chunk.js.map",
     "513.9d7ddcbf.chunk.js.map": "/static/js/513.9d7ddcbf.chunk.js.map",
@@ -420,6 +420,6 @@
   },
   "entrypoints": [
     "static/css/main.aba3b935.css",
-    "static/js/main.21e8aef6.js"
+    "static/js/main.14387fd9.js"
   ]
 }
