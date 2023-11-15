@@ -1,7 +1,18 @@
 import { networkInterfaces } from "os";
 import { createConnection, createPool } from "mysql2";
+import * as dotenv from "dotenv";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import * as path from 'path';
 
 const setConnection = () => {
+
+  //Получение пути к текущей папке для настроки .env
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
+  console.log(__dirname);
+  dotenv.config({ path: path.resolve(__dirname, '../.env') });
+
   const nets = networkInterfaces();
   const results = Object.create(null); // Or just '{}', an empty object
 
@@ -26,45 +37,17 @@ const setConnection = () => {
   let PORT;
   //В зависимости от IP адреса необходимо подключаться к различным портам и с разными настройками базы данных
   switch (currentIP) {
-    case "192.168.0.19":
-      console.log("Это localhost");
-      PORT = 3005;
-      //Подключение к localhost
-      connection = createPool({
-        connectionLimit : 10,
-        host: "localhost",
-        port: 3306,
-        user: "Anatoly",
-        password: "",
-        database: "test_db",
-      });
-      break;
-
     case "10.205.24.14":
       console.log("Это sodfu");
       PORT = 3005;
       //Подключение к базе данных sodfu
       connection = createPool({
         connectionLimit : 10,
-        host: "10.205.24.14",
-        port: 3306,
-        user: "inventorydb",
-        database: "inventory",
-        password: "inventory1983!",
-      });
-      break;
-
-    case "91.220.109.180":
-      console.log("Это timeweb");
-      PORT = 3005;
-      //Подключение к базе данных timeweb
-      connection = createPool({
-        connectionLimit : 10,
-        host: "91.220.109.180",
-        port: 3306,
-        user: "root",
-        database: "inventory",
-        password: "Haimdall",
+        host: process.env.DB_SODFU_HOST,
+        port: process.env.DB_SODFU_PORT,
+        database: process.env.DB_SODFU_DB,
+        user: process.env.DB_SODFU_USER,
+        password: process.env.DB_SODFU_PASSWORD,
       });
       break;
 
@@ -73,11 +56,11 @@ const setConnection = () => {
       //Подключение к localhost
       connection = createPool({
         connectionLimit : 10,
-        host: "localhost",
-        port: 3306,
-        user: "root",
-        password: "",
-        database: "test_db",
+        host: process.env.DB_HOST,
+        port: process.env.DB_PORT,
+        database: process.env.DB_DB,
+        user:process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
       });
       break;
   }

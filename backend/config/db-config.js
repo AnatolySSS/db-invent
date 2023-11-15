@@ -1,6 +1,17 @@
 import { networkInterfaces } from "os";
+import * as dotenv from "dotenv";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import * as path from 'path';
 
 const setConnection = () => {
+
+  //Получение пути к текущей папке для настроки .env
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
+  console.log(__dirname);
+  dotenv.config({ path: path.resolve(__dirname, '../.env') });
+
   const nets = networkInterfaces();
   const results = Object.create(null); // Or just '{}', an empty object
 
@@ -25,58 +36,31 @@ const setConnection = () => {
   let PORT;
   //В зависимости от IP адреса необходимо подключаться к различным портам и с разными настройками базы данных
   switch (currentIP) {
-    case "192.168.0.19":
-      console.log("Это localhost");
-      PORT = 3005;
-      //Подключение к localhost
-      config = {
-        HOST: "localhost",
-        PORT: 3306,
-        USER: "root",
-        PASSWORD: "",
-        DB: "test_db",
-        dialect: "mysql",
-      };
-      break;
-
     case "10.205.24.14":
       console.log("Это sodfu");
       PORT = 3005;
       //Подключение к базе данных sodfu
       config = {
-        HOST: "10.205.24.14",
-        PORT: 3306,
-        USER: "inventorydb",
-        PASSWORD: "inventory1983!",
-        DB: "inventory",
-        dialect: "mysql",
-      };
-      break;
-
-    case "91.220.109.180":
-      console.log("Это timeweb");
-      PORT = 3005;
-      //Подключение к базе данных timeweb
-      config = {
-        HOST: "91.220.109.180",
-        PORT: 3306,
-        USER: "Anatoly",
-        PASSWORD: "Haimdall",
-        DB: "inventory",
-        dialect: "mysql",
+        HOST: process.env.DB_SODFU_HOST,
+        PORT: process.env.DB_SODFU_PORT,
+        DB: process.env.DB_SODFU_DB,
+        USER: process.env.DB_SODFU_USER,
+        PASSWORD: process.env.DB_SODFU_PASSWORD,
+        dialect: 'mysql',
       };
       break;
 
     default:
+      console.log("Это localhost by default");
       PORT = 3005;
       //Подключение к localhost
       config = {
-        HOST: "localhost",
-        PORT: 3306,
-        USER: "root",
-        PASSWORD: "",
-        DB: "test_db",
-        dialect: "mysql",
+        HOST: process.env.DB_HOST,
+        PORT: process.env.DB_PORT,
+        DB: process.env.DB_DB,
+        USER: process.env.DB_USER,
+        PASSWORD: process.env.DB_PASSWORD,
+        dialect: 'mysql',
       };
       break;
   }
