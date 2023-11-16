@@ -5,6 +5,7 @@ import { requestData, addData, updateData, deleteData } from "../../redux/reduce
 import { setVisible } from "../../redux/reducers/side-bar-reducer";
 import { withAuthNavigate } from "../../hoc/withAuthNavigate";
 import { logout } from "../../redux/reducers/auth-reducer";
+import { memo } from "react";
 
 let mapStateToProps = (state) => {
 
@@ -33,6 +34,7 @@ let mapDispatchToProps =  {
 // export default connect(mapStateToProps, mapDispatchToProps)(TableCraft)
 
 export default compose(
+  memo,
   connect(mapStateToProps, mapDispatchToProps),
   withAuthNavigate
 )(TableCraft);

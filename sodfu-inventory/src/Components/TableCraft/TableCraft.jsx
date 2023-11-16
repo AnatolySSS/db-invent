@@ -107,7 +107,6 @@ const TableCraft = (props) => {
   };
 
   const saveItem = () => {
-
     if (item.name != null && item.name != "") {
       let _item = { ...item };
 
@@ -183,7 +182,7 @@ const TableCraft = (props) => {
         <Button label="Нет" icon="pi pi-times" outlined onClick={hideDeleteItemDialog} />
         <Button label="Да" icon="pi pi-check" severity="danger" onClick={deleteItem} />
     </React.Fragment>
-);
+  );
 
   const createId = () => {
     //Получение массива id
@@ -200,10 +199,11 @@ const TableCraft = (props) => {
     return missing[0];
   };
 
-  let dataWasReceived = false;
-  if (columns.length !== 0) {
-    dataWasReceived = true;
-  }
+  const dataWasReceived = columns.length !== 0;
+  // let dataWasReceived = false;
+  // if (columns.length !== 0) {
+  //   dataWasReceived = true;
+  // }
   useEffect(() => {
     requestData();
     initFilters();
@@ -212,9 +212,9 @@ const TableCraft = (props) => {
   }, []);
 
   //Это нужно для того, чтобы значение item обновлялось непосредственно после его обновления, а не после перерисовки страницы
-  useEffect(() => {
-    setItem(item);
-  })
+  // useEffect(() => {
+  //   setItem(item);
+  // })
 
   useEffect(() => {
     try {
