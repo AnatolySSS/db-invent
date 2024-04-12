@@ -7,7 +7,7 @@ import formatDate from "../../function-helpers/formatDate";
 import changeDateType from "../../function-helpers/changeDateType";
 
 const UploadCraft = (props) => {
-  const { uploadItData, uploadFurnitureData, setVisible } = props;
+  const { uploadItData, uploadFurnitureData, uploadUnmarkedData, setVisible, userAuth } = props;
   const toast = useRef(null);
 
   const onUpload = (type) => {
@@ -62,14 +62,19 @@ const UploadCraft = (props) => {
           });
           return v;
         });
+
         switch (type) {
           case "it":
-            uploadItData(jsonData);
+            uploadItData(jsonData, userAuth.division);
             onUpload("IT");
             break;
           case "furniture":
-            uploadFurnitureData(jsonData);
+            uploadFurnitureData(jsonData, userAuth.division);
             onUpload("FURNITURE");
+            break;
+          case "unmarked":
+            uploadUnmarkedData(jsonData, userAuth.division);
+            onUpload("UNMARKED");
             break;
           default:
             break;
@@ -106,6 +111,17 @@ const UploadCraft = (props) => {
           maxFileSize={1000000}
           customUpload={true}
           uploadHandler={uploadData("furniture")}
+        />
+        <FileUpload
+          chooseLabel="Upload UNMARKED data"
+          className="flex"
+          mode="basic"
+          name="unmarkedData"
+          url="/api/unmarkedData"
+          accept="xlsx/*"
+          maxFileSize={1000000}
+          customUpload={true}
+          uploadHandler={uploadData("unmarked")}
         />
       </div>
     </div>

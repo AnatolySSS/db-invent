@@ -7,6 +7,7 @@ let initialState = {
   fullName: "",
   isAuth: false,
   role: "",
+  division: null,
   message: ""
 };
 
@@ -27,26 +28,25 @@ const authReducer = (state = initialState, action) => {
   }
 };
 
-const setAuth = (login, fullName, isAuth, role, message) => ({ type: SET_AUTH, data: {login, fullName, isAuth, role, message} });
+const setAuth = (login, fullName, isAuth, role, division, message) => ({ type: SET_AUTH, data: {login, fullName, isAuth, role, division, message} });
 
 const setMessage = (message) => ({ type: SET_MESSAGE, data: {message} })
 
 export const getAuthUserData = () => {
-  return (dispatch) => {
-    return AuthAPI.me().then((data) => {
-      switch (data.resultCode) {
-        case 0:
-          let { login, full_name, role } = data.user;
-          dispatch(setAuth(login, full_name, true, role, data.message));
-          break;
-        case 1:
-          dispatch(setMessage(data.message));
-          break;
-        default:
-          dispatch(setMessage(data.message));
-          break;
-      }
-    });
+  return async (dispatch) => {
+    const data = await AuthAPI.me();
+    switch (data.resultCode) {
+      case 0:
+        let { login, full_name, role, division } = data.user;
+        dispatch(setAuth(login, full_name, true, role, division, data.message));
+        break;
+      case 1:
+        dispatch(setMessage(data.message));
+        break;
+      default:
+        dispatch(setMessage(data.message));
+        break;
+    }
   };
 };
 

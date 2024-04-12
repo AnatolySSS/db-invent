@@ -9,29 +9,29 @@ const instance = axios.create({
 });
 
 export const DataAPI = {
-  async getData(type) {
+  async getData(type, userDivision) {
     const responce = await instance
-      .post(`getData`, { type });
+      .post(`getData`, { type, userDivision });
     return responce.data;
   },
-  async addData(type, rowData, rowId) {
+  async addData(type, rowData, userDivision) {
     const responce = await instance
-      .post(`addData`, { type, rowData });
+      .post(`addData`, { type, rowData, userDivision });
     return responce.data;
   },
-  async updateData(type, rowData, rowId) {
+  async updateData(type, rowData, userDivision) {
     const responce = await instance
-      .put(`updateData`, { type, rowData, rowId });
+      .put(`updateData`, { type, rowData, userDivision });
     return responce.data;
   },
-  async deleteData(type, rowId) {
+  async deleteData(type, rowId, userDivision) {
     const responce = await instance
-      .delete(`deleteData`, {data: { type, rowId }});
+      .delete(`deleteData`, {data: { type, rowId, userDivision }});
     return responce.data;
   },
-  async uploadData(type, data) {
+  async uploadData(type, data, userDivision) {
     const responce = await instance
-      .post(`uploadData`, { type, data });
+      .post(`uploadData`, { type, data, userDivision });
     return responce.data;
   },
 }
@@ -59,14 +59,14 @@ export const AuthAPI = {
 }
 
 export const InventoryAPI = {
-  async getYears() {
+  async getYears(userDivision) {
     const responce = await instance
-      .get(`years`);
+      .post(`years`, { userDivision });
     return responce.data;
   },
-  async getData(tableName, year) {
+  async getData(tableName, year, userDivision) {
     const responce = await instance
-      .post(`getYearData`, { tableName, year });
+      .post(`getYearData`, { tableName, year, userDivision });
     return responce.data;
   },
 }

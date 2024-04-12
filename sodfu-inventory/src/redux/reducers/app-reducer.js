@@ -25,11 +25,9 @@ export const initializedSuccess = () => {
 };
 
 export const initializeApp = () => {
-  return (dispatch) => {
-    let promis = dispatch(getAuthUserData())
-    promis.then(() => {
-      dispatch(initializedSuccess())
-    })
+  return async (dispatch) => {
+    await dispatch(getAuthUserData());
+    dispatch(initializedSuccess());
   };
 };
 

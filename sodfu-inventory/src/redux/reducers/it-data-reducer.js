@@ -2,10 +2,10 @@ import { DataAPI } from "../../api/api";
 import { FilterMatchMode, FilterOperator } from "primereact/api";
 import changeDateType from "../../function-helpers/changeDateType";
 
-const SET_DATA = "sodfu-inventory/it-download-reducer/SET_DATA";
-const SET_UPLOAD_STATUS = "sodfu-inventory/it-download-reducer/SET_UPLOAD_STATUS";
-const TOGGLE_IS_FETCHING = "sodfu-inventory/it-download-reducer/TOGGLE_IS_FETCHING";
-const SET_VALIDATION_STATUS = "sodfu-inventory/it-download-reducer/SET_VALIDATION_STATUS";
+const SET_DATA = "sodfu-inventory/it-data-reducer/SET_DATA";
+const SET_UPLOAD_STATUS = "sodfu-inventory/it-data-reducer/SET_UPLOAD_STATUS";
+const TOGGLE_IS_FETCHING = "sodfu-inventory/it-data-reducer/TOGGLE_IS_FETCHING";
+const SET_VALIDATION_STATUS = "sodfu-inventory/it-data-reducer/SET_VALIDATION_STATUS";
 
 let initialState = {
   columns: [],
@@ -112,21 +112,21 @@ const changeDateFormat = (data) => {
   return data
 };
 
-export const requestData = () => {
+export const requestData = (userDivision) => {
   return (dispatch) => {
     dispatch(toggleIsFetching(true));
-    DataAPI.getData("it").then((data) => {
+    DataAPI.getData("it", userDivision).then((data) => {
       dispatch(toggleIsFetching(false));
       dispatch(setData(changeDateFormat(data)));
     });
   };
 };
 
-export const updateData = (rowData, rowId) => {
+export const updateData = (rowData, userDivision) => {
   return (dispatch) => {
     dispatch(toggleIsFetching(true));
-    DataAPI.updateData("it", rowData, rowId).then((message) => {
-      DataAPI.getData("it").then((data) => {
+    DataAPI.updateData("it", rowData, userDivision).then((message) => {
+      DataAPI.getData("it", userDivision).then((data) => {
         dispatch(toggleIsFetching(false));
         dispatch(setData(changeDateFormat(data), message.message));
       });
@@ -134,11 +134,11 @@ export const updateData = (rowData, rowId) => {
   };
 };
 
-export const deleteData = (rowId) => {
+export const deleteData = (rowId, userDivision) => {
   return (dispatch) => {
     dispatch(toggleIsFetching(true));
-    DataAPI.deleteData("it", rowId).then((message) => {
-      DataAPI.getData("it").then((data) => {
+    DataAPI.deleteData("it", rowId, userDivision).then((message) => {
+      DataAPI.getData("it", userDivision).then((data) => {
         dispatch(toggleIsFetching(false));
         dispatch(setData(changeDateFormat(data), message.message));
       });
@@ -146,12 +146,12 @@ export const deleteData = (rowId) => {
   };
 };
 
-export const addData = (rowData) => {
+export const addData = (rowData, userDivision) => {
   return (dispatch) => {
     dispatch(toggleIsFetching(true));
-    DataAPI.addData("it", rowData).then((data) => {
+    DataAPI.addData("it", rowData, userDivision).then((data) => {
       dispatch(setValidationStatus(data));
-      DataAPI.getData("it").then((data) => {
+      DataAPI.getData("it", userDivision).then((data) => {
         dispatch(toggleIsFetching(false));
         dispatch(setData(changeDateFormat(data)));
       });
@@ -159,10 +159,10 @@ export const addData = (rowData) => {
   };
 };
 
-export const uploadData = (data) => {
+export const uploadData = (data, userDivision) => {
   return (dispatch) => {
     dispatch(toggleIsFetching(true));
-    DataAPI.uploadData("it", data).then((data) => {
+    DataAPI.uploadData("it", data, userDivision).then((data) => {
       dispatch(toggleIsFetching(false));
       dispatch(setUploadStatus(true));
     });

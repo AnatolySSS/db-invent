@@ -1,5 +1,5 @@
 import { networkInterfaces } from "os";
-import { createConnection, createPool } from "mysql2";
+import { createPool } from "mysql2";
 import * as dotenv from "dotenv";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -10,7 +10,6 @@ const setConnection = () => {
   //Получение пути к текущей папке для настроки .env
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = dirname(__filename);
-  console.log(__dirname);
   dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
   const nets = networkInterfaces();

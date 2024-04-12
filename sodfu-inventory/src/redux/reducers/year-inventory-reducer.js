@@ -93,13 +93,12 @@ const changeDateFormat = (data) => {
   return data
 };
 
-export const requestData = (tableName, year) => {
-  return (dispatch) => {
+export const requestData = (tableName, year, userDivision) => {
+  return async (dispatch) => {
     dispatch(toggleIsFetching(true));
-    InventoryAPI.getData(tableName, year).then((data) => {
-      dispatch(toggleIsFetching(false));
-      dispatch(setData(changeDateFormat(data)));
-    });
+    const data = await InventoryAPI.getData(tableName, year, userDivision);
+    dispatch(toggleIsFetching(false));
+    dispatch(setData(changeDateFormat(data)));
   };
 };
 

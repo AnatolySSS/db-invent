@@ -1,0 +1,51 @@
+@media screen and (min-width: 1246px) {
+    .multiSelect {
+        width: 300px;
+    }
+}
+
+@media screen and (max-width: 1245px) {
+    /* .main {
+        flex-direction: column;
+    } */
+
+    .name {
+        display: none;
+    }
+
+    .multiSelect {
+        width: 200px;
+    }
+
+    .globalFilterGroup {
+        width: 100%;
+    }
+
+    .globalFilter {
+        width: 100%;
+        margin-left: 8px;
+    }
+
+    .globalFilter input {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 921px) {
+    .multiSelect {
+        display: none;
+    }
+
+    .globalFilterGroup {
+        width: 100%;
+    }
+
+    .globalFilter {
+        width: 100%;
+    }
+
+    .globalFilter input {
+        width: 100%;
+    }
+}
+

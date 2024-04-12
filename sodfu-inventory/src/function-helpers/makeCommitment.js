@@ -12,15 +12,11 @@ import {
   BorderStyle,
   VerticalAlign,
   HeightRule,
-  ImageRun,
-  PageNumber,
-  Header,
   WidthType,
   convertInchesToTwip,
   UnderlineType,
   Footer,
   TabStopType,
-  Tab,
 } from "docx";
 import { saveAs } from "file-saver";
 

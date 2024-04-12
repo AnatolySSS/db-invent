@@ -15,7 +15,7 @@ import { Image } from 'primereact/image';
 
 const LoginSchema = Yup.object().shape({
   login: Yup.string()
-    .min(6, 'Too Short!')
+    .min(3, 'Too Short!')
     .max(50, 'Too Long!')
     .required('Required'),
   password: Yup.string()

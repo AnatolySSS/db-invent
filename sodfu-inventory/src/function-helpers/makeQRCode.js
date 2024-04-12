@@ -1,6 +1,6 @@
 import { jsPDF } from "jspdf"
 
-export function makeQRCode(selectedItems) {
+export function makeQRCode(selectedItems, div) {
 
     let qrcodes = [];
     let images = []
@@ -26,9 +26,9 @@ export function makeQRCode(selectedItems) {
   
     const getImgUrl = (qrcode) => {
       try {
-        return require(`./../img/qr_code/${qrcode}.png`)
+        return require(`./../img/${qrcode}.png`)
       } catch (error) {
-        return require(`./../img/qr_code/no_data.png`)
+        return require(`./../img/division_${div}/qr_code/no_data.png`)
       }
     }
   

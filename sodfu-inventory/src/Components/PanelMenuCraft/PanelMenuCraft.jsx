@@ -6,13 +6,13 @@ import "primeicons/primeicons.css";
 import { NavLink } from "react-router-dom";
 import { PanelMenu } from "primereact/panelmenu";
 import { classNames } from "primereact/utils";
-import { useState } from "react";
+import { PiOfficeChairBold } from "react-icons/pi";
 
 const PanelMenuCraft = (props) => {
-  const { yearsIt, yearsFurniture, requestYears } = props
+  const { yearsIt, yearsFurniture, yearsUnmarked, requestYears, userDivision } = props
 
   useEffect(() => {
-    requestYears();
+    requestYears(userDivision);
   }, []);
 
   const items = [
@@ -54,8 +54,28 @@ const PanelMenuCraft = (props) => {
                   color: "#495057",
                 }}
               >
-                <i className="pi pi-fw pi-box mr-2"></i>
+                <i className="mr-3"><PiOfficeChairBold/></i>
                 Мебель
+              </NavLink>
+            );
+          },
+        },
+        {
+          template: (item, options) => {
+            return (
+              <NavLink
+                to="/unmarked"
+                className={classNames(
+                  options.className,
+                  "w-full p-link flex align-items-center"
+                )}
+                style={{
+                  textDecoration: "none",
+                  color: "#495057",
+                }}
+              >
+                <i className="pi pi-fw pi-box mr-2"></i>
+                Прочее
               </NavLink>
             );
           },
@@ -114,7 +134,7 @@ const PanelMenuCraft = (props) => {
         },
         {
           label: "Мебель",
-          icon: "pi pi-fw pi-box",
+          icon: <i className="mr-3"><PiOfficeChairBold/></i>,
           items: yearsFurniture.map((year) => {
             return {
               template: (item, options) => {
@@ -138,29 +158,55 @@ const PanelMenuCraft = (props) => {
             };
           }),
         },
+        {
+          label: "Прочее",
+          icon: "pi pi-fw pi-box",
+          items: yearsUnmarked.map((year) => {
+            return {
+              template: (item, options) => {
+                return (
+                  <NavLink
+                    to={`/unmarked/${year}`}
+                    className={classNames(
+                      options.className,
+                      "w-full p-link flex align-items-center pl-4"
+                    )}
+                    style={{
+                      textDecoration: "none",
+                      color: "#495057",
+                    }}
+                  >
+                    <i className="pi pi-fw pi-calendar mr-2"></i>
+                    {year}
+                  </NavLink>
+                );
+              },
+            };
+          }),
+        },
       ],
     },
-    // {
-    //   label: "Загрузить данные",
-    //   icon: "pi pi-fw pi-download",
-    //   items: [
-    //     {
-    //       template: (item, options) => {
-    //         return (
-    //             <NavLink to="/upload"
-    //               className={classNames(options.className,"w-full p-link flex align-items-center")}
-    //               style={{
-    //                 textDecoration: "none",
-    //                 color: "#495057",
-    //               }}>
-    //               <i className="pi pi-fw pi-download mr-2"></i>
-    //               Загрузить данные
-    //             </NavLink>
-    //         );
-    //       },
-    //     },
-    //   ],
-    // },
+    {
+      label: "Загрузить данные",
+      icon: "pi pi-fw pi-download",
+      items: [
+        {
+          template: (item, options) => {
+            return (
+                <NavLink to="/upload"
+                  className={classNames(options.className,"w-full p-link flex align-items-center")}
+                  style={{
+                    textDecoration: "none",
+                    color: "#495057",
+                  }}>
+                  <i className="pi pi-fw pi-download mr-2"></i>
+                  Загрузить данные
+                </NavLink>
+            );
+          },
+        },
+      ],
+    },
   ];
 
   return (

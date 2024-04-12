@@ -2,10 +2,10 @@ import { DataAPI } from "../../api/api";
 import { FilterMatchMode, FilterOperator } from "primereact/api";
 import changeDateType from "../../function-helpers/changeDateType";
 
-const SET_DATA = "sodfu-inventory/furniture-download-reducer/SET_DATA";
-const SET_UPLOAD_STATUS = "sodfu-inventory/furniture-download-reducer/SET_UPLOAD_STATUS";
-const TOGGLE_IS_FETCHING = "sodfu-inventory/furniture-download-reducer/TOGGLE_IS_FETCHING";
-const SET_VALIDATION_STATUS = "sodfu-inventory/furniture-download-reducer/SET_VALIDATION_STATUS";
+const SET_DATA = "sodfu-inventory/furniture-data-reducer/SET_DATA";
+const SET_UPLOAD_STATUS = "sodfu-inventory/furniture-data-reducer/SET_UPLOAD_STATUS";
+const TOGGLE_IS_FETCHING = "sodfu-inventory/furniture-data-reducer/TOGGLE_IS_FETCHING";
+const SET_VALIDATION_STATUS = "sodfu-inventory/furniture-data-reducer/SET_VALIDATION_STATUS";
 
 let initialState = {
   columns: [],
@@ -104,21 +104,21 @@ const changeDateFormat = (data) => {
   return data
 };
 
-export const requestData = () => {
+export const requestData = (userDivision) => {
   return (dispatch) => {
     dispatch(toggleIsFetching(true));
-    DataAPI.getData("furniture").then((data) => {
+    DataAPI.getData("furniture", userDivision).then((data) => {
       dispatch(toggleIsFetching(false));
       dispatch(setData(changeDateFormat(data)));
     });
   };
 };
 
-export const updateData = (rowData, rowId) => {
+export const updateData = (rowData, userDivision) => {
   return (dispatch) => {
     dispatch(toggleIsFetching(true));
-    DataAPI.updateData("furniture", rowData, rowId).then((message) => {
-      DataAPI.getData("furniture").then((data) => {
+    DataAPI.updateData("furniture", rowData, userDivision).then((message) => {
+      DataAPI.getData("furniture", userDivision).then((data) => {
         dispatch(toggleIsFetching(false));
         dispatch(setData(changeDateFormat(data), message.message));
       });
@@ -126,11 +126,11 @@ export const updateData = (rowData, rowId) => {
   };
 };
 
-export const deleteData = (rowId) => {
+export const deleteData = (rowId, userDivision) => {
   return (dispatch) => {
     dispatch(toggleIsFetching(true));
-    DataAPI.deleteData("furniture", rowId).then((message) => {
-      DataAPI.getData("furniture").then((data) => {
+    DataAPI.deleteData("furniture", rowId, userDivision).then((message) => {
+      DataAPI.getData("furniture", userDivision).then((data) => {
         dispatch(toggleIsFetching(false));
         dispatch(setData(changeDateFormat(data), message.message));
       });
@@ -138,12 +138,12 @@ export const deleteData = (rowId) => {
   };
 };
 
-export const addData = (rowData) => {
+export const addData = (rowData, userDivision) => {
   return (dispatch) => {
     dispatch(toggleIsFetching(true));
-    DataAPI.addData("furniture", rowData).then((data) => {
+    DataAPI.addData("furniture", rowData, userDivision).then((data) => {
       dispatch(setValidationStatus(data));
-      DataAPI.getData("furniture").then((data) => {
+      DataAPI.getData("furniture", userDivision).then((data) => {
         dispatch(toggleIsFetching(false));
         dispatch(setData(changeDateFormat(data)));
       });
@@ -151,10 +151,10 @@ export const addData = (rowData) => {
   };
 };
 
-export const uploadData = (data) => {
+export const uploadData = (data, userDivision) => {
   return (dispatch) => {
     dispatch(toggleIsFetching(true));
-    DataAPI.uploadData("furniture", data).then((data) => {
+    DataAPI.uploadData("furniture", data, userDivision).then((data) => {
       dispatch(toggleIsFetching(false));
       dispatch(setUploadStatus(true));
     });

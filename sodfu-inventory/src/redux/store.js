@@ -1,6 +1,7 @@
 import { applyMiddleware, combineReducers, legacy_createStore as createStore, compose } from "redux"
 import itDataReducer from "./reducers/it-data-reducer";
 import furnitureDataReducer from "./reducers/furniture-data-reducer";
+import unmarkedDataReducer from "./reducers/unmarked-data-reducer";
 import yearInventoryReducer from "./reducers/year-inventory-reducer";
 import sideBarReducer from "./reducers/side-bar-reducer";
 import panelMenuReducer from "./reducers/panel-menu-reducer";
@@ -11,6 +12,7 @@ import thunkMiddleware from "redux-thunk"
 let reducers = combineReducers({
     itData: itDataReducer,
     furnitureData: furnitureDataReducer,
+    unmarkedData: unmarkedDataReducer,
     sideBar: sideBarReducer,
     panelMenu: panelMenuReducer,
     auth: authReducer,

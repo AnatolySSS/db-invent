@@ -7,6 +7,8 @@ let mapStateToProps = (state) => {
   return {
     yearsIt: state.panelMenu.yearsIt,
     yearsFurniture: state.panelMenu.yearsFurniture,
+    yearsUnmarked: state.panelMenu.yearsUnmarked,
+    userDivision: state.auth.division,
   };
 };
 

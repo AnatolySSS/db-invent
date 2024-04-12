@@ -1,14 +1,12 @@
-import db from "../models/index.js";
-const CurrentYearInventaryIt = db.currentYearInventaryIt
-const CurrentYearInventaryFurniture = db.currentYearInventaryFurniture
-const PreviousYearInventaryIt = db.previousYearInventaryIt
-const PreviousYearInventaryFurniture = db.previousYearInventaryFurniture
-const libDataIt = db.libDataIt
-const valuesDataIt = db.valuesDataIt
-const libDataFurniture = db.libDataFurniture
+import db from "../models/_index.js";
+const CurrentYearInventaryIt = db.DIVISIONS.D3.currentYearInventaryIt
+const CurrentYearInventaryFurniture = db.DIVISIONS.D3.currentYearInventaryFurniture
+const PreviousYearInventaryIt = db.DIVISIONS.D3.previousYearInventaryIt
+const PreviousYearInventaryFurniture = db.DIVISIONS.D3.previousYearInventaryFurniture
+const libDataIt = db.DIVISIONS.D3.itLib
+const valuesDataIt = db.DIVISIONS.D3.itValues
+const libDataFurniture = db.DIVISIONS.D3.furnitureLib
 import setConnection from "../config/db-connection.js";
-import changeDateType from "../changeDateType.js";
-import { longHexNumber } from "docx";
 
 //подключение в базе данных
 const { connection } = setConnection();
@@ -69,11 +67,11 @@ export const InventaryController = {
         );
         switch (tableName) {
           case "it":
-            await CurrentYearInventaryIt[currentYear].sync()
+            await CurrentYearInventaryIt.sync()
             await basicInventaryData.forEach(element => {
-              CurrentYearInventaryIt[currentYear].create({ qr_code: element.qr_code, name: element.name });
+              CurrentYearInventaryIt.create({ qr_code: element.qr_code, name: element.name });
             });
-            const CurrentYearInventaryItNew = await CurrentYearInventaryIt[currentYear].findAll({ raw: true });
+            const CurrentYearInventaryItNew = await CurrentYearInventaryIt.findAll({ raw: true });
             responce.json({
               tableName: tableName,
               message: `Таблица ${tableName} за ${currentYear} год создана`,
@@ -81,12 +79,11 @@ export const InventaryController = {
             });
             break;
           case "furniture":
-            console.log('here');
-            await CurrentYearInventaryFurniture[currentYear].sync()
+            await CurrentYearInventaryFurniture.sync()
             await basicInventaryData.forEach(element => {
-              CurrentYearInventaryFurniture[currentYear].create({ qr_code: element.qr_code, name: element.name });
+              CurrentYearInventaryFurniture.create({ qr_code: element.qr_code, name: element.name });
             });
-            const CurrentYearInventaryFurnitureNew = await CurrentYearInventaryIt[currentYear].findAll({ raw: true });
+            const CurrentYearInventaryFurnitureNew = await CurrentYearInventaryIt.findAll({ raw: true });
             responce.json({
               tableName: tableName,
               message: `Таблица ${tableName} за ${currentYear} год создана`,
@@ -114,28 +111,28 @@ export const InventaryController = {
       let itemName
       switch (tableName) {
         case "it":
-          await CurrentYearInventaryIt[currentYear].update({ checked: true }, {
+          await CurrentYearInventaryIt.update({ checked: true }, {
             where: {
               qr_code: qrCode
             }
           });
-          await CurrentYearInventaryIt[currentYear].update({ user: userName }, {
+          await CurrentYearInventaryIt.update({ user: userName }, {
             where: {
               qr_code: qrCode
             }
           });
-          await CurrentYearInventaryIt[currentYear].update({ location: roomNumber }, {
+          await CurrentYearInventaryIt.update({ location: roomNumber }, {
             where: {
               qr_code: qrCode
             }
           });
-          await CurrentYearInventaryIt[currentYear].update({ scan_date: new Date() }, {
+          await CurrentYearInventaryIt.update({ scan_date: new Date() }, {
             where: {
               qr_code: qrCode
             }
           });
 
-          itemName = await CurrentYearInventaryIt[currentYear].findOne({ where: { qr_code: qrCode } })
+          itemName = await CurrentYearInventaryIt.findOne({ where: { qr_code: qrCode } })
           responce.json({
             tableName: tableName,
             message: `${itemName.name} инвентаризован в таблице ${tableName} за ${currentYear} год`,
@@ -143,28 +140,28 @@ export const InventaryController = {
           });
           break;
         case "furniture":
-          await CurrentYearInventaryFurniture[currentYear].update({ checked: true }, {
+          await CurrentYearInventaryFurniture.update({ checked: true }, {
             where: {
               qr_code: qrCode
             }
           });
-          await CurrentYearInventaryFurniture[currentYear].update({ user: userName }, {
+          await CurrentYearInventaryFurniture.update({ user: userName }, {
             where: {
               qr_code: qrCode
             }
           });
-          await CurrentYearInventaryFurniture[currentYear].update({ location: roomNumber }, {
+          await CurrentYearInventaryFurniture.update({ location: roomNumber }, {
             where: {
               qr_code: qrCode
             }
           });
-          await CurrentYearInventaryFurniture[currentYear].update({ scan_date: new Date() }, {
+          await CurrentYearInventaryFurniture.update({ scan_date: new Date() }, {
             where: {
               qr_code: qrCode
             }
           });
 
-          itemName = await CurrentYearInventaryFurniture[currentYear].findOne({ where: { qr_code: qrCode } })
+          itemName = await CurrentYearInventaryFurniture.findOne({ where: { qr_code: qrCode } })
           responce.json({
             tableName: tableName,
             message: `${itemName.name} инвентаризован в таблице ${tableName} за ${currentYear} год`,
@@ -223,12 +220,12 @@ export const InventaryController = {
         furniture = await PreviousYearInventaryFurniture.findAll({ where: { location: roomNumber }, raw : true, })
       }
 
-      it_status = await CurrentYearInventaryIt[currentYear].findAll({
+      it_status = await CurrentYearInventaryIt.findAll({
         attributes: ["name", "qr_code", "checked", "location"], raw : true, 
         // where: { location: roomNumber },
       });
       
-      furniture_status = await CurrentYearInventaryFurniture[currentYear].findAll({
+      furniture_status = await CurrentYearInventaryFurniture.findAll({
         attributes: ["name", "qr_code", "checked", "location"],raw : true, 
         // where: { location: roomNumber },
       });
@@ -257,9 +254,6 @@ export const InventaryController = {
         })
         return v;
       }).filter(v => v.location == roomNumber)
-
-      console.log(it_status);
-      console.log(furniture_status);
 
       // //Форматирование данных по оборудованию
       // it = it.map(v => {
@@ -387,10 +381,10 @@ export const InventaryController = {
         furniture = await PreviousYearInventaryFurniture.findAll({ attributes: ["qr_code", "location"], raw : true, })
       }
 
-      it_status = await CurrentYearInventaryIt[currentYear].findAll({
+      it_status = await CurrentYearInventaryIt.findAll({
         attributes: ["name", "qr_code", "checked", "location"], raw : true,
       });
-      furniture_status = await CurrentYearInventaryFurniture[currentYear].findAll({
+      furniture_status = await CurrentYearInventaryFurniture.findAll({
         attributes: ["name", "qr_code", "checked", "location"], raw : true,
       });
 

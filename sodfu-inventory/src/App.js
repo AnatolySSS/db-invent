@@ -7,43 +7,49 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { initializeApp } from "./redux/reducers/app-reducer";
 import { requestYears } from "./redux/reducers/panel-menu-reducer";
 import SidebarCraftContainer from "./Components/SidebarCraft/SidebarCraftContainer";
-import TableCraftItContainer from "./Components/TableCraft/TableCraftItContainer";
-import TableCraftFurnitureContainer from "./Components/TableCraft/TableCraftFurnitureContainer";
+import TableCraftItContainer from "./Components/Tables/TableCraft/TableCraftItContainer";
+import TableCraftFurnitureContainer from "./Components/Tables/TableCraft/TableCraftFurnitureContainer";
 import UploadCraftContainer from "./Components/UploadCraft/UploadCraftContainer";
 import LoginCraftContainer from "./Components/LoginCraft/LoginCraftContainer";
-import YearInventoryContainer from "./Components/YearInventory/YearInventoryContainer";
+import YearInventoryContainer from "./Components/Tables/YearInventory/YearInventoryContainer";
 import ChartCraftContainer from "./Components/Charts/ChartCraftContainer";
+import TableCraftUnmarkedContainer from "./Components/Tables/TableCraft/TableCraftUnmarkedContainer";
 
 class App extends React.Component {
-  componentDidMount() {
-    this.props.initializeApp()
-    this.props.requestYears()
+  async componentDidMount() {
+    await this.props.initializeApp();
+    await this.props.requestYears(this.props.userDivision);
   }
   render() {
     return (
       <BrowserRouter>
         <div>
-          {/* <div> */}
-            <SidebarCraftContainer />
-          {/* </div> */}
-          <div className="max-w-screen h-screen">
+          <SidebarCraftContainer />
+          <div className="w-screen h-screen">
             <Routes>
               <Route path="/" element={<LoginCraftContainer />} />
               <Route path="/login" element={<LoginCraftContainer />} />
               <Route path="/it" element={<TableCraftItContainer />} />
               <Route path="/furniture" element={<TableCraftFurnitureContainer />} />
+              <Route path="/unmarked" element={<TableCraftUnmarkedContainer />} />
               <Route path="/upload" element={<UploadCraftContainer />} />
               <Route path="/charts" element={<ChartCraftContainer />} />
               { this.props.yearsIt.map((year, index) => {
-                let id = 1000 + index
+                let id = 1000 + index;
                 return (
                   <Route key={id} path={`/it/:year`} element={<YearInventoryContainer tableName="it"/>} />
                 )
               })}
               { this.props.yearsFurniture.map((year, index) => {
-                let id = 2000 + index
+                let id = 2000 + index;
                 return (
                   <Route key={id} path={`/furniture/:year`} element={<YearInventoryContainer tableName="furniture"/>} />
+                )
+              })}
+              { this.props.yearsUnmarked.map((year, index) => {
+                let id = 3000 + index;
+                return (
+                  <Route key={id} path={`/unmarked/:year`} element={<YearInventoryContainer tableName="unmarked"/>} />
                 )
               })}
             </Routes>
@@ -59,6 +65,8 @@ const mapStateToProps = (state) => {
     initialized: state.app.initialized,
     yearsIt: state.panelMenu.yearsIt,
     yearsFurniture: state.panelMenu.yearsFurniture,
+    yearsUnmarked: state.panelMenu.yearsUnmarked,
+    userDivision: state.auth.division,
   };
 };
 

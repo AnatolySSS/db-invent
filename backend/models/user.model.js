@@ -18,6 +18,9 @@ export default (sequelize, Sequelize) => {
     role: {
       type: Sequelize.STRING,
     },
+    division: {
+      type: Sequelize.INTEGER,
+    },
   });
 
   return User;

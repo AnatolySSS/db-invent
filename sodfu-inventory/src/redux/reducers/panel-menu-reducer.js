@@ -5,6 +5,7 @@ const SET_YEARS = "sodfu-inventory/panelMenuReducer/SET_YEARS";
 let initialState = {
   yearsIt: [],
   yearsFurniture: [],
+  yearsUnmarked: [],
 };
 
 const panelMenuReducer = (state = initialState, action) => {
@@ -14,19 +15,24 @@ const panelMenuReducer = (state = initialState, action) => {
         ...state,
         yearsIt: action.yearsIt,
         yearsFurniture: action.yearsFurniture,
+        yearsUnmarked: action.yearsUnmarked,
       };
     default:
       return state;
   }
 };
 
-export const setYears = (years) => ({ type: SET_YEARS, yearsIt: years.yearsIt, yearsFurniture: years.yearsFurniture });
+export const setYears = (years) => ({
+  type: SET_YEARS,
+  yearsIt: years.yearsIt,
+  yearsFurniture: years.yearsFurniture,
+  yearsUnmarked: years.yearsUnmarked,
+});
 
-export const requestYears = () => {
-  return (dispatch) => {
-    InventoryAPI.getYears("years").then((data) => {
-      dispatch(setYears(data));
-    });
+export const requestYears = (userDivision) => {
+  return async (dispatch) => {
+    const data = await InventoryAPI.getYears(userDivision);
+    dispatch(setYears(data));
   };
 };
 
