@@ -26,9 +26,9 @@ export function makeQRCode(selectedItems, div) {
   
     const getImgUrl = (qrcode) => {
       try {
-        return require(`./../img/${qrcode}.png`)
+        return require(`./../img/division_${div}/qr_code/${qrcode}.png`)
       } catch (error) {
-        return require(`./../img/division_${div}/qr_code/no_data.png`)
+        return require(`./../img/no_data.png`)
       }
     }
   
@@ -66,7 +66,5 @@ export function makeQRCode(selectedItems, div) {
       error => {
       }
     );
-    
-    console.log(qrcodes);
   }
   

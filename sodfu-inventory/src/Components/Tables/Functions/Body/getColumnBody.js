@@ -60,13 +60,16 @@ export const getColumnBody = (col) => {
     }
   }
   export const imgBodyTemplate = (div) => (rowData) => {
+    
+    let qrCodeHeight;
+    div == 3 ? qrCodeHeight = 70 : qrCodeHeight = 60;
     return (
       <Image
         src={getQrCodeImg(rowData.qr_code, div)}
         zoomSrc={getQrCodeImg(rowData.qr_code, div)}
         alt="No Image"
         width="60"
-        height="70"
+        height={qrCodeHeight}
         preview
       />
     );
