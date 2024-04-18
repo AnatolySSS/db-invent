@@ -214,6 +214,7 @@ const TableCraft = (props) => {
             globalFilterValue={globalFilterValue}
             beginInventory={beginInventory}
             hasCurrentInventory={hasCurrentInventory}
+            requestCurrentInventory={requestCurrentInventory}
           />
         }
         paginator

@@ -32,6 +32,7 @@ export const Header = (props) => {
     globalFilterValue,
     beginInventory,
     hasCurrentInventory,
+    requestCurrentInventory,
   } = props;
 
   const userMenu = useRef(null);
@@ -95,6 +96,7 @@ export const Header = (props) => {
       icon: <i className="mr-2"><MdOutlineInventory /></i>,
       command: async () => {
         await beginInventory(type, userAuth.division);
+        await requestCurrentInventory(type, userAuth.division);
         userToast.current.show({
           severity: "success",
           summary: "Info",
