@@ -1,15 +1,10 @@
-import React from "react";
+import React, {useState} from "react";
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
-import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { InputNumber } from "primereact/inputnumber";
 import { Dropdown } from "primereact/dropdown";
-import { Calendar } from "primereact/calendar";
-import { MultiStateCheckbox } from "primereact/multistatecheckbox";
 import { getDropdownOptions } from "../Functions/getDropdownOptions";
-import { formatDate } from "../../../Functions/Helpers/formatDate";
-import { multiStateCheckboxOptions } from "../../../Functions/Filters/getColumnFilterElement";
 import { hideNew } from "../Functions/hideNew";
 import { saveItem } from "../Functions/saveItem";
 import styles from "./DialogCraftUnmarked.module.css";
@@ -29,6 +24,8 @@ export const DialogCraftUnmarked = (props) => {
     userAuth,
   } = props;
 
+  const [disabled, setDisabled] = useState(true);
+
   return (
     <Dialog
       visible={ItemDialog}
@@ -45,7 +42,9 @@ export const DialogCraftUnmarked = (props) => {
         setItemDialog,
         setItem,
         emptyItem,
-        userAuth
+        userAuth,
+        disabled,
+        setDisabled
       )}
       onHide={hideNew}
     >
@@ -62,6 +61,7 @@ export const DialogCraftUnmarked = (props) => {
             autoFocus={true}
             rows={3}
             cols={20}
+            disabled={disabled}
           />
         </div>
         <div className="col-6">
@@ -74,6 +74,7 @@ export const DialogCraftUnmarked = (props) => {
             options={getDropdownOptions("type", values)}
             onChange={(e) => setItem({ ...item, type: e.target.value })}
             placeholder={item.type || ""}
+            disabled={disabled}
           />
         </div>
         <div className="col-6">
@@ -86,6 +87,7 @@ export const DialogCraftUnmarked = (props) => {
             options={getDropdownOptions("location", values)}
             onChange={(e) => setItem({ ...item, location: e.target.value })}
             placeholder={item.location || ""}
+            disabled={disabled}
           />
         </div>
         <div className="col-4">
@@ -102,6 +104,7 @@ export const DialogCraftUnmarked = (props) => {
             buttonLayout="horizontal"
             step={1}
             min={0}
+            disabled={disabled}
           />
         </div>
         <div className="col-4">
@@ -114,6 +117,7 @@ export const DialogCraftUnmarked = (props) => {
             options={getDropdownOptions("measurement", values)}
             onChange={(e) => setItem({ ...item, measurement: e.target.value })}
             placeholder={item.measurement || ""}
+            disabled={disabled}
           />
         </div>
         <div className="col-4">
@@ -127,6 +131,7 @@ export const DialogCraftUnmarked = (props) => {
             mode="currency"
             currency="RUB"
             locale="ru-RU"
+            disabled={disabled}
           />
         </div>
         <div className="col-12">
@@ -139,6 +144,7 @@ export const DialogCraftUnmarked = (props) => {
             onChange={(e) => setItem({ ...item, note: e.target.value })}
             rows={3}
             cols={20}
+            disabled={disabled}
           />
         </div>
       </div>
@@ -155,28 +161,40 @@ const itemDialogFooter = (
   setItem,
   emptyItem,
   userAuth,
+  disabled,
+  setDisabled
 ) => (
   <React.Fragment>
     <Button
       label="Выйти"
       icon="pi pi-times"
       outlined
-      onClick={hideNew(setItemDialog)}
+      onClick={hideNew(setItemDialog, setDisabled)}
     />
-    <Button
-      type="submit"
-      label="Сохранить"
-      icon="pi pi-check"
-      onClick={saveItem(
-        addData,
-        updateData,
-        data,
-        item,
-        setItemDialog,
-        setItem,
-        emptyItem,
-        userAuth,
-      )}
-    />
+    {disabled ? (
+      <Button
+        type="submit"
+        label="Изменить"
+        icon="pi pi-pencil"
+        onClick={() => setDisabled(false)}
+      />
+    ) : (
+      <Button
+        type="submit"
+        label="Сохранить"
+        icon="pi pi-check"
+        onClick={saveItem(
+          addData,
+          updateData,
+          data,
+          item,
+          setItemDialog,
+          setItem,
+          emptyItem,
+          userAuth,
+          setDisabled
+        )}
+      />
+    )}
   </React.Fragment>
 );

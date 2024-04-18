@@ -4,8 +4,9 @@ import { createId } from "./createId";
 import { setCurrentDateTimeString } from "../../../Functions/Helpers/setCurrentDateTimeString";
 
 export const saveItem =
-  (addData, updateData, data, item, setItemDialog, setItem, emptyItem, userAuth) =>
+  (addData, updateData, data, item, setItemDialog, setItem, emptyItem, userAuth, setDisabled) =>
   () => {
+    setDisabled(true);
     let _item = { ...item };
 
     Object.keys(_item).forEach((element) => {
