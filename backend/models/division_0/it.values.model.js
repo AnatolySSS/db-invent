@@ -3,6 +3,15 @@ export default (sequelize, Sequelize) => {
     type: {
       type: Sequelize.STRING,
     },
+    workplace_type: {
+      type: Sequelize.TEXT,
+    },
+    serviceable: {
+      type: Sequelize.TEXT,
+    },
+    location: {
+      type: Sequelize.TEXT,
+    },
   }, {
     tableName: `it_values`
   });

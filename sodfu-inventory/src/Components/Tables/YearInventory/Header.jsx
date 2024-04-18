@@ -28,6 +28,7 @@ export const Header = (props) => {
     filters,
     name,
     globalFilterValue,
+    year,
   } = props;
 
   const userMenu = useRef(null);
@@ -106,7 +107,7 @@ export const Header = (props) => {
           />
         </div>
         <div className={classNames("align-items-center justify-content-center min-w-max px-4", styles.name)}>
-          <h2>{`${name}  (общая)`}</h2>
+          <h2>{`${name}  (${year})`}</h2>
         </div>
         <div className={classNames("flex align-items-center justify-content-center", styles.globalFilterGroup)}>
           <span className={classNames("p-input-icon-left", styles.globalFilter)}>

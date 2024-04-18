@@ -21,6 +21,7 @@ import { getDialog } from "./DialogsCraft/Functions/getDialog";
 
 const TableCraft = (props) => {
   let {
+    type,
     name,
     data,
     columns,
@@ -34,6 +35,9 @@ const TableCraft = (props) => {
     userAuth,
     isFetching,
     validationStatus,
+    beginInventory,
+    requestCurrentInventory,
+    hasCurrentInventory,
   } = props;
 
   const [visibleColumns, setVisibleColumns] = useState(columns);
@@ -66,6 +70,7 @@ const TableCraft = (props) => {
 
   useEffect(() => {
     requestData(userAuth.division);
+    requestCurrentInventory(type, userAuth.division);
     initFilters();
     creactLocale();
     locale("ru");
@@ -190,6 +195,7 @@ const TableCraft = (props) => {
         dataKey="id"
         header={
           <Header
+            type={type}
             data={data}
             logout={logout}
             selectedItems={selectedItems}
@@ -206,6 +212,8 @@ const TableCraft = (props) => {
             filters={filters}
             name={name}
             globalFilterValue={globalFilterValue}
+            beginInventory={beginInventory}
+            hasCurrentInventory={hasCurrentInventory}
           />
         }
         paginator
@@ -254,7 +262,7 @@ const TableCraft = (props) => {
             body={getColumnBody(col)}
           />
         ))}
-        {(name === "Мебель" || name === "Оборудование") && (
+        {(name === "Мебель" || name === "Оборудование") && data.length != 0 && (
           <Column
             key={visibleColumns.qr_code}
             field={visibleColumns.qr_code}
@@ -265,7 +273,7 @@ const TableCraft = (props) => {
             bodyClassName="text-center"
           />
         )}
-        {userAuth.role === "admin" && (
+        {userAuth.role === "admin" && data.length != 0 && (
           <Column
             body={editColumnBodyTemplate}
             header={"Редактирование"}

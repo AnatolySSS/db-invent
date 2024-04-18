@@ -12,35 +12,14 @@ export default (sequelize, Sequelize) => {
     name: {
       type: Sequelize.TEXT,
     },
-    purchase_date: {
-      type: Sequelize.DATE,
-    },
-    release_date: {
-      type: Sequelize.DATE,
-    },
-    serviceable: {
-      type: Sequelize.TEXT,
-    },
-    note: {
-      type: Sequelize.TEXT,
-    },
-    is_workplace: {
-      type: Sequelize.BOOLEAN,
-    },
-    location: {
-      type: Sequelize.TEXT,
-    },
-    was_deleted: {
-      type: Sequelize.BOOLEAN,
-    },
-    deleted_date: {
-      type: Sequelize.DATE,
-    },
-    deleted_grounds: {
+    owner: {
       type: Sequelize.TEXT,
     },
     purchase_price: {
       type: Sequelize.INTEGER,
+    },
+    note: {
+      type: Sequelize.TEXT,
     },
   }, {
     tableName: `furniture_lib`

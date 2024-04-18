@@ -64,6 +64,16 @@ export const InventoryAPI = {
       .post(`years`, { userDivision });
     return responce.data;
   },
+  async beginInventory(tableName, userDivision) {
+    const responce = await instance
+      .post(`beginInventory`, { tableName, userDivision });
+    return responce.data;
+  },
+  async requestCurrentInventory(tableName, userDivision) {
+    const responce = await instance
+      .post(`requestCurrentInventory`, { tableName, userDivision });
+    return responce.data;
+  },
   async getData(tableName, year, userDivision) {
     const responce = await instance
       .post(`getYearData`, { tableName, year, userDivision });

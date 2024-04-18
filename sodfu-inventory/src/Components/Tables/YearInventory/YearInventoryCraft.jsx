@@ -6,7 +6,6 @@ import "primeicons/primeicons.css";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-// import { Dialog } from "primereact/dialog";
 import Preloader from "../../Common/Preloader/Preloader";
 import { creactLocale } from "../../../function-helpers/addLocale";
 import { locale } from "primereact/api";
@@ -36,8 +35,6 @@ const YearInventoryCraft = (props) => {
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filters, setFilters] = useState(props.filters);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
-
-  console.log(visibleColumns);
 
   columns.map((obj) => {
     let dataType;
@@ -117,6 +114,7 @@ const YearInventoryCraft = (props) => {
             filters={filters}
             name={name}
             globalFilterValue={globalFilterValue}
+            year={year}
           />
         }
         paginator
@@ -158,15 +156,17 @@ const YearInventoryCraft = (props) => {
             body={getColumnBody(col)}
           />
         ))}
-        <Column
-          key={visibleColumns.qr_code}
-          field={visibleColumns.qr_code}
-          header={"QRCODE IMG"}
-          dataType={"text"}
-          style={{ minWidth: "10rem" }}
-          body={imgBodyTemplate}
-          bodyClassName="text-center"
-        />
+        {(name === "Мебель" || name === "Оборудование") && data.length != 0 && (
+          <Column
+            key={visibleColumns.qr_code}
+            field={visibleColumns.qr_code}
+            header={"QRCODE IMG"}
+            dataType={"text"}
+            style={{ minWidth: "10rem" }}
+            body={imgBodyTemplate}
+            bodyClassName="text-center"
+          />
+        )}
       </DataTable>
     </div>
   );

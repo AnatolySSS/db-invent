@@ -3,6 +3,7 @@ import { FilterMatchMode, FilterOperator } from "primereact/api";
 import changeDateType from "../../function-helpers/changeDateType";
 
 const SET_DATA = "sodfu-inventory/year-inventory-reducer/SET_DATA";
+const SET_CURRENT_INVENTORY = "sodfu-inventory/year-inventory-reducer/SET_CURRENT_INVENTORY";
 const TOGGLE_IS_FETCHING = "sodfu-inventory/year-inventory-reducer/TOGGLE_IS_FETCHING";
 
 let initialState = {
@@ -42,6 +43,7 @@ let initialState = {
   name: "",
   message: "",
   isFetching: false,
+  hasCurrentInventory: false,
 };
 
 const yearInventoryReducer = (state = initialState, action) => {
@@ -56,10 +58,15 @@ const yearInventoryReducer = (state = initialState, action) => {
         name: action.data.name,
         message: action.message,
       };
-      case TOGGLE_IS_FETCHING:
+    case TOGGLE_IS_FETCHING:
       return {
         ...state,
         isFetching: action.isFetching,
+      };
+    case SET_CURRENT_INVENTORY:
+      return {
+        ...state,
+        hasCurrentInventory: action.hasCurrentInventory,
       };
     default:
       return state;
@@ -67,6 +74,7 @@ const yearInventoryReducer = (state = initialState, action) => {
 };
 
 const setData = (data, message) => ({ type: SET_DATA, data, message });
+const setCurrentInventory = (hasCurrentInventory) => ({ type: SET_CURRENT_INVENTORY, hasCurrentInventory });
 const toggleIsFetching = (isFetching) => ({ type: TOGGLE_IS_FETCHING, isFetching: isFetching });
 
 //Изменение формата даты со строки на объект Date (необходимо для правильной фильтрации)
@@ -99,6 +107,13 @@ export const requestData = (tableName, year, userDivision) => {
     const data = await InventoryAPI.getData(tableName, year, userDivision);
     dispatch(toggleIsFetching(false));
     dispatch(setData(changeDateFormat(data)));
+  };
+};
+
+export const requestCurrentInventory = (tableName, userDivision) => {
+  return async (dispatch) => {
+    const data = await InventoryAPI.requestCurrentInventory(tableName, userDivision);
+    dispatch(setCurrentInventory(data.hasCurrentInventory));
   };
 };
 

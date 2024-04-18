@@ -1,6 +1,7 @@
 import { Sequelize } from "sequelize";
 import userModel from "./user.model.js";
 import { getDbConfig } from "../config/getDbConfig.js";
+import getDb_D0 from "./division_0/_getDb.js";
 import getDb_D1 from "./division_1/_getDb.js";
 import getDb_D2 from "./division_2/_getDb.js";
 import getDb_D3 from "./division_3/_getDb.js";
@@ -50,6 +51,7 @@ for (const DIVISION in config.DIVISIONS) {
     )
 };
 
+db.DIVISIONS.D0 = getDb_D0(sequelize.DIVISIONS.D0, Sequelize);
 db.DIVISIONS.D1 = getDb_D1(sequelize.DIVISIONS.D1, Sequelize);
 db.DIVISIONS.D2 = getDb_D2(sequelize.DIVISIONS.D2, Sequelize);
 db.DIVISIONS.D3 = getDb_D3(sequelize.DIVISIONS.D3, Sequelize);

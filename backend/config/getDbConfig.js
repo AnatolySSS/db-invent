@@ -44,6 +44,15 @@ export const getDbConfig = () => {
           dialect: "mysql",
         },
         DIVISIONS: {
+          D0: {
+            connectionLimit : 10,
+            HOST: process.env.F0_HOST,
+            PORT: process.env.F0_PORT,
+            DB: process.env.F0_NAME,
+            USER: process.env.F0_USER,
+            PASSWORD: process.env.F0_PASSWORD,
+            dialect: "mysql",
+          },
           D1: {
             connectionLimit : 10,
             HOST: process.env.F1_HOST,

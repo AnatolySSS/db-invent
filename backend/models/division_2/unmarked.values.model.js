@@ -3,9 +3,6 @@ export default (sequelize, Sequelize) => {
     type: {
       type: Sequelize.STRING,
     },
-    measurement: {
-      type: Sequelize.STRING,
-    },
     location: {
       type: Sequelize.TEXT,
     },

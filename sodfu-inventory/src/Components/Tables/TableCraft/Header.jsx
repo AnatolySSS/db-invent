@@ -9,9 +9,11 @@ import { getUserLogo } from "../Functions/Helpers/getUserLogo";
 import { Toast } from "primereact/toast";
 import { classNames } from "primereact/utils";
 import styles from './Header.module.css';
+import { MdOutlineInventory } from "react-icons/md";
 
 export const Header = (props) => {
   const {
+    type,
     data,
     logout,
     selectedItems,
@@ -28,6 +30,8 @@ export const Header = (props) => {
     filters,
     name,
     globalFilterValue,
+    beginInventory,
+    hasCurrentInventory,
   } = props;
 
   const userMenu = useRef(null);
@@ -85,6 +89,22 @@ export const Header = (props) => {
     });
   }
 
+  if (!hasCurrentInventory) {
+    userMenuItems.splice(2, 0, {
+      label: "Начать инвентаризацию",
+      icon: <i className="mr-2"><MdOutlineInventory /></i>,
+      command: async () => {
+        await beginInventory(type, userAuth.division);
+        userToast.current.show({
+          severity: "success",
+          summary: "Info",
+          detail: 'Инвентаризация инициирована',
+          life: 3000,
+        });
+      },
+    });
+  }
+
   return (
     <div className={classNames("flex justify-content-between")}>
       <Toast ref={userToast} />
@@ -105,8 +125,9 @@ export const Header = (props) => {
             display="chip"
           />
         </div>
-        <div className={classNames("align-items-center justify-content-center min-w-max px-4", styles.name)}>
+        <div className={classNames("align-items-center text-center justify-content-center min-w-max px-4", styles.name)}>
           <h2>{`${name}  (общая)`}</h2>
+          {hasCurrentInventory && <small className="text-red-400">Инвентаризация в процессе</small>}
         </div>
         <div className={classNames("flex align-items-center justify-content-center", styles.globalFilterGroup)}>
           <span className={classNames("p-input-icon-left", styles.globalFilter)}>

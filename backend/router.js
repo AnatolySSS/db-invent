@@ -21,7 +21,8 @@ router.post("/years", InventaryYearsController.getYears);
 router.post("/getYearData", InventaryYearsController.getYearData);
 
 router.get("/currentYearInventary", InventaryController.hasCurrentYearInventary);
-router.post("/beginInventary", InventaryController.beginInventary);
+router.post("/requestCurrentInventory", InventaryController.requestCurrentInventory);
+router.post("/beginInventory", InventaryController.beginInventory);
 router.post("/findQRCode", InventaryController.findQRCode);
 router.post("/checkQRCode", InventaryController.checkQRCode);
 router.post("/checkRemains", InventaryController.checkRemains);

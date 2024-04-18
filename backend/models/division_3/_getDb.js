@@ -38,6 +38,7 @@ const getDb = (sequelize, Sequelize) => {
 
     modelObj.currentYearInventaryIt = yearInventaryModel(sequelize, Sequelize, "it", currentYear);
     modelObj.currentYearInventaryFurniture = yearInventaryModel(sequelize, Sequelize, "furniture", currentYear);
+    modelObj.currentYearInventaryUnmarked = yearInventaryModel(sequelize, Sequelize, "unmarked", currentYear);
     modelObj.previousYearInventaryIt = yearInventaryModel(sequelize, Sequelize, "it", previousYear);
     modelObj.previousYearInventaryFurniture = yearInventaryModel(sequelize, Sequelize, "furniture", previousYear);
 

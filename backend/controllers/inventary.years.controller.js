@@ -14,6 +14,11 @@ export const InventaryYearsController = {
     try {
       const tableObj = await db.DIVISIONS[`D${userDivision}`].sequelize.getQueryInterface().showAllSchemas();
 
+      let tables = tableObj
+        .map((table) => Object.values(table)[0])
+        .filter((table) => table.includes("_lib"))
+        .map((table) => table.replace("_lib", ""));
+
       let yearsIt = tableObj
         .map((table) => Object.values(table)[0])
         .filter((tableName) =>
@@ -45,7 +50,7 @@ export const InventaryYearsController = {
         )
         .map((value) => value.substr(4, 4));
 
-        responce.json({yearsIt, yearsFurniture, yearsUnmarked});
+        responce.json({tables, yearsIt, yearsFurniture, yearsUnmarked});
 
     } catch (error) {
       console.log('_____________________InventaryYearsController_getYears____________________');
@@ -64,6 +69,9 @@ export const InventaryYearsController = {
         furnitureLib,
         furnitureValues,
         furnitureColumns,
+        unmarkedLib,
+        unmarkedValues,
+        unmarkedColumns,
         sequelize,
       } = db.DIVISIONS[`D${userDivision}`];
 
@@ -74,17 +82,27 @@ export const InventaryYearsController = {
           data.lib = await itLib.findAll();
           data.columns = await itColumns.findAll();
           data.values = await itValues.findAll({
-            attributes: ["type", "workplace_type", "serviceable", "location"],
+            attributes: { exclude: ['id', 'createdAt', 'updatedAt'] }
           });
           data.name = "Оборудование";
           break;
+
         case "furniture":
           data.lib = await furnitureLib.findAll();
           data.columns = await furnitureColumns.findAll();
           data.values = await furnitureValues.findAll({
-            attributes: ["type", "serviceable", "location"],
+            attributes: { exclude: ['id', 'createdAt', 'updatedAt'] }
           });
           data.name = "Мебель";
+          break;
+
+        case "unmarked":
+          data.lib = await unmarkedLib.findAll();
+          data.columns = await unmarkedColumns.findAll();
+          data.values = await unmarkedValues.findAll({
+            attributes: { exclude: ['id', 'createdAt', 'updatedAt'] }
+          });
+          data.name = "Прочее";
           break;
         default:
           break;
