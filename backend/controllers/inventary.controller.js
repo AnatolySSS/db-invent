@@ -6,10 +6,6 @@ const PreviousYearInventaryFurniture = db.DIVISIONS.D3.previousYearInventaryFurn
 const libDataIt = db.DIVISIONS.D3.itLib
 const valuesDataIt = db.DIVISIONS.D3.itValues
 const libDataFurniture = db.DIVISIONS.D3.furnitureLib
-import setConnection from "../config/db-connection.js";
-
-//подключение в базе данных
-const { connection } = setConnection();
 
 export const InventaryController = {
   async hasCurrentYearInventary(request, responce) {
@@ -102,17 +98,14 @@ export const InventaryController = {
             break;
         }
         
-        data = await dataTable.findAll({
-          attributes: ["qr_code", "name"],
-        });
-        data = Object.values(JSON.parse(JSON.stringify(data)));
+        data = await dataTable.findAll();
+        data = JSON.parse(JSON.stringify(data));
 
         await inventTable.sync();
-        for (const obj of data)
-          await inventTable.create({ qr_code: obj.qr_code, name: obj.name });
-
-        inventData = await inventTable.findAll();
-        inventData = JSON.parse(JSON.stringify(inventData));
+        for (const obj of data) {
+          delete obj.id;
+          await inventTable.create(obj);
+        }
 
         responce.json({
           tableName: tableName,
@@ -126,64 +119,6 @@ export const InventaryController = {
         });
       }
 
-      // const {
-      //   itLib,
-      //   itValues,
-      //   itColumns,
-      //   furnitureLib,
-      //   furnitureValues,
-      //   furnitureColumns,
-      //   unmarkedLib,
-      //   unmarkedValues,
-      //   unmarkedColumns,
-      //   currentYearInventaryIt,
-      //   currentYearInventaryFurniture,
-      // } = db.DIVISIONS[`D${userDivision}`];
-
-      // const [results] = await db.DIVISIONS[`D${userDivision}`].sequelize.query(`SHOW TABLES LIKE 'inv_${currentYear}_${tableName}'`);
-      
-      // if (results.length == 0) {
-      //   let basicInventaryData
-      //   connection.query(
-      //     `SELECT qr_code, name FROM ${tableName}_lib`,
-      //     (err, rows, fields) => {
-      //       basicInventaryData = Object.values(JSON.parse(JSON.stringify(rows)));
-      //     }
-      //   );
-      //   switch (tableName) {
-      //     case "it":
-      //       await CurrentYearInventaryIt.sync();
-      //       await basicInventaryData.forEach(element => {
-      //         CurrentYearInventaryIt.create({ qr_code: element.qr_code, name: element.name });
-      //       });
-      //       const CurrentYearInventaryItNew = await CurrentYearInventaryIt.findAll({ raw: true });
-      //       responce.json({
-      //         tableName: tableName,
-      //         message: `Таблица ${tableName} за ${currentYear} год создана`,
-      //         CurrentYearInventaryItNew,
-      //       });
-      //       break;
-      //     case "furniture":
-      //       await CurrentYearInventaryFurniture.sync()
-      //       await basicInventaryData.forEach(element => {
-      //         CurrentYearInventaryFurniture.create({ qr_code: element.qr_code, name: element.name });
-      //       });
-      //       const CurrentYearInventaryFurnitureNew = await CurrentYearInventaryIt.findAll({ raw: true });
-      //       responce.json({
-      //         tableName: tableName,
-      //         message: `Таблица ${tableName} за ${currentYear} год создана`,
-      //         CurrentYearInventaryFurnitureNew,
-      //       });
-      //       break;
-      //     default:
-      //       break;
-      //   }
-      // } else {
-      //   responce.json({
-      //     tableName: tableName,
-      //     message: `Таблица ${tableName} за ${currentYear} год уже создана`,
-      //   });
-      // }
     } catch (error) {
       console.log(error);
       responce.json(error);
