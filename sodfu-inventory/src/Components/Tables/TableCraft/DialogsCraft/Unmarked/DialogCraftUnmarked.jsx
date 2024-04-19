@@ -1,12 +1,10 @@
 import React, {useState} from "react";
 import { Dialog } from "primereact/dialog";
-import { Button } from "primereact/button";
 import { InputTextarea } from "primereact/inputtextarea";
 import { InputNumber } from "primereact/inputnumber";
 import { Dropdown } from "primereact/dropdown";
 import { getDropdownOptions } from "../Functions/getDropdownOptions";
-import { hideNew } from "../Functions/hideNew";
-import { saveItem } from "../Functions/saveItem";
+import { getItemDialogFooter } from "../Functions/getItemDialogFooter";
 import styles from "./DialogCraftUnmarked.module.css";
 
 export const DialogCraftUnmarked = (props) => {
@@ -34,7 +32,7 @@ export const DialogCraftUnmarked = (props) => {
       header="Описание предмета"
       modal
       className="p-fluid"
-      footer={itemDialogFooter(
+      footer={getItemDialogFooter(
         addData,
         updateData,
         data,
@@ -44,7 +42,7 @@ export const DialogCraftUnmarked = (props) => {
         emptyItem,
         userAuth,
         disabled,
-        setDisabled
+        setDisabled,
       )}
       onHide={hideNew}
     >
@@ -151,50 +149,3 @@ export const DialogCraftUnmarked = (props) => {
     </Dialog>
   );
 };
-
-const itemDialogFooter = (
-  addData,
-  updateData,
-  data,
-  item,
-  setItemDialog,
-  setItem,
-  emptyItem,
-  userAuth,
-  disabled,
-  setDisabled
-) => (
-  <React.Fragment>
-    <Button
-      label="Выйти"
-      icon="pi pi-times"
-      outlined
-      onClick={hideNew(setItemDialog, setDisabled)}
-    />
-    {disabled ? (
-      <Button
-        type="submit"
-        label="Изменить"
-        icon="pi pi-pencil"
-        onClick={() => setDisabled(false)}
-      />
-    ) : (
-      <Button
-        type="submit"
-        label="Сохранить"
-        icon="pi pi-check"
-        onClick={saveItem(
-          addData,
-          updateData,
-          data,
-          item,
-          setItemDialog,
-          setItem,
-          emptyItem,
-          userAuth,
-          setDisabled
-        )}
-      />
-    )}
-  </React.Fragment>
-);

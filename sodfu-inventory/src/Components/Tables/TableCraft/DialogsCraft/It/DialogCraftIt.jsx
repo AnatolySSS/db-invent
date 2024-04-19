@@ -1,6 +1,5 @@
-import React from "react";
+import React, {useState} from "react";
 import { Dialog } from "primereact/dialog";
-import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { InputNumber } from "primereact/inputnumber";
@@ -10,8 +9,7 @@ import { MultiStateCheckbox } from "primereact/multistatecheckbox";
 import { getDropdownOptions } from "../Functions/getDropdownOptions";
 import { formatDate } from "../../../Functions/Helpers/formatDate";
 import { multiStateCheckboxOptions } from "../../../Functions/Filters/getColumnFilterElement";
-import { hideNew } from "../Functions/hideNew";
-import { saveItem } from "../Functions/saveItem";
+import { getItemDialogFooter } from "../Functions/getItemDialogFooter";
 import styles from "./DialogCraftIt.module.css";
 
 export const DialogCraftIt = (props) => {
@@ -29,6 +27,8 @@ export const DialogCraftIt = (props) => {
     userAuth,
   } = props;
 
+  const [disabled, setDisabled] = useState(true);
+
   return (
     <Dialog
       visible={ItemDialog}
@@ -37,7 +37,7 @@ export const DialogCraftIt = (props) => {
       header="Описание предмета"
       modal
       className="p-fluid"
-      footer={itemDialogFooter(
+      footer={getItemDialogFooter(
         addData,
         updateData,
         data,
@@ -46,6 +46,8 @@ export const DialogCraftIt = (props) => {
         setItem,
         emptyItem,
         userAuth,
+        disabled,
+        setDisabled,
       )}
       onHide={hideNew}
     >
@@ -62,6 +64,7 @@ export const DialogCraftIt = (props) => {
             autoFocus={true}
             rows={3}
             cols={20}
+            disabled={disabled}
           />
         </div>
         <div className="col-6">
@@ -74,6 +77,7 @@ export const DialogCraftIt = (props) => {
             onChange={(e) =>
               setItem({ ...item, inventary_number: e.target.value })
             }
+            disabled={disabled}
           />
         </div>
         <div className="col-6">
@@ -84,6 +88,7 @@ export const DialogCraftIt = (props) => {
             id="qr_code"
             value={item.qr_code || ""}
             onChange={(e) => setItem({ ...item, qr_code: e.target.value })}
+            disabled={disabled}
           />
         </div>
         <div className="col-6">
@@ -94,6 +99,7 @@ export const DialogCraftIt = (props) => {
             id="serial"
             value={item.serial || ""}
             onChange={(e) => setItem({ ...item, serial: e.target.value })}
+            disabled={disabled}
           />
         </div>
         <div className="col-6">
@@ -104,6 +110,7 @@ export const DialogCraftIt = (props) => {
             id="ad_name"
             value={item.ad_name || ""}
             onChange={(e) => setItem({ ...item, ad_name: e.target.value })}
+            disabled={disabled}
           />
         </div>
         <div className="col-6">
@@ -114,6 +121,7 @@ export const DialogCraftIt = (props) => {
             id="owner"
             value={item.owner || ""}
             onChange={(e) => setItem({ ...item, owner: e.target.value })}
+            disabled={disabled}
           />
         </div>
         <div className="col-6">
@@ -124,6 +132,7 @@ export const DialogCraftIt = (props) => {
             id="prev_owner"
             value={item.prev_owner || ""}
             onChange={(e) => setItem({ ...item, prev_owner: e.target.value })}
+            disabled={disabled}
           />
         </div>
         <div className="col-6">
@@ -136,6 +145,7 @@ export const DialogCraftIt = (props) => {
             options={getDropdownOptions("type", values)}
             onChange={(e) => setItem({ ...item, type: e.target.value })}
             placeholder={item.type || ""}
+            disabled={disabled}
           />
         </div>
         <div className="col-6">
@@ -148,6 +158,7 @@ export const DialogCraftIt = (props) => {
             options={getDropdownOptions("location", values)}
             onChange={(e) => setItem({ ...item, location: e.target.value })}
             placeholder={item.location || ""}
+            disabled={disabled}
           />
         </div>
         <div className="col-6">
@@ -162,6 +173,7 @@ export const DialogCraftIt = (props) => {
               setItem({ ...item, workplace_type: e.target.value })
             }
             placeholder={item.workplace_type || ""}
+            disabled={disabled}
           />
         </div>
         <div className="col-6">
@@ -174,6 +186,7 @@ export const DialogCraftIt = (props) => {
             options={getDropdownOptions("serviceable", values)}
             onChange={(e) => setItem({ ...item, serviceable: e.target.value })}
             placeholder={item.serviceable || ""}
+            disabled={disabled}
           />
         </div>
         <div className="col-6">
@@ -184,6 +197,7 @@ export const DialogCraftIt = (props) => {
             id="set_with"
             value={item.set_with || ""}
             onChange={(e) => setItem({ ...item, set_with: e.target.value })}
+            disabled={disabled}
           />
         </div>
         <div className="col-6">
@@ -197,6 +211,7 @@ export const DialogCraftIt = (props) => {
             mode="currency"
             currency="RUB"
             locale="ru-RU"
+            disabled={disabled}
           />
         </div>
         <div className="col-6">
@@ -211,6 +226,7 @@ export const DialogCraftIt = (props) => {
             }
             dateFormat="dd.mm.yy"
             placeholder={formatDate(item.purchase_date || null)}
+            disabled={disabled}
             // mask="99.99.9999"
           />
         </div>
@@ -224,6 +240,7 @@ export const DialogCraftIt = (props) => {
             onChange={(e) => setItem({ ...item, release_date: e.target.value })}
             dateFormat="dd.mm.yy"
             placeholder={formatDate(item.release_date || null)}
+            disabled={disabled}
             // mask="99.99.9999"
           />
         </div>
@@ -239,6 +256,7 @@ export const DialogCraftIt = (props) => {
             }
             dateFormat="dd.mm.yy"
             placeholder={formatDate(item.incoming_date || null)}
+            disabled={disabled}
             // mask="99.99.9999"
           />
         </div>
@@ -254,16 +272,18 @@ export const DialogCraftIt = (props) => {
             }
             dateFormat="dd.mm.yy"
             placeholder={formatDate(item.last_setup_date || null)}
+            disabled={disabled}
             // mask="99.99.9999"
           />
         </div>
         <div className="col-6">
           <MultiStateCheckbox
             inputid="is_workplace"
-            value={item.is_workplace != undefined ? item.is_workplace : null}
+            value={item.is_workplace != undefined ? item.is_workplace.toString() : null}
             onChange={(e) => setItem({ ...item, is_workplace: e.target.value })}
             options={multiStateCheckboxOptions}
             optionValue="value"
+            disabled={disabled}
           />
           <label htmlFor="is_workplace" className="font-bold ml-2">
             Рабочее место
@@ -273,11 +293,12 @@ export const DialogCraftIt = (props) => {
           <MultiStateCheckbox
             inputId="was_deleted"
             value={
-              item.was_deleted != undefined ? item.was_deleted : null
+              item.was_deleted != undefined ? item.was_deleted.toString() : null
             }
             onChange={(e) => setItem({ ...item, was_deleted: e.target.value })}
             options={multiStateCheckboxOptions}
             optionValue="value"
+            disabled={disabled}
           />
           <label htmlFor="was_deleted" className="font-bold ml-2">
             Списано
@@ -293,6 +314,7 @@ export const DialogCraftIt = (props) => {
             onChange={(e) => setItem({ ...item, deleted_date: e.target.value })}
             dateFormat="dd.mm.yy"
             placeholder={formatDate(item.deleted_date || null)}
+            disabled={disabled}
             // mask="99.99.9999"
           />
         </div>
@@ -308,6 +330,7 @@ export const DialogCraftIt = (props) => {
             }
             rows={1}
             cols={20}
+            disabled={disabled}
           />
         </div>
         <div className="col-12">
@@ -320,44 +343,10 @@ export const DialogCraftIt = (props) => {
             onChange={(e) => setItem({ ...item, note: e.target.value })}
             rows={3}
             cols={20}
+            disabled={disabled}
           />
         </div>
       </div>
     </Dialog>
   );
 };
-
-const itemDialogFooter = (
-  addData,
-  updateData,
-  data,
-  item,
-  setItemDialog,
-  setItem,
-  emptyItem,
-  userAuth,
-) => (
-  <React.Fragment>
-    <Button
-      label="Выйти"
-      icon="pi pi-times"
-      outlined
-      onClick={hideNew(setItemDialog)}
-    />
-    <Button
-      type="submit"
-      label="Сохранить"
-      icon="pi pi-check"
-      onClick={saveItem(
-        addData,
-        updateData,
-        data,
-        item,
-        setItemDialog,
-        setItem,
-        emptyItem,
-        userAuth,
-      )}
-    />
-  </React.Fragment>
-);

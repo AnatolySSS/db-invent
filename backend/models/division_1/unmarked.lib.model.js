@@ -1,25 +1,25 @@
 export default (sequelize, Sequelize) => {
   const libDataUnmarked = sequelize.define(`libDataUnmarked`, {
-    qr_code: {
-      type: Sequelize.STRING,
-    },
     type: {
       type: Sequelize.STRING,
     },
     name: {
       type: Sequelize.TEXT,
     },
-    location: {
+    owner: {
       type: Sequelize.TEXT,
-    },
-    count: {
-      type: Sequelize.INTEGER,
     },
     purchase_price: {
       type: Sequelize.INTEGER,
     },
     measurement: {
       type: Sequelize.STRING,
+    },
+    count: {
+      type: Sequelize.INTEGER,
+    },
+    location: {
+      type: Sequelize.TEXT,
     },
     note: {
       type: Sequelize.TEXT,
