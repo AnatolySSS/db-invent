@@ -61,6 +61,7 @@ export const InventaryController = {
       });
       
     } catch (error) {
+      console.log('_____________________InventoryController_requestCurrentInventory____________________');
       console.log(error);
       responce.json(error);
     }
@@ -104,6 +105,7 @@ export const InventaryController = {
         await inventTable.sync();
         for (const obj of data) {
           delete obj.id;
+          obj.checked = false;
           await inventTable.create(obj);
         }
 
@@ -120,6 +122,7 @@ export const InventaryController = {
       }
 
     } catch (error) {
+      console.log('_____________________InventoryController_beginInventory____________________');
       console.log(error);
       responce.json(error);
     }

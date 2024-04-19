@@ -55,14 +55,16 @@ export const DataController = {
       data.columns = JSON.parse(JSON.stringify(data.columns));
       data.values = JSON.parse(JSON.stringify(data.values));
 
-      data.lib = data.lib.map((v) => {
-        if (v.is_workplace === null) {
-          v.is_workplace = "null";
+      //Изменение null на "null"
+      data.lib = data.lib.map((libObg) => {
+        for (const libKey in libObg) {
+          data.columns.forEach(columnObg => {
+            if (columnObg.dbFieldType == "boolean" && columnObg.field == libKey) {
+              libObg[libKey] = libObg[libKey] === null ? libObg[libKey] === "null" : libObg[libKey];
+            }
+          });
         }
-        if (v.was_deleted === null) {
-          v.was_deleted = "null";
-        }
-        return v;
+        return libObg;
       });
 
       data.values = getValues(data.values);

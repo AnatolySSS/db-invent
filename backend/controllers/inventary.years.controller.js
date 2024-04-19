@@ -69,21 +69,6 @@ export const InventaryYearsController = {
 
       let data = {};
 
-      data.lib = await sequelize.query(
-        `SELECT * FROM inv_${year}_${tableName}`,
-        { type: QueryTypes.SELECT }
-      );
-
-      data.lib = data.lib.map((v) => {
-        if (v.is_workplace === null) {
-          v.is_workplace = "null";
-        }
-        if (v.was_deleted === null) {
-          v.was_deleted = "null";
-        }
-        return v;
-      });
-
       switch (tableName) {
         case "it":
           data.columns = await itColumns.findAll();
@@ -151,6 +136,26 @@ export const InventaryYearsController = {
         (col) => col.field != "createdAt" && col.field != "updatedAt"
       );
       data.values = getValues(data.values);
+
+      data.lib = await sequelize.query(
+        `SELECT * FROM inv_${year}_${tableName}`,
+        { type: QueryTypes.SELECT, raw: false }
+      );
+
+      data.lib = JSON.parse(JSON.stringify(data.lib));
+
+      //Изменение tinyint на boolean и null на "null"
+      data.lib = data.lib.map((libObg) => {
+        for (const libKey in libObg) {
+          data.columns.forEach(columnObg => {
+            if (columnObg.dbFieldType == "boolean" && columnObg.field == libKey) {
+              libObg[libKey] = libObg[libKey] === null ? libObg[libKey] === "null" : libObg[libKey];
+              libObg[libKey] = libObg[libKey] ? true : false;
+            }
+          });
+        }
+        return libObg;
+      });
 
       responce.json(data);
     } catch (error) {
