@@ -16,6 +16,9 @@ export const DataController = {
         unmarkedLib,
         unmarkedValues,
         unmarkedColumns,
+        assetsLib,
+        assetsValues,
+        assetsColumns,
       } = db.DIVISIONS[`D${userDivision}`];
       let data = {};
 
@@ -45,6 +48,15 @@ export const DataController = {
             attributes: { exclude: ['id', 'createdAt', 'updatedAt'] }
           });
           data.name = "Прочее";
+          break;
+
+        case "assets":
+          data.lib = await assetsLib.findAll();
+          data.columns = await assetsColumns.findAll();
+          data.values = await assetsValues.findAll({
+            attributes: { exclude: ['id', 'createdAt', 'updatedAt'] }
+          });
+          data.name = "Основные средства";
           break;
 
         default:
@@ -79,7 +91,7 @@ export const DataController = {
   async addData(request, responce) {
     label: try {
       let { type, rowData, userDivision } = request.body;
-      const { itLib, furnitureLib, unmarkedLib } = db.DIVISIONS[`D${userDivision}`];
+      const { itLib, furnitureLib, unmarkedLib, assetsLib } = db.DIVISIONS[`D${userDivision}`];
       let table;
       let data = {
         qr_code: false,
@@ -95,6 +107,9 @@ export const DataController = {
           break;
         case "unmarked":
           table = unmarkedLib;
+          break;
+        case "assets":
+          table = assetsLib;
           break;
         default:
           break;
@@ -136,7 +151,7 @@ export const DataController = {
   async updateData(request, responce) {
     try {
       let { type, rowData, userDivision } = request.body;
-      const { itLib, furnitureLib, unmarkedLib } = db.DIVISIONS[`D${userDivision}`];
+      const { itLib, furnitureLib, unmarkedLib, assetsLib } = db.DIVISIONS[`D${userDivision}`];
       let table;
 
       switch (type) {
@@ -148,6 +163,9 @@ export const DataController = {
           break;
         case "unmarked":
           table = unmarkedLib;
+          break;
+        case "assets":
+          table = assetsLib;
           break;
         default:
           break;
@@ -173,7 +191,7 @@ export const DataController = {
   async deleteData(request, responce) {
     try {
       let { type, rowId, userDivision } = request.body;
-      const { itLib, furnitureLib, unmarkedLib } = db.DIVISIONS[`D${userDivision}`];
+      const { itLib, furnitureLib, unmarkedLib, assetsLib } = db.DIVISIONS[`D${userDivision}`];
       let table;
 
       switch (type) {
@@ -185,6 +203,9 @@ export const DataController = {
           break;
         case "unmarked":
           table = unmarkedLib;
+          break;
+        case "assets":
+          table = assetsLib;
           break;
         default:
           break;
@@ -211,6 +232,9 @@ export const DataController = {
         unmarkedLib,
         unmarkedValues,
         unmarkedColumns,
+        assetsLib,
+        assetsValues,
+        assetsColumns,
       } = db.DIVISIONS[`D${userDivision}`];
 
       switch (type) {
@@ -230,6 +254,12 @@ export const DataController = {
           for (const obj of data.lib) await unmarkedLib.create(obj);
           for (const obj of data.values) await unmarkedValues.create(obj);
           for (const obj of data.meta) await unmarkedColumns.create(obj);
+          break;
+
+        case "assets":
+          for (const obj of data.lib) await assetsLib.create(obj);
+          for (const obj of data.values) await assetsValues.create(obj);
+          for (const obj of data.meta) await assetsColumns.create(obj);
           break;
 
         default:

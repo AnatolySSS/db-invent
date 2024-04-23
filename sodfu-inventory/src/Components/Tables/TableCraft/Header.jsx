@@ -10,6 +10,7 @@ import { Toast } from "primereact/toast";
 import { classNames } from "primereact/utils";
 import styles from './Header.module.css';
 import { MdOutlineInventory } from "react-icons/md";
+import { getTableHeight } from "../Functions/Helpers/getTableHeight";
 
 export const Header = (props) => {
   const {
@@ -97,6 +98,7 @@ export const Header = (props) => {
       command: async () => {
         await beginInventory(type, userAuth.division);
         await requestCurrentInventory(type, userAuth.division);
+        getTableHeight();
         userToast.current.show({
           severity: "success",
           summary: "Info",

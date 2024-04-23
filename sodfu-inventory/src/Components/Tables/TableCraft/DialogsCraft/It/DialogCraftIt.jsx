@@ -11,13 +11,14 @@ import { formatDate } from "../../../Functions/Helpers/formatDate";
 import { multiStateCheckboxOptions } from "../../../Functions/Filters/getColumnFilterElement";
 import { getItemDialogFooter } from "../Functions/getItemDialogFooter";
 import styles from "./DialogCraftIt.module.css";
+import { hideNew } from "../Functions/hideNew";
 
 export const DialogCraftIt = (props) => {
   const {
     data,
+    columns,
     setItemDialog,
     ItemDialog,
-    hideNew,
     item,
     setItem,
     values,
@@ -28,6 +29,10 @@ export const DialogCraftIt = (props) => {
   } = props;
 
   const [disabled, setDisabled] = useState(true);
+
+  //Переменная для массива наименований столбцов,
+  //чтобы показывать только релевантные столбцы для конкретного филиала
+  let currentColumns = columns.map(column => column.field)
 
   return (
     <Dialog
@@ -49,10 +54,10 @@ export const DialogCraftIt = (props) => {
         disabled,
         setDisabled,
       )}
-      onHide={hideNew}
+      onHide={hideNew(setItemDialog, setDisabled)}
     >
       <div className="grid">
-        <div className="col-12">
+        {currentColumns.includes("name") && <div className="col-12">
           <label htmlFor="name" className={styles.label}>
             Наименование
           </label>
@@ -66,8 +71,8 @@ export const DialogCraftIt = (props) => {
             cols={20}
             disabled={disabled}
           />
-        </div>
-        <div className="col-6">
+        </div>}
+        {currentColumns.includes("inventary_number") && <div className="col-6">
           <label htmlFor="inventary_number" className={styles.label}>
             Инвентарный номер
           </label>
@@ -79,8 +84,8 @@ export const DialogCraftIt = (props) => {
             }
             disabled={disabled}
           />
-        </div>
-        <div className="col-6">
+        </div>}
+        {currentColumns.includes("qr_code") && <div className="col-6">
           <label htmlFor="qr_code" className={styles.label}>
             QRCODE
           </label>
@@ -90,8 +95,8 @@ export const DialogCraftIt = (props) => {
             onChange={(e) => setItem({ ...item, qr_code: e.target.value })}
             disabled={disabled}
           />
-        </div>
-        <div className="col-6">
+        </div>}
+        {currentColumns.includes("serial") && <div className="col-6">
           <label htmlFor="serial" className={styles.label}>
             Серийный номер
           </label>
@@ -101,8 +106,8 @@ export const DialogCraftIt = (props) => {
             onChange={(e) => setItem({ ...item, serial: e.target.value })}
             disabled={disabled}
           />
-        </div>
-        <div className="col-6">
+        </div>}
+        {currentColumns.includes("ad_name") &&  <div className="col-6">
           <label htmlFor="ad_name" className={styles.label}>
             Имя устройства в AD
           </label>
@@ -112,8 +117,8 @@ export const DialogCraftIt = (props) => {
             onChange={(e) => setItem({ ...item, ad_name: e.target.value })}
             disabled={disabled}
           />
-        </div>
-        <div className="col-6">
+        </div>}
+        {currentColumns.includes("owner") && <div className="col-6">
           <label htmlFor="owner" className={styles.label}>
             ФИО юзера
           </label>
@@ -123,8 +128,8 @@ export const DialogCraftIt = (props) => {
             onChange={(e) => setItem({ ...item, owner: e.target.value })}
             disabled={disabled}
           />
-        </div>
-        <div className="col-6">
+        </div>}
+        {currentColumns.includes("prev_owner") && <div className="col-6">
           <label htmlFor="prev_owner" className={styles.label}>
             ФИО предыдущего юзера
           </label>
@@ -134,8 +139,8 @@ export const DialogCraftIt = (props) => {
             onChange={(e) => setItem({ ...item, prev_owner: e.target.value })}
             disabled={disabled}
           />
-        </div>
-        <div className="col-6">
+        </div>}
+        {currentColumns.includes("type") && <div className="col-6">
           <label htmlFor="type" className={styles.label}>
             Тип
           </label>
@@ -147,8 +152,8 @@ export const DialogCraftIt = (props) => {
             placeholder={item.type || ""}
             disabled={disabled}
           />
-        </div>
-        <div className="col-6">
+        </div>}
+        {currentColumns.includes("location") && <div className="col-6">
           <label htmlFor="location" className={styles.label}>
             Где установлено
           </label>
@@ -160,8 +165,8 @@ export const DialogCraftIt = (props) => {
             placeholder={item.location || ""}
             disabled={disabled}
           />
-        </div>
-        <div className="col-6">
+        </div>}
+        {currentColumns.includes("workplace_type") && <div className="col-6">
           <label htmlFor="workplace_type" className={styles.label}>
             Тип рабочего места
           </label>
@@ -175,8 +180,8 @@ export const DialogCraftIt = (props) => {
             placeholder={item.workplace_type || ""}
             disabled={disabled}
           />
-        </div>
-        <div className="col-6">
+        </div>}
+        {currentColumns.includes("serviceable") && <div className="col-6">
           <label htmlFor="serviceable" className={styles.label}>
             Состояние исправности
           </label>
@@ -188,8 +193,8 @@ export const DialogCraftIt = (props) => {
             placeholder={item.serviceable || ""}
             disabled={disabled}
           />
-        </div>
-        <div className="col-6">
+        </div>}
+        {currentColumns.includes("set_with") && <div className="col-6">
           <label htmlFor="set_with" className={styles.label}>
             Образует одно устройство
           </label>
@@ -199,9 +204,9 @@ export const DialogCraftIt = (props) => {
             onChange={(e) => setItem({ ...item, set_with: e.target.value })}
             disabled={disabled}
           />
-        </div>
-        <div className="col-6">
-          <label htmlFor="price" className={styles.label}>
+        </div>}
+        {currentColumns.includes("purchase_price") && <div className="col-6">
+          <label htmlFor="purchase_price" className={styles.label}>
             Стоимость
           </label>
           <InputNumber
@@ -213,8 +218,8 @@ export const DialogCraftIt = (props) => {
             locale="ru-RU"
             disabled={disabled}
           />
-        </div>
-        <div className="col-6">
+        </div>}
+        {currentColumns.includes("purchase_date") && <div className="col-6">
           <label htmlFor="purchase_date" className={styles.label}>
             Дата приобретения
           </label>
@@ -229,8 +234,8 @@ export const DialogCraftIt = (props) => {
             disabled={disabled}
             // mask="99.99.9999"
           />
-        </div>
-        <div className="col-6">
+        </div>}
+        {currentColumns.includes("release_date") && <div className="col-6">
           <label htmlFor="release_date" className={styles.label}>
             Дата выпуска
           </label>
@@ -243,8 +248,8 @@ export const DialogCraftIt = (props) => {
             disabled={disabled}
             // mask="99.99.9999"
           />
-        </div>
-        <div className="col-6">
+        </div>}
+        {currentColumns.includes("incoming_date") && <div className="col-6">
           <label htmlFor="incoming_date" className={styles.label}>
             Дата поступления в НН
           </label>
@@ -259,8 +264,8 @@ export const DialogCraftIt = (props) => {
             disabled={disabled}
             // mask="99.99.9999"
           />
-        </div>
-        <div className="col-6">
+        </div>}
+        {currentColumns.includes("last_setup_date") && <div className="col-6">
           <label htmlFor="last_setup_date" className={styles.label}>
             Дата установки пользователю
           </label>
@@ -275,8 +280,8 @@ export const DialogCraftIt = (props) => {
             disabled={disabled}
             // mask="99.99.9999"
           />
-        </div>
-        <div className="col-6">
+        </div>}
+        {currentColumns.includes("is_workplace") && <div className="col-6">
           <MultiStateCheckbox
             inputid="is_workplace"
             value={item.is_workplace != undefined ? item.is_workplace.toString() : null}
@@ -288,8 +293,8 @@ export const DialogCraftIt = (props) => {
           <label htmlFor="is_workplace" className="font-bold ml-2">
             Рабочее место
           </label>
-        </div>
-        <div className="col-6">
+        </div>}
+        {currentColumns.includes("was_deleted") && <div className="col-6">
           <MultiStateCheckbox
             inputId="was_deleted"
             value={
@@ -303,8 +308,8 @@ export const DialogCraftIt = (props) => {
           <label htmlFor="was_deleted" className="font-bold ml-2">
             Списано
           </label>
-        </div>
-        <div className="col-6">
+        </div>}
+        {currentColumns.includes("deleted_date") && <div className="col-6">
           <label htmlFor="deleted_date" className={styles.label}>
             Дата списания
           </label>
@@ -317,8 +322,8 @@ export const DialogCraftIt = (props) => {
             disabled={disabled}
             // mask="99.99.9999"
           />
-        </div>
-        <div className="col-6">
+        </div>}
+        {currentColumns.includes("deleted_grounds") && <div className="col-6">
           <label htmlFor="deleted_grounds" className={styles.label}>
             Основание для списания
           </label>
@@ -332,8 +337,8 @@ export const DialogCraftIt = (props) => {
             cols={20}
             disabled={disabled}
           />
-        </div>
-        <div className="col-12">
+        </div>}
+        {currentColumns.includes("note") && <div className="col-12">
           <label htmlFor="note" className={styles.label}>
             Информация
           </label>
@@ -345,7 +350,7 @@ export const DialogCraftIt = (props) => {
             cols={20}
             disabled={disabled}
           />
-        </div>
+        </div>}
       </div>
     </Dialog>
   );

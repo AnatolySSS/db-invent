@@ -95,6 +95,11 @@ export const InventaryController = {
             inventTable =
               db.DIVISIONS[`D${userDivision}`].currentYearInventaryUnmarked;
             break;
+          case "assets":
+            dataTable = db.DIVISIONS[`D${userDivision}`].assetsLib;
+            inventTable =
+              db.DIVISIONS[`D${userDivision}`].currentYearInventaryAssets;
+            break;
           default:
             break;
         }

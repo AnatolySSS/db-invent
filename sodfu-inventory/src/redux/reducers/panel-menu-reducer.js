@@ -1,12 +1,13 @@
 import { InventoryAPI } from "../../api/api";
 
-const SET_YEARS = "sodfu-inventory/panelMenuReducer/SET_YEARS";
+const SET_YEARS = "sodfu-inventory/panel-menu-reducer/SET_YEARS";
 
 let initialState = {
   tables: [],
   yearsIt: [],
   yearsFurniture: [],
   yearsUnmarked: [],
+  yearsAssets: [],
 };
 
 const panelMenuReducer = (state = initialState, action) => {
@@ -18,6 +19,7 @@ const panelMenuReducer = (state = initialState, action) => {
         yearsIt: action.yearsIt,
         yearsFurniture: action.yearsFurniture,
         yearsUnmarked: action.yearsUnmarked,
+        yearsAssets: action.yearsAssets,
       };
     default:
       return state;
@@ -30,6 +32,7 @@ export const setYears = (years) => ({
   yearsIt: years.yearsIt,
   yearsFurniture: years.yearsFurniture,
   yearsUnmarked: years.yearsUnmarked,
+  yearsAssets: years.yearsAssets,
 });
 
 export const requestYears = (userDivision) => {

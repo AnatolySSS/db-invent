@@ -44,8 +44,18 @@ export const InventaryYearsController = {
             : null
         )
         .map((value) => value.substr(4, 4));
+      
+      let yearsAssets = tableObj
+        .map((table) => Object.values(table)[0])
+        .filter((tableName) =>
+          tableName.indexOf("inv_") !== -1 &&
+          tableName.indexOf("assets") !== -1
+            ? tableName
+            : null
+        )
+        .map((value) => value.substr(4, 4));
 
-        responce.json({tables, yearsIt, yearsFurniture, yearsUnmarked});
+        responce.json({tables, yearsIt, yearsFurniture, yearsUnmarked, yearsAssets});
 
     } catch (error) {
       console.log('_____________________InventaryYearsController_getYears____________________');
@@ -64,6 +74,8 @@ export const InventaryYearsController = {
         furnitureColumns,
         unmarkedValues,
         unmarkedColumns,
+        assetsValues,
+        assetsColumns,
         sequelize,
       } = db.DIVISIONS[`D${userDivision}`];
 
@@ -92,6 +104,14 @@ export const InventaryYearsController = {
             attributes: { exclude: ['id', 'createdAt', 'updatedAt'] }
           });
           data.name = "Прочее";
+          break;
+        
+        case "assets":
+          data.columns = await assetsColumns.findAll();
+          data.values = await assetsValues.findAll({
+            attributes: { exclude: ['id', 'createdAt', 'updatedAt'] }
+          });
+          data.name = "Основные средства";
           break;
         default:
           break;

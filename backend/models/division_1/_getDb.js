@@ -7,9 +7,13 @@ import furnitureColumnsModel from "./furniture.columns.model.js";
 import unmarkedLibModel from "./unmarked.lib.model.js";
 import unmarkedValuesModel from "./unmarked.values.model.js";
 import unmarkedColumnsModel from "./unmarked.columns.model.js";
+import assetsLibModel from "./assets.lib.model.js";
+import assetsValuesModel from "./assets.values.model.js";
+import assetsColumnsModel from "./assets.columns.model.js";
 import yearInventaryIt from "./year.inventary.it.model.js";
 import yearInventaryFurnitureModel from "./year.inventary.furniture.model.js";
 import yearInventaryUnmarkedModel from "./year.inventary.unmarked.model.js";
+import yearInventaryAssetsModel from "./year.inventary.assets.model.js";
 
 const getDb = (sequelize, Sequelize) => {
     const currentYear = new Date().getFullYear();
@@ -38,9 +42,17 @@ const getDb = (sequelize, Sequelize) => {
     modelObj.unmarkedColumns = unmarkedColumnsModel(sequelize, Sequelize);
     modelObj.unmarkedColumns.sync();
 
+    modelObj.assetsLib = assetsLibModel(sequelize, Sequelize);
+    modelObj.assetsLib.sync();
+    modelObj.assetsValues = assetsValuesModel(sequelize, Sequelize);
+    modelObj.assetsValues.sync();
+    modelObj.assetsColumns = assetsColumnsModel(sequelize, Sequelize);
+    modelObj.assetsColumns.sync();
+
     modelObj.currentYearInventaryIt = yearInventaryIt(sequelize, Sequelize, currentYear);
     modelObj.currentYearInventaryFurniture = yearInventaryFurnitureModel(sequelize, Sequelize, currentYear);
     modelObj.currentYearInventaryUnmarked = yearInventaryUnmarkedModel(sequelize, Sequelize, currentYear);
+    modelObj.currentYearInventaryAssets = yearInventaryAssetsModel(sequelize, Sequelize, currentYear);
     modelObj.previousYearInventaryIt = yearInventaryIt(sequelize, Sequelize, previousYear);
     modelObj.previousYearInventaryFurniture = yearInventaryFurnitureModel(sequelize, Sequelize, previousYear);
 

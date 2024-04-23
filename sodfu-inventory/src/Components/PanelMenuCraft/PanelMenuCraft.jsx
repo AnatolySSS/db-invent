@@ -9,7 +9,15 @@ import { classNames } from "primereact/utils";
 import { PiOfficeChairBold } from "react-icons/pi";
 
 const PanelMenuCraft = (props) => {
-  const { tables, yearsIt, yearsFurniture, yearsUnmarked, requestYears, userDivision } = props
+  const {
+    tables,
+    yearsIt,
+    yearsFurniture,
+    yearsUnmarked,
+    yearsAssets,
+    requestYears,
+    userDivision,
+  } = props;
 
   useEffect(() => {
     requestYears(userDivision);
@@ -149,6 +157,56 @@ const PanelMenuCraft = (props) => {
             return (
               <NavLink
                 to={`/unmarked/${year}`}
+                className={classNames(
+                  options.className,
+                  "w-full p-link flex align-items-center pl-4"
+                )}
+                style={{
+                  textDecoration: "none",
+                  color: "#495057",
+                }}
+              >
+                <i className="pi pi-fw pi-calendar mr-2"></i>
+                {year}
+              </NavLink>
+            );
+          },
+        };
+      }),
+    });
+  }
+
+  if (tables.includes("assets")) {
+    generalMenuItems.push({
+      template: (item, options) => {
+        return (
+          <NavLink
+            to="/assets"
+            className={classNames(
+              options.className,
+              "w-full p-link flex align-items-center"
+            )}
+            style={{
+              textDecoration: "none",
+              color: "#495057",
+            }}
+          >
+            <i className="pi pi-fw pi-building mr-2"></i>
+            Основные средства
+          </NavLink>
+        );
+      },
+    });
+
+    yearsMenuItems.push({
+      label: "Основные средства",
+      icon: "pi pi-fw pi-building",
+      items: yearsAssets.map((year) => {
+        return {
+          template: (item, options) => {
+            return (
+              <NavLink
+                to={`/assets/${year}`}
                 className={classNames(
                   options.className,
                   "w-full p-link flex align-items-center pl-4"

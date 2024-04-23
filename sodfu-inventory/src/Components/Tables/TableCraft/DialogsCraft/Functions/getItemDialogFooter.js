@@ -22,7 +22,7 @@ export const getItemDialogFooter = (
         outlined
         onClick={hideNew(setItemDialog, setDisabled)}
       />
-      {disabled ? (
+      {userAuth.role == "admin" && (disabled ? (
         <Button
           type="submit"
           label="Изменить"
@@ -46,7 +46,7 @@ export const getItemDialogFooter = (
             setDisabled
           )}
         />
-      )}
+      ))}
     </React.Fragment>
   );
   

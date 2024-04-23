@@ -8,11 +8,12 @@ import { initializeApp } from "./redux/reducers/app-reducer";
 import SidebarCraftContainer from "./Components/SidebarCraft/SidebarCraftContainer";
 import TableCraftItContainer from "./Components/Tables/TableCraft/TableCraftItContainer";
 import TableCraftFurnitureContainer from "./Components/Tables/TableCraft/TableCraftFurnitureContainer";
+import TableCraftUnmarkedContainer from "./Components/Tables/TableCraft/TableCraftUnmarkedContainer";
+import TableCraftAssetsContainer from "./Components/Tables/TableCraft/TableCraftAssetsContainer";
 import UploadCraftContainer from "./Components/UploadCraft/UploadCraftContainer";
 import LoginCraftContainer from "./Components/LoginCraft/LoginCraftContainer";
 import YearInventoryContainer from "./Components/Tables/YearInventory/YearInventoryContainer";
 import ChartCraftContainer from "./Components/Charts/ChartCraftContainer";
-import TableCraftUnmarkedContainer from "./Components/Tables/TableCraft/TableCraftUnmarkedContainer";
 
 class App extends React.Component {
   async componentDidMount() {
@@ -30,11 +31,13 @@ class App extends React.Component {
               <Route path="/it" element={<TableCraftItContainer />} />
               <Route path="/furniture" element={<TableCraftFurnitureContainer />} />
               <Route path="/unmarked" element={<TableCraftUnmarkedContainer />} />
+              <Route path="/assets" element={<TableCraftAssetsContainer />} />
               <Route path="/upload" element={<UploadCraftContainer />} />
               <Route path="/charts" element={<ChartCraftContainer />} />
               <Route path={`/it/:year`} element={<YearInventoryContainer tableName="it"/>} />
               <Route path={`/furniture/:year`} element={<YearInventoryContainer tableName="furniture"/>} />
               <Route path={`/unmarked/:year`} element={<YearInventoryContainer tableName="unmarked"/>} />
+              <Route path={`/assets/:year`} element={<YearInventoryContainer tableName="assets"/>} />
             </Routes>
           </div>
         </div>

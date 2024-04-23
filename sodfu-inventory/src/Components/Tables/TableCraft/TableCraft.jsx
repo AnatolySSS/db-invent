@@ -102,10 +102,6 @@ const TableCraft = (props) => {
     }
   }, [validationStatus]);
 
-  const hideNew = () => {
-    setItemDialog(false);
-  };
-
   const hideDeleteItemDialog = () => {
     setDeleteItemDialog(false);
   };
@@ -160,19 +156,19 @@ const TableCraft = (props) => {
     return (
       <React.Fragment>
         <Button
-          icon="pi pi-pencil"
+          icon={`pi ${userAuth.role === "admin" ? "pi-pencil" : "pi-eye"}`}
           rounded
           outlined
           onClick={() => editItem(rowData)}
         />
-        <Button
+        {userAuth.role === "admin" && <Button
           icon="pi pi-trash"
           rounded
           outlined
           className="ml-2"
           severity="danger"
           onClick={() => confirmDeleteItem(rowData)}
-        />
+        />}
       </React.Fragment>
     );
   };
@@ -274,7 +270,7 @@ const TableCraft = (props) => {
             bodyClassName="text-center"
           />
         )}
-        {userAuth.role === "admin" && data.length != 0 && (
+        {data.length != 0 && (
           <Column
             body={editColumnBodyTemplate}
             header={"Редактирование"}
@@ -289,9 +285,9 @@ const TableCraft = (props) => {
       { getDialog(
         name,
         data,
+        columns,
         setItemDialog,
         ItemDialog,
-        hideNew,
         item,
         setItem,
         values,
