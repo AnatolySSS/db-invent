@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
-// import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { NavLink } from "react-router-dom";
 import { PanelMenu } from "primereact/panelmenu";
 import { classNames } from "primereact/utils";
@@ -17,6 +16,7 @@ const PanelMenuCraft = (props) => {
     yearsAssets,
     requestYears,
     userDivision,
+    userAuth,
   } = props;
 
   useEffect(() => {
@@ -237,7 +237,11 @@ const PanelMenuCraft = (props) => {
       icon: "pi pi-fw pi-calendar",
       items: yearsMenuItems,
     },
-    {
+    
+  ];
+
+  if (userDivision == 3 && userAuth.login == "user3") {
+    items.push({
       label: "Загрузить данные",
       icon: "pi pi-fw pi-download",
       items: [
@@ -257,8 +261,8 @@ const PanelMenuCraft = (props) => {
           },
         },
       ],
-    },
-  ];
+    })
+  }
 
   return (
     <div className="card flex justify-content-center mt-2">

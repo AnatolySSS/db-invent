@@ -11,6 +11,7 @@ let mapStateToProps = (state) => {
     yearsUnmarked: state.panelMenu.yearsUnmarked,
     yearsAssets: state.panelMenu.yearsAssets,
     userDivision: state.auth.division,
+    userAuth: state.auth,
   };
 };
 
