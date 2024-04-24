@@ -80,3 +80,26 @@ export const InventoryAPI = {
     return responce.data;
   },
 }
+
+export const UsersAPI = {
+  async getUsers(userDivision) {
+    const responce = await instance
+      .post(`getUsers`, { userDivision });
+    return responce.data;
+  },
+  async addUser(rowData, userDivision) {
+    const responce = await instance
+      .post(`addUser`, { rowData, userDivision });
+    return responce.data;
+  },
+  async updateUser(rowData) {
+    const responce = await instance
+      .put(`updateUser`, { rowData });
+    return responce.data;
+  },
+  async deleteUser(rowId) {
+    const responce = await instance
+      .delete(`deleteUser`, { data: { rowId } });
+    return responce.data;
+  },
+}

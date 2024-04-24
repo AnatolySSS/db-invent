@@ -8,7 +8,6 @@ const verifyToken = (req, res, next) => {
       tokenMessage: "No token provided!",
     });
   }
-  console.log(token);
 
   jwt.verify(token, config.secret, (err, decoded) => {
     if (err) {

@@ -1,8 +1,9 @@
 import { Router } from "express";
 import { DataController } from "./controllers/data.controller.js";
-import { AuthController } from "./controllers/user.controller.js";
+import { AuthController } from "./controllers/auth.controller.js";
 import { InventaryController } from "./controllers/inventary.controller.js";
 import { InventaryYearsController } from "./controllers/inventary.years.controller.js";
+import { UsersController } from "./controllers/users.controller.js";
 import authJwt from "./middleware/authJwt.js";
 
 const router = new Router()
@@ -19,6 +20,11 @@ router.get("/auth/me", authJwt.verifyToken, AuthController.auth);
 
 router.post("/years", InventaryYearsController.getYears);
 router.post("/getYearData", InventaryYearsController.getYearData);
+
+router.post("/getUsers", UsersController.getUsers);
+router.post("/addUser", UsersController.addUser);
+router.put("/updateUser", UsersController.updateUser);
+router.delete("/deleteUser", UsersController.deleteUser);
 
 router.get("/currentYearInventary", InventaryController.hasCurrentYearInventary);
 router.post("/requestCurrentInventory", InventaryController.requestCurrentInventory);

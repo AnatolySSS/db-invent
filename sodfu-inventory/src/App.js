@@ -14,6 +14,7 @@ import UploadCraftContainer from "./Components/UploadCraft/UploadCraftContainer"
 import LoginCraftContainer from "./Components/LoginCraft/LoginCraftContainer";
 import YearInventoryContainer from "./Components/Tables/YearInventory/YearInventoryContainer";
 import ChartCraftContainer from "./Components/Charts/ChartCraftContainer";
+import UsersCraftContainer from "./Components/Tables/UsersCraft/UsersCraftContainer";
 
 class App extends React.Component {
   async componentDidMount() {
@@ -34,6 +35,7 @@ class App extends React.Component {
               <Route path="/assets" element={<TableCraftAssetsContainer />} />
               <Route path="/upload" element={<UploadCraftContainer />} />
               <Route path="/charts" element={<ChartCraftContainer />} />
+              <Route path="/users" element={<UsersCraftContainer />} />
               <Route path={`/it/:year`} element={<YearInventoryContainer tableName="it"/>} />
               <Route path={`/furniture/:year`} element={<YearInventoryContainer tableName="furniture"/>} />
               <Route path={`/unmarked/:year`} element={<YearInventoryContainer tableName="unmarked"/>} />

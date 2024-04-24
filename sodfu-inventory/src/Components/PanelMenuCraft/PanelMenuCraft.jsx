@@ -240,6 +240,30 @@ const PanelMenuCraft = (props) => {
     
   ];
 
+  if (userAuth.role == "admin") {
+    items.push({
+      label: "Пользователи",
+      icon: "pi pi-fw pi-users",
+      items: [
+        {
+          template: (item, options) => {
+            return (
+                <NavLink to="/users"
+                  className={classNames(options.className,"w-full p-link flex align-items-center")}
+                  style={{
+                    textDecoration: "none",
+                    color: "#495057",
+                  }}>
+                  <i className="pi pi-fw pi-user-edit mr-2"></i>
+                  Редактировать
+                </NavLink>
+            );
+          },
+        },
+      ],
+    })
+  }
+
   if (userDivision == 3 && userAuth.login == "user3") {
     items.push({
       label: "Загрузить данные",

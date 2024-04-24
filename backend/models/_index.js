@@ -1,5 +1,7 @@
 import { Sequelize } from "sequelize";
 import userModel from "./user.model.js";
+import userValuesModel from "./user.values.model.js";
+import userColumnsModel from "./user.columns.model.js";
 import { getDbConfig } from "../config/getDbConfig.js";
 import getDb_D0 from "./division_0/_getDb.js";
 import getDb_D1 from "./division_1/_getDb.js";
@@ -31,6 +33,10 @@ sequelize.GLOBAL = new Sequelize(config.GLOBAL.DB, config.GLOBAL.USER, config.GL
 
 db.GLOBAL.user = userModel(sequelize.GLOBAL, Sequelize);
 db.GLOBAL.user.sync();
+db.GLOBAL.userValues = userValuesModel(sequelize.GLOBAL, Sequelize);
+db.GLOBAL.userValues.sync();
+db.GLOBAL.userColumns = userColumnsModel(sequelize.GLOBAL, Sequelize);
+db.GLOBAL.userColumns.sync();
 
 for (const DIVISION in config.DIVISIONS) {
   sequelize.DIVISIONS[DIVISION] = 

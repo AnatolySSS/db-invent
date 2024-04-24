@@ -9,6 +9,7 @@ import panelMenuReducer from "./reducers/panel-menu-reducer";
 import authReducer from "./reducers/auth-reducer";
 import appReducer from "./reducers/app-reducer";
 import thunkMiddleware from "redux-thunk"
+import usersDataReducer from "./reducers/users-data-reducer";
 
 let reducers = combineReducers({
     itData: itDataReducer,
@@ -19,7 +20,8 @@ let reducers = combineReducers({
     panelMenu: panelMenuReducer,
     auth: authReducer,
     app: appReducer,
-    yearInventory: yearInventoryReducer
+    yearInventory: yearInventoryReducer,
+    usersData: usersDataReducer,
   });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
