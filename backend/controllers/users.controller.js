@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs"
 import generator from "generate-password";
+import nodemailer from "nodemailer";
 import db from "../models/_index.js";
 import { getValues } from "./functions/getValues.js";
 
@@ -7,8 +8,6 @@ export const UsersController = {
   async getUsers(request, responce) {
     try {
       let { userDivision } = request.body;
-
-      console.log(userDivision);
 
       const { user, userValues, userColumns } = db.GLOBAL;
       let data = {};
@@ -60,13 +59,42 @@ export const UsersController = {
       let passwordGen = generator.generate({
         length: 10,
         numbers: true,
-        symbols: true,
+        // symbols: true,
       });
 
       rowData.password = await bcrypt.hash(passwordGen, 10);
       delete rowData.id;
 
       await user.create(rowData);
+
+      // let testEmailAccount = await nodemailer.createTestAccount();
+
+      // let transporter = nodemailer.createTransport({
+      //     host: 'smtp.ethereal.email',
+      //     port: 587,
+      //     secure: false,
+      //     auth: {
+      //         user: testEmailAccount.user,
+      //         pass: testEmailAccount.pass,
+      //     },
+      // });
+
+      let transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'anatoly.shilyaev@gmail.com',
+            pass: 'sqot kogx iijd fuyr',
+        },
+    });
+
+      let result = await transporter.sendMail({
+          from: '"Inventory" <anatoly.shilyaev@gmail.com>',
+          to: `${rowData.login}@finombudsman.ru`,
+          subject: 'Инвентаризация (логин & пароль)',
+          html:`Учетные данные для входа в систему инвентаризации:<br><br>
+                <strong>Логин:</strong> ${rowData.login}<br>
+                <strong>Пароль:</strong> ${passwordGen}`,
+      });
 
       responce.json();
     } catch (error) {
