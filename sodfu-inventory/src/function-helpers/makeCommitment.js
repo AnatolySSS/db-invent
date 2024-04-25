@@ -22,7 +22,7 @@ import { inclineFirstname, inclineMiddlename, inclineLastname } from "lvovich";
 import { saveAs } from "file-saver";
 
 export function makeCommitment(selectedItems, fullName) {
-
+console.log(selectedItems);
   let owners = [];
   let names = [];
   selectedItems.forEach((item) => {
@@ -367,9 +367,10 @@ export function makeCommitment(selectedItems, fullName) {
                       new Paragraph({
                         style: "myCustomStyle",
                         children: [],
-                        alignment: AlignmentType.LEFT,
+                        alignment: AlignmentType.CENTER,
                       }),
                     ],
+                    verticalAlign: VerticalAlign.BOTTOM,
                     borders: bottomBorder,
                   }),
                 ],
@@ -400,9 +401,10 @@ export function makeCommitment(selectedItems, fullName) {
                       new Paragraph({
                         style: "myCustomStyle",
                         children: [],
-                        alignment: AlignmentType.LEFT,
+                        alignment: AlignmentType.CENTER,
                       }),
                     ],
+                    verticalAlign: VerticalAlign.BOTTOM,
                     borders: bottomBorder,
                   }),
                 ],
@@ -437,9 +439,10 @@ export function makeCommitment(selectedItems, fullName) {
                       new Paragraph({
                         style: "myCustomStyle",
                         children: [],
-                        alignment: AlignmentType.LEFT,
+                        alignment: AlignmentType.CENTER,
                       }),
                     ],
+                    verticalAlign: VerticalAlign.BOTTOM,
                     borders: bottomBorder,
                   }),
                 ],
@@ -474,9 +477,10 @@ export function makeCommitment(selectedItems, fullName) {
                       new Paragraph({
                         style: "myCustomStyle",
                         children: [],
-                        alignment: AlignmentType.LEFT,
+                        alignment: AlignmentType.CENTER,
                       }),
                     ],
+                    verticalAlign: VerticalAlign.BOTTOM,
                     borders: bottomBorder,
                   }),
                 ],
@@ -487,7 +491,6 @@ export function makeCommitment(selectedItems, fullName) {
               size: 100,
               type: WidthType.PERCENTAGE,
             },
-            // columnWidths: [convertInchesToTwip(4), convertInchesToTwip(6)],
           }),
           new Paragraph({
             style: "textStyle",
@@ -731,7 +734,7 @@ export function makeCommitment(selectedItems, fullName) {
                           style: "myCustomStyle",
                           children: [
                             new TextRun({
-                              text: "",
+                              text: item.inventary_number,
                             }),
                           ],
                           alignment: AlignmentType.CENTER,
@@ -784,7 +787,7 @@ export function makeCommitment(selectedItems, fullName) {
                   ],
                   height: {
                     rule: HeightRule.AUTO,
-                    value: 1700,
+                    value: 2000,
                   },
                 });
               }),
@@ -916,6 +919,10 @@ export function makeCommitment(selectedItems, fullName) {
                         alignment: AlignmentType.LEFT,
                       }),
                     ],
+                    width: {
+                      size: 50,
+                      type: WidthType.PERCENTAGE,
+                    },
                     borders: zeroBorders,
                   }),
                   new TableCell({
@@ -931,6 +938,10 @@ export function makeCommitment(selectedItems, fullName) {
                         alignment: AlignmentType.CENTER,
                       }),
                     ],
+                    width: {
+                      size: 50,
+                      type: WidthType.PERCENTAGE,
+                    },
                     borders: zeroBorders,
                   }),
                 ],
