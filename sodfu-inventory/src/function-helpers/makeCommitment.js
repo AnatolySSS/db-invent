@@ -18,9 +18,11 @@ import {
   Footer,
   TabStopType,
 } from "docx";
+import { inclineFirstname, inclineMiddlename, inclineLastname } from "lvovich";
 import { saveAs } from "file-saver";
 
-export function makeCommitment(selectedItems) {
+export function makeCommitment(selectedItems, fullName) {
+
   let owners = [];
   let names = [];
   selectedItems.forEach((item) => {
@@ -28,7 +30,7 @@ export function makeCommitment(selectedItems) {
     names.push(item.name);
   });
 
-  const borders = {
+  const zeroBorders = {
     top: {
       style: BorderStyle.NIL,
       size: 0,
@@ -36,6 +38,25 @@ export function makeCommitment(selectedItems) {
     bottom: {
       style: BorderStyle.NIL,
       size: 0,
+    },
+    left: {
+      style: BorderStyle.NIL,
+      size: 0,
+    },
+    right: {
+      style: BorderStyle.NIL,
+      size: 0,
+    },
+  };
+
+  const bottomBorder = {
+    top: {
+      style: BorderStyle.NIL,
+      size: 0,
+    },
+    bottom: {
+      style: BorderStyle.SINGLE,
+      size: 1,
     },
     left: {
       style: BorderStyle.NIL,
@@ -63,7 +84,7 @@ export function makeCommitment(selectedItems) {
               top: convertInchesToTwip(0.8),
               right: convertInchesToTwip(0.6),
               bottom: convertInchesToTwip(0.8),
-              left: convertInchesToTwip(1.2),
+              left: convertInchesToTwip(0.6),
             },
           },
           titlePage: true,
@@ -112,7 +133,7 @@ export function makeCommitment(selectedItems) {
             tabStops: [
               {
                 type: TabStopType.LEFT,
-                position: 6000,
+                position: 7200,
               },
             ],
             spacing: {
@@ -132,7 +153,7 @@ export function makeCommitment(selectedItems) {
             tabStops: [
               {
                 type: TabStopType.LEFT,
-                position: 6000,
+                position: 7200,
               },
             ],
             spacing: {
@@ -152,7 +173,7 @@ export function makeCommitment(selectedItems) {
             tabStops: [
               {
                 type: TabStopType.LEFT,
-                position: 6000,
+                position: 7200,
               },
             ],
             spacing: {
@@ -162,46 +183,68 @@ export function makeCommitment(selectedItems) {
             },
             alignment: AlignmentType.LEFT,
           }),
+          new Paragraph({
+            style: "myCustomStyle",
+            children: [
+              new TextRun({
+                text: "ОБЯЗАТЕЛЬСТВО*",
+                bold: true,
+              }),
+              new TextRun({
+                text: "1",
+                superScript: true,
+                bold: true,
+              }),
+              new TextRun({
+                text: " № _______________",
+                bold: true,
+              }),
+            ],
+            alignment: AlignmentType.CENTER,
+            spacing: {
+              after: 450,
+            },
+          }),
           new Table({
             style: "myCustomStyle",
             alignment: AlignmentType.CENTER,
             rows: [
-              new TableRow({
-                children: [
-                  new TableCell({
-                    children: [
-                      new Paragraph({
-                        style: "myCustomStyle",
-                        children: [
-                          new TextRun({
-                            text: "ОБЯЗАТЕЛЬСТВО*",
-                            bold: true,
-                          }),
-                          new TextRun({
-                            text: "1",
-                            superScript: true,
-                            bold: true,
-                          }),
-                          new TextRun({
-                            text: " № _______________",
-                            bold: true,
-                          }),
-                        ],
-                        alignment: AlignmentType.CENTER,
-                      }),
-                    ],
-                    columnSpan: 2,
-                  }),
-                ],
-              }),
-              new TableRow({
-                children: [
-                  new TableCell({
-                    children: [],
-                    columnSpan: 2,
-                  }),
-                ],
-              }),
+              // new TableRow({
+              //   children: [
+              //     new TableCell({
+              //       children: [
+              //         new Paragraph({
+              //           style: "myCustomStyle",
+              //           children: [
+              //             new TextRun({
+              //               text: "ОБЯЗАТЕЛЬСТВО*",
+              //               bold: true,
+              //             }),
+              //             new TextRun({
+              //               text: "1",
+              //               superScript: true,
+              //               bold: true,
+              //             }),
+              //             new TextRun({
+              //               text: " № _______________",
+              //               bold: true,
+              //             }),
+              //           ],
+              //           alignment: AlignmentType.CENTER,
+              //         }),
+              //       ],
+              //       columnSpan: 2,
+              //     }),
+              //   ],
+              // }),
+              // new TableRow({
+              //   children: [
+              //     new TableCell({
+              //       children: [],
+              //       columnSpan: 2,
+              //     }),
+              //   ],
+              // }),
               new TableRow({
                 children: [
                   new TableCell({
@@ -216,6 +259,11 @@ export function makeCommitment(selectedItems) {
                         alignment: AlignmentType.LEFT,
                       }),
                     ],
+                    width: {
+                      size: convertInchesToTwip(2.2),
+                      type: WidthType.DXA,
+                    },
+                    borders: zeroBorders,
                   }),
                   new TableCell({
                     children: [
@@ -230,6 +278,30 @@ export function makeCommitment(selectedItems) {
                         alignment: AlignmentType.CENTER,
                       }),
                     ],
+                    borders: bottomBorder,
+                  }),
+                ],
+              }),
+              new TableRow({
+                children: [
+                  new TableCell({
+                    children: [],
+                    borders: zeroBorders,
+                  }),
+                  new TableCell({
+                    children: [
+                      new Paragraph({
+                        style: "myCustomStyle",
+                        children: [
+                          new TextRun({
+                            text: "ФИО полностью",
+                            style: "myCustomStyle",
+                          }),
+                        ],
+                        alignment: AlignmentType.CENTER,
+                      }),
+                    ],
+                    borders: zeroBorders,
                   }),
                 ],
               }),
@@ -247,6 +319,7 @@ export function makeCommitment(selectedItems) {
                         alignment: AlignmentType.LEFT,
                       }),
                     ],
+                    borders: zeroBorders,
                   }),
                   new TableCell({
                     children: [
@@ -264,6 +337,7 @@ export function makeCommitment(selectedItems) {
                         alignment: AlignmentType.CENTER,
                       }),
                     ],
+                    borders: bottomBorder,
                   }),
                 ],
               }),
@@ -271,6 +345,11 @@ export function makeCommitment(selectedItems) {
                 children: [
                   new TableCell({
                     children: [
+                      new Paragraph({
+                        style: "myCustomStyle",
+                        children: [],
+                        alignment: AlignmentType.LEFT,
+                      }),
                       new Paragraph({
                         style: "myCustomStyle",
                         children: [
@@ -281,6 +360,7 @@ export function makeCommitment(selectedItems) {
                         alignment: AlignmentType.LEFT,
                       }),
                     ],
+                    borders: zeroBorders,
                   }),
                   new TableCell({
                     children: [
@@ -290,6 +370,7 @@ export function makeCommitment(selectedItems) {
                         alignment: AlignmentType.LEFT,
                       }),
                     ],
+                    borders: bottomBorder,
                   }),
                 ],
               }),
@@ -297,6 +378,11 @@ export function makeCommitment(selectedItems) {
                 children: [
                   new TableCell({
                     children: [
+                      new Paragraph({
+                        style: "myCustomStyle",
+                        children: [],
+                        alignment: AlignmentType.LEFT,
+                      }),
                       new Paragraph({
                         style: "myCustomStyle",
                         children: [
@@ -307,6 +393,7 @@ export function makeCommitment(selectedItems) {
                         alignment: AlignmentType.LEFT,
                       }),
                     ],
+                    borders: zeroBorders,
                   }),
                   new TableCell({
                     children: [
@@ -316,6 +403,7 @@ export function makeCommitment(selectedItems) {
                         alignment: AlignmentType.LEFT,
                       }),
                     ],
+                    borders: bottomBorder,
                   }),
                 ],
               }),
@@ -332,7 +420,17 @@ export function makeCommitment(selectedItems) {
                         ],
                         alignment: AlignmentType.LEFT,
                       }),
+                      new Paragraph({
+                        style: "myCustomStyle",
+                        children: [
+                          new TextRun({
+                            text: "(дистанционное место работы)",
+                          }),
+                        ],
+                        alignment: AlignmentType.LEFT,
+                      }),
                     ],
+                    borders: zeroBorders,
                   }),
                   new TableCell({
                     children: [
@@ -342,6 +440,7 @@ export function makeCommitment(selectedItems) {
                         alignment: AlignmentType.LEFT,
                       }),
                     ],
+                    borders: bottomBorder,
                   }),
                 ],
               }),
@@ -358,7 +457,17 @@ export function makeCommitment(selectedItems) {
                         ],
                         alignment: AlignmentType.LEFT,
                       }),
+                      new Paragraph({
+                        style: "myCustomStyle",
+                        children: [
+                          new TextRun({
+                            text: "(мобильный телефон)",
+                          }),
+                        ],
+                        alignment: AlignmentType.LEFT,
+                      }),
                     ],
+                    borders: zeroBorders,
                   }),
                   new TableCell({
                     children: [
@@ -368,22 +477,32 @@ export function makeCommitment(selectedItems) {
                         alignment: AlignmentType.LEFT,
                       }),
                     ],
+                    borders: bottomBorder,
                   }),
                 ],
               }),
             ],
+            margins,
             width: {
               size: 100,
               type: WidthType.PERCENTAGE,
             },
-            margins,
-            columnWidths: [convertInchesToTwip(4), convertInchesToTwip(6)],
+            // columnWidths: [convertInchesToTwip(4), convertInchesToTwip(6)],
           }),
           new Paragraph({
             style: "textStyle",
             children: [
               new TextRun({
-                text: `получил(а) от Чуплыгина Сергея Геннадьевича в пользование нижеперечисленное имущество (технику), принадлежащее АНО «СОДФУ» (далее — имущество):`,
+                text: `получил(а) от ${inclineLastname(
+                  fullName.split(" ")[0],
+                  "genitive"
+                )} ${inclineFirstname(
+                  fullName.split(" ")[1],
+                  "genitive"
+                )} ${inclineMiddlename(
+                  fullName.split(" ")[2],
+                  "genitive"
+                )} в пользование нижеперечисленное имущество (технику), принадлежащее АНО «СОДФУ» (далее — имущество):`,
               }),
             ],
             alignment: AlignmentType.LEFT,
@@ -678,7 +797,7 @@ export function makeCommitment(selectedItems) {
             columnWidths: [
               convertInchesToTwip(0.5),
               convertInchesToTwip(3.5),
-              convertInchesToTwip(1.5),
+              convertInchesToTwip(0.5),
               convertInchesToTwip(1.5),
               convertInchesToTwip(1),
               convertInchesToTwip(2),
@@ -715,7 +834,16 @@ export function makeCommitment(selectedItems) {
             style: "textStyle",
             children: [
               new TextRun({
-                text: `При переходе на другое место работы или увольнения, а также по требованию АНО «СОДФУ» в лице Чуплыгина Сергея Геннадьевича, либо следующих структурных подразделений АНО «СОДФУ», полученное мною имущество обязуюсь возвратить немедленно: Управление информатизации, Административное управление, Отдел безопасности и защиты информации Аппарата АНО «СОДФУ», Отдел по работе с персоналом Аппарата АНО «СОДФУ».`,
+                text: `При переходе на другое место работы или увольнения, а также по требованию АНО «СОДФУ» в лице ${inclineLastname(
+                  fullName.split(" ")[0],
+                  "genitive"
+                )} ${inclineFirstname(
+                  fullName.split(" ")[1],
+                  "genitive"
+                )} ${inclineMiddlename(
+                  fullName.split(" ")[2],
+                  "genitive"
+                )}, либо следующих структурных подразделений АНО «СОДФУ», полученное мною имущество обязуюсь возвратить немедленно: Управление информатизации, Административное управление, Отдел безопасности и защиты информации Аппарата АНО «СОДФУ», Отдел по работе с персоналом Аппарата АНО «СОДФУ».`,
               }),
             ],
           }),
@@ -788,7 +916,7 @@ export function makeCommitment(selectedItems) {
                         alignment: AlignmentType.LEFT,
                       }),
                     ],
-                    borders,
+                    borders: zeroBorders,
                   }),
                   new TableCell({
                     children: [
@@ -803,7 +931,7 @@ export function makeCommitment(selectedItems) {
                         alignment: AlignmentType.CENTER,
                       }),
                     ],
-                    borders,
+                    borders: zeroBorders,
                   }),
                 ],
               }),
@@ -821,7 +949,7 @@ export function makeCommitment(selectedItems) {
                         alignment: AlignmentType.LEFT,
                       }),
                     ],
-                    borders,
+                    borders: zeroBorders,
                   }),
                   new TableCell({
                     children: [
@@ -836,7 +964,7 @@ export function makeCommitment(selectedItems) {
                         alignment: AlignmentType.CENTER,
                       }),
                     ],
-                    borders,
+                    borders: zeroBorders,
                   }),
                 ],
               }),

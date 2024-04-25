@@ -14,15 +14,13 @@ export const setUserMenuItems = (
   division,
   selectedItems,
   clearFilter,
-  name,
-  div,
 ) => {
   const makeLogout = (logout) => () => {
     clearFilter();
     logout();
   };
 
-  const makeCommitmentHelper = () => makeCommitment(selectedItems);
+  const makeCommitmentHelper = () => makeCommitment(selectedItems, fullName);
 
   const makeQRCodeHelper = () => makeQRCode(selectedItems, division);
 

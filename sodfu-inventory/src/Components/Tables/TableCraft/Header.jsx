@@ -80,7 +80,6 @@ export const Header = (props) => {
     userAuth.division,
     selectedItems,
     clearFilter,
-    name,
   );
 
   if (userAuth.role === "admin") {
