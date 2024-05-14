@@ -26,12 +26,16 @@ router.post("/addUser", UsersController.addUser);
 router.put("/updateUser", UsersController.updateUser);
 router.delete("/deleteUser", UsersController.deleteUser);
 
-router.get("/currentYearInventary", InventaryController.hasCurrentYearInventary);
+router.post("/currentYearInventary", InventaryController.hasCurrentYearInventary);
 router.post("/requestCurrentInventory", InventaryController.requestCurrentInventory);
 router.post("/beginInventory", InventaryController.beginInventory);
 router.post("/findQRCode", InventaryController.findQRCode);
 router.post("/checkQRCode", InventaryController.checkQRCode);
-router.post("/checkRemains", InventaryController.checkRemains);
-router.get("/getLocations", InventaryController.getLocations);
+router.post("/checkRemainsWithLocations", InventaryController.checkRemainsWithLocations);
+router.post("/checkRemainsWithoutLocations", InventaryController.checkRemainsWithoutLocations);
+router.post("/checkStatus", InventaryController.checkStatus);
+router.post("/checkStatusType", InventaryController.checkStatusType);
+router.post("/checkStatusLocations", InventaryController.checkStatusLocations);
+router.post("/getLocations", InventaryController.getLocations);
 
 export default router
