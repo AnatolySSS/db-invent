@@ -1,11 +1,4 @@
 import db from "../models/_index.js";
-const CurrentYearInventaryIt = db.DIVISIONS.D3.currentYearInventaryIt
-const CurrentYearInventaryFurniture = db.DIVISIONS.D3.currentYearInventaryFurniture
-const PreviousYearInventaryIt = db.DIVISIONS.D3.previousYearInventaryIt
-const PreviousYearInventaryFurniture = db.DIVISIONS.D3.previousYearInventaryFurniture
-const libDataIt = db.DIVISIONS.D3.itLib
-// const valuesDataIt = db.DIVISIONS.D3.itValues
-const libDataFurniture = db.DIVISIONS.D3.furnitureLib
 
 export const InventaryController = {
   async hasCurrentYearInventary(request, responce) {
@@ -228,11 +221,21 @@ export const InventaryController = {
 
   async checkQRCode(request, responce) {
     try {
-      let { qrCode } = request.body;
-      let object
-      object = await libDataIt.findOne({ where: { qr_code: qrCode } })
+      let { qrCode, userDivision } = request.body;
+
+      const {
+        itLib,
+        furnitureLib,
+        assetsLib,
+      } = db.DIVISIONS[`D${userDivision}`];
+
+      let object;
+      object = await itLib.findOne({ where: { qr_code: qrCode } })
       if (!object) {
-        object = await libDataFurniture.findOne({ where: { qr_code: qrCode } })
+        object = await furnitureLib.findOne({ where: { qr_code: qrCode } })
+      }
+      if (!object) {
+        object = await assetsLib.findOne({ where: { qr_code: qrCode } })
       }
       responce.json({
         message: `Объект ${object.dataValues.name} найден`,
