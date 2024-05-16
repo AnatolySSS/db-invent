@@ -219,6 +219,44 @@ export const InventaryController = {
     }
   },
 
+  async inventUnmarked(request, responce) {
+    try {
+      let { id, count, user } = request.body;
+
+      const {
+        unmarkedLib,
+        currentYearInventaryUnmarked,
+      } = db.DIVISIONS[`D${user.division}`];
+
+      const currentYear = new Date().getFullYear();
+      let itemName;
+
+      await currentYearInventaryUnmarked.update({
+        checked: true,
+        user: user.full_name,
+        scan_date: new Date(),
+        count: count,
+      },
+      { where: { id: id, }});
+
+      await unmarkedLib.update({ count: count }, { where: { id: id }});
+
+      itemName = await currentYearInventaryUnmarked.findOne({ where: { id: id }, raw : true, })
+
+      responce.json({
+        message: `${itemName.name} инвентаризован в таблице Unmarked за ${currentYear} год`,
+        name: itemName.name
+      });
+    } catch (error) {
+      console.log("__________InventaryController__inventUnmarked___________");
+      console.log(error);
+      responce.json({
+        message: `Объекты не найдены`,
+        name: "Имя не известно",
+      });
+    }
+  },
+
   async checkQRCode(request, responce) {
     try {
       let { qrCode, userDivision } = request.body;
@@ -504,7 +542,6 @@ export const InventaryController = {
         location.checked = location.inv_data.filter(v => v.checked == true).length
         checked = checked + location.checked
       });
-      console.log(locations);
 
       responce.json({
         message: `Объекты найдены`,

@@ -30,6 +30,7 @@ router.post("/currentYearInventary", InventaryController.hasCurrentYearInventary
 router.post("/requestCurrentInventory", InventaryController.requestCurrentInventory);
 router.post("/beginInventory", InventaryController.beginInventory);
 router.post("/findQRCode", InventaryController.findQRCode);
+router.post("/inventUnmarked", InventaryController.inventUnmarked);
 router.post("/checkQRCode", InventaryController.checkQRCode);
 router.post("/checkRemainsWithLocations", InventaryController.checkRemainsWithLocations);
 router.post("/checkRemainsWithoutLocations", InventaryController.checkRemainsWithoutLocations);
