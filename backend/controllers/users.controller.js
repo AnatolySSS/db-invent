@@ -85,7 +85,7 @@ export const UsersController = {
             user: 'anatoly.shilyaev@gmail.com',
             pass: 'sqot kogx iijd fuyr',
         },
-    });
+      });
 
       let result = await transporter.sendMail({
           from: '"Inventory" <anatoly.shilyaev@gmail.com>',
