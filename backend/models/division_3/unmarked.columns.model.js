@@ -18,6 +18,9 @@ export default (sequelize, Sequelize) => {
     dbFieldType: {
       type: Sequelize.STRING,
     },
+    dataType: {
+      type: Sequelize.STRING,
+    },
   }, {
     tableName: `unmarked_meta`
   });
