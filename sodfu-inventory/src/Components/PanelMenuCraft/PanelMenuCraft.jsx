@@ -264,7 +264,7 @@ const PanelMenuCraft = (props) => {
     })
   }
 
-  if (userDivision == 3 && userAuth.login == "user3") {
+  // if (userDivision == 3 && userAuth.login == "user3") {
     items.push({
       label: "Загрузить данные",
       icon: "pi pi-fw pi-download",
@@ -286,7 +286,7 @@ const PanelMenuCraft = (props) => {
         },
       ],
     })
-  }
+  // }
 
   return (
     <div className="card flex justify-content-center mt-2">
