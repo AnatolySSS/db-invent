@@ -23,6 +23,8 @@ let initialState = {
     purchase_price: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
     qr_code: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] },
     release_date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
+    last_setup_date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
+    owner: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] },
     serviceable: { value: null, matchMode: FilterMatchMode.IN },
     type: { value: null, matchMode: FilterMatchMode.IN },
     was_deleted: { value: null, matchMode: FilterMatchMode.EQUALS },
