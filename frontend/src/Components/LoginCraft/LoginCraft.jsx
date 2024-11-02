@@ -1,8 +1,8 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef } from "react";
 import { Navigate } from "react-router-dom";
-import { Formik, Field, Form } from 'formik';
-import * as Yup from 'yup';
-import { classNames } from 'primereact/utils';
+import { Formik, Field, Form } from "formik";
+import * as Yup from "yup";
+import { classNames } from "primereact/utils";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeflex/primeflex.css";
@@ -10,38 +10,56 @@ import "primeicons/primeicons.css";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import { Button } from "primereact/button";
-import { Message } from 'primereact/message'
-import { Image } from 'primereact/image';
+import { Message } from "primereact/message";
+import { Image } from "primereact/image";
 
 const LoginSchema = Yup.object().shape({
   login: Yup.string()
-    .min(3, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('Required'),
+    .min(3, "Too Short!")
+    .max(50, "Too Long!")
+    .required("Required"),
   password: Yup.string()
-    .min(3, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('Required'),
+    .min(3, "Too Short!")
+    .max(50, "Too Long!")
+    .required("Required"),
 });
 
 const LoginInput = ({ field, form, form: { touched, errors }, ...props }) => {
-  const { setPasswordMt} = props
+  const { setPasswordMt } = props;
   return (
     <div
       className={"mb-2"}
       onInput={() => {
-        if ((errors.login) || (errors.login && errors.password) || !touched.login) {
+        if (
+          errors.login ||
+          (errors.login && errors.password) ||
+          !touched.login
+        ) {
           setPasswordMt("mt-2");
         }
-        if ((!errors.login && !errors.password && touched.login && touched.password)) {
+        if (
+          !errors.login &&
+          !errors.password &&
+          touched.login &&
+          touched.password
+        ) {
           setPasswordMt("mt-4");
         }
       }}
       onBlur={() => {
-        if ((errors.login) || (errors.login && errors.password) || !touched.login) {
+        if (
+          errors.login ||
+          (errors.login && errors.password) ||
+          !touched.login
+        ) {
           setPasswordMt("mt-2");
         }
-        if ((!errors.login && !errors.password && touched.login && touched.password)) {
+        if (
+          !errors.login &&
+          !errors.password &&
+          touched.login &&
+          touched.password
+        ) {
           setPasswordMt("mt-4");
         }
       }}
@@ -76,15 +94,24 @@ const LoginInput = ({ field, form, form: { touched, errors }, ...props }) => {
   );
 };
 
-const PasswordInput = ({ field, form, form: { touched, errors }, ...props }) => {
-  const {passwordMt, setPasswordMt} = props
+const PasswordInput = ({
+  field,
+  form,
+  form: { touched, errors },
+  ...props
+}) => {
+  const { passwordMt, setPasswordMt } = props;
   // const [passwordMt, setPasswordMt] = useState("mt-2");
   return (
     <div className={classNames(passwordMt, "mb-2")}>
       <span
         className="p-input-icon-right p-float-label"
         onBlur={() => {
-          if ((errors.login) || (errors.login && errors.password) || !touched.login && errors.password) {
+          if (
+            errors.login ||
+            (errors.login && errors.password) ||
+            (!touched.login && errors.password)
+          ) {
             setPasswordMt("mt-2");
           }
         }}
@@ -119,22 +146,26 @@ const PasswordInput = ({ field, form, form: { touched, errors }, ...props }) => 
 
 const LoginCraft = (props) => {
   const [passwordMt, setPasswordMt] = useState("mt-2");
-  const messageRef = useRef(null)
+  const messageRef = useRef(null);
   const { login, isAuth, message } = props;
 
   const submit = (values) => {
     login(values.login, values.password);
   };
 
-  if (isAuth) return <Navigate to={"/it"} />
+  if (isAuth) return <Navigate to={"/it"} />;
 
   return (
     <div className="h-screen flex align-items-center justify-content-center">
-      
       <div ref={messageRef} className="flex flex-column">
-      <div className="flex justify-content-center mb-3">
-        <Image src={require("./../../img/logo1.png")} width="203" height="137" alt="No Image" />
-      </div>
+        <div className="flex justify-content-center mb-3">
+          <Image
+            src={require("../../img/logo1.png")}
+            width="203"
+            height="137"
+            alt="No Image"
+          />
+        </div>
         <Formik
           initialValues={{
             login: "",
@@ -159,10 +190,22 @@ const LoginCraft = (props) => {
               setPasswordMt={setPasswordMt}
             />
             <div className="mb-2">
-              {message && <Message style={{width: messageRef.current.offsetWidth}} severity="error" text={message} /> }
+              {message && (
+                <Message
+                  style={{ width: messageRef.current.offsetWidth }}
+                  severity="error"
+                  text={message}
+                />
+              )}
             </div>
-             <div className='justify-content-center'>
-              <Button type="submit" className='w-full justify-content-center' onClick={submit}>Login</Button>
+            <div className="justify-content-center">
+              <Button
+                type="submit"
+                className="w-full justify-content-center"
+                onClick={submit}
+              >
+                Login
+              </Button>
             </div>
           </Form>
         </Formik>
