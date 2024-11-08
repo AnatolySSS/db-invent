@@ -1,61 +1,24 @@
-import React, {useState} from "react";
-import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { InputNumber } from "primereact/inputnumber";
 import { Dropdown } from "primereact/dropdown";
 import { Calendar } from "primereact/calendar";
+import styles from "./DescriptionCraft.module.css";
 import { getDropdownOptions } from "../Functions/getDropdownOptions";
 import { formatDate } from "../../../Functions/Helpers/formatDate";
-import { getItemDialogFooter } from "../Functions/getItemDialogFooter";
-import styles from "./DialogCraftAssets.module.css";
-import { hideNew } from "../Functions/hideNew";
+import { imgBodyTemplate } from "../../../Functions/Body/getColumnBody";
 
-export const DialogCraftAssets = (props) => {
-  const {
-    data,
-    columns,
-    setItemDialog,
-    ItemDialog,
-    item,
-    setItem,
-    values,
-    addData,
-    updateData,
-    emptyItem,
-    userAuth,
-  } = props;
-
-  const [disabled, setDisabled] = useState(true);
+export const DescriptionAssets = (props) => {
+  const { columns, item, disabled, setItem, values } = props;
 
   //Переменная для массива наименований столбцов,
   //чтобы показывать только релевантные столбцы для конкретного филиала
-  let currentColumns = columns.map(column => column.field)
+  let currentColumns = columns.map((column) => column.field);
 
   return (
-    <Dialog
-      visible={ItemDialog}
-      style={{ width: "48rem" }}
-      breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-      header="Описание предмета"
-      modal
-      className="p-fluid"
-      footer={getItemDialogFooter(
-        addData,
-        updateData,
-        data,
-        item,
-        setItemDialog,
-        setItem,
-        emptyItem,
-        userAuth,
-        disabled,
-        setDisabled,
-      )}
-      onHide={hideNew(setItemDialog, setDisabled)}
-    >
-      <div className="grid">
-        {currentColumns.includes("name") && <div className="col-12">
+    <div className="grid">
+      {currentColumns.includes("name") && (
+        <div className="col-12">
           <label htmlFor="name" className={styles.label}>
             Наименование
           </label>
@@ -69,8 +32,10 @@ export const DialogCraftAssets = (props) => {
             cols={20}
             disabled={disabled}
           />
-        </div>}
-        {currentColumns.includes("inventary_number") && <div className="col-6">
+        </div>
+      )}
+      {currentColumns.includes("inventary_number") && (
+        <div className="col-6">
           <label htmlFor="inventary_number" className={styles.label}>
             Инвентарный номер
           </label>
@@ -82,8 +47,10 @@ export const DialogCraftAssets = (props) => {
             }
             disabled={disabled}
           />
-        </div>}
-        {currentColumns.includes("qr_code") && <div className="col-6">
+        </div>
+      )}
+      {currentColumns.includes("qr_code") && (
+        <div className="col-6">
           <label htmlFor="qr_code" className={styles.label}>
             QRCODE
           </label>
@@ -93,8 +60,10 @@ export const DialogCraftAssets = (props) => {
             onChange={(e) => setItem({ ...item, qr_code: e.target.value })}
             disabled={disabled}
           />
-        </div>}
-        {currentColumns.includes("serial") && <div className="col-6">
+        </div>
+      )}
+      {currentColumns.includes("serial") && (
+        <div className="col-6">
           <label htmlFor="serial" className={styles.label}>
             Серийный номер
           </label>
@@ -104,8 +73,10 @@ export const DialogCraftAssets = (props) => {
             onChange={(e) => setItem({ ...item, serial: e.target.value })}
             disabled={disabled}
           />
-        </div>}
-        {currentColumns.includes("owner") && <div className="col-6">
+        </div>
+      )}
+      {currentColumns.includes("owner") && (
+        <div className="col-6">
           <label htmlFor="owner" className={styles.label}>
             ФИО юзера
           </label>
@@ -115,8 +86,10 @@ export const DialogCraftAssets = (props) => {
             onChange={(e) => setItem({ ...item, owner: e.target.value })}
             disabled={disabled}
           />
-        </div>}
-        {currentColumns.includes("type") && <div className="col-6">
+        </div>
+      )}
+      {currentColumns.includes("type") && (
+        <div className="col-6">
           <label htmlFor="type" className={styles.label}>
             Тип
           </label>
@@ -128,8 +101,10 @@ export const DialogCraftAssets = (props) => {
             placeholder={item.type || ""}
             disabled={disabled}
           />
-        </div>}
-        {currentColumns.includes("purchase_price") && <div className="col-6">
+        </div>
+      )}
+      {currentColumns.includes("purchase_price") && (
+        <div className="col-6">
           <label htmlFor="purchase_price" className={styles.label}>
             Стоимость
           </label>
@@ -142,8 +117,10 @@ export const DialogCraftAssets = (props) => {
             locale="ru-RU"
             disabled={disabled}
           />
-        </div>}
-        {currentColumns.includes("purchase_date") && <div className="col-6">
+        </div>
+      )}
+      {currentColumns.includes("purchase_date") && (
+        <div className="col-6">
           <label htmlFor="purchase_date" className={styles.label}>
             Дата приобретения
           </label>
@@ -158,8 +135,10 @@ export const DialogCraftAssets = (props) => {
             disabled={disabled}
             // mask="99.99.9999"
           />
-        </div>}
-        {currentColumns.includes("note") && <div className="col-12">
+        </div>
+      )}
+      {currentColumns.includes("note") && (
+        <div className="col-12">
           <label htmlFor="note" className={styles.label}>
             Информация
           </label>
@@ -171,8 +150,8 @@ export const DialogCraftAssets = (props) => {
             cols={20}
             disabled={disabled}
           />
-        </div>}
-      </div>
-    </Dialog>
+        </div>
+      )}
+    </div>
   );
 };

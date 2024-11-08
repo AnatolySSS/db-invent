@@ -20,16 +20,21 @@ const db = {
   DIVISIONS: {},
 };
 
-sequelize.GLOBAL = new Sequelize(config.GLOBAL.DB, config.GLOBAL.USER, config.GLOBAL.PASSWORD, {
-  host: config.GLOBAL.HOST,
-  dialect: config.GLOBAL.dialect,
-  operatorsAliases: 0,
-  pool: {
-    max: 5,
-    min: 0,
-    idle: 10000
-  },
-});
+sequelize.GLOBAL = new Sequelize(
+  config.GLOBAL.DB,
+  config.GLOBAL.USER,
+  config.GLOBAL.PASSWORD,
+  {
+    host: config.GLOBAL.HOST,
+    dialect: config.GLOBAL.dialect,
+    operatorsAliases: 0,
+    pool: {
+      max: 5,
+      min: 0,
+      idle: 10000,
+    },
+  }
+);
 
 db.GLOBAL.user = userModel(sequelize.GLOBAL, Sequelize);
 db.GLOBAL.user.sync();
@@ -39,23 +44,22 @@ db.GLOBAL.userColumns = userColumnsModel(sequelize.GLOBAL, Sequelize);
 db.GLOBAL.userColumns.sync();
 
 for (const DIVISION in config.DIVISIONS) {
-  sequelize.DIVISIONS[DIVISION] = 
-    new Sequelize(
-      config.DIVISIONS[DIVISION].DB,
-      config.DIVISIONS[DIVISION].USER,
-      config.DIVISIONS[DIVISION].PASSWORD,
-      {
-        host: config.DIVISIONS[DIVISION].HOST,
-        dialect: config.DIVISIONS[DIVISION].dialect,
-        operatorsAliases: 0,
-        pool: {
-          max: 5,
-          min: 0,
-          idle: 10000,
-        },
-      }
-    )
-};
+  sequelize.DIVISIONS[DIVISION] = new Sequelize(
+    config.DIVISIONS[DIVISION].DB,
+    config.DIVISIONS[DIVISION].USER,
+    config.DIVISIONS[DIVISION].PASSWORD,
+    {
+      host: config.DIVISIONS[DIVISION].HOST,
+      dialect: config.DIVISIONS[DIVISION].dialect,
+      operatorsAliases: 0,
+      pool: {
+        max: 5,
+        min: 0,
+        idle: 10000,
+      },
+    }
+  );
+}
 
 db.DIVISIONS.D0 = getDb_D0(sequelize.DIVISIONS.D0, Sequelize);
 db.DIVISIONS.D1 = getDb_D1(sequelize.DIVISIONS.D1, Sequelize);

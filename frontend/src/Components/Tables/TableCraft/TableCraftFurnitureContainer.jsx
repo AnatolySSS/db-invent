@@ -1,7 +1,13 @@
 import { connect } from "react-redux";
 import { compose } from "redux";
 import TableCraft from "./TableCraft";
-import { requestData, addData, updateData, deleteData } from "../../../redux/reducers/furniture-data-reducer";
+import {
+  requestData,
+  addData,
+  updateData,
+  deleteData,
+  clearState,
+} from "../../../redux/reducers/furniture-data-reducer";
 import { beginInventory } from "../../../redux/reducers/panel-menu-reducer";
 import { requestCurrentInventory } from "../../../redux/reducers/year-inventory-reducer";
 import { setVisible } from "../../../redux/reducers/side-bar-reducer";
@@ -10,7 +16,6 @@ import { logout } from "../../../redux/reducers/auth-reducer";
 import { memo } from "react";
 
 let mapStateToProps = (state) => {
-
   return {
     type: "furniture",
     data: state.furnitureData.data,
@@ -26,15 +31,16 @@ let mapStateToProps = (state) => {
   };
 };
 
-let mapDispatchToProps =  {
-    requestData,
-    addData,
-    updateData,
-    deleteData,
-    setVisible,
-    logout,
-    beginInventory,
-    requestCurrentInventory,
+let mapDispatchToProps = {
+  requestData,
+  addData,
+  updateData,
+  deleteData,
+  setVisible,
+  logout,
+  beginInventory,
+  requestCurrentInventory,
+  clearState,
 };
 
 // export default connect(mapStateToProps, mapDispatchToProps)(TableCraft)

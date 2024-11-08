@@ -3,9 +3,13 @@ import { FilterMatchMode, FilterOperator } from "primereact/api";
 import changeDateType from "../../function-helpers/changeDateType";
 
 const SET_DATA = "sodfu-inventory/unmarked-data-reducer/SET_DATA";
-const SET_UPLOAD_STATUS = "sodfu-inventory/unmarked-data-reducer/SET_UPLOAD_STATUS";
-const TOGGLE_IS_FETCHING = "sodfu-inventory/unmarked-data-reducer/TOGGLE_IS_FETCHING";
-const SET_VALIDATION_STATUS = "sodfu-inventory/unmarked-data-reducer/SET_VALIDATION_STATUS";
+const RESET_STATE = "sodfu-inventory/it-data-reducer/RESET_STATE";
+const SET_UPLOAD_STATUS =
+  "sodfu-inventory/unmarked-data-reducer/SET_UPLOAD_STATUS";
+const TOGGLE_IS_FETCHING =
+  "sodfu-inventory/unmarked-data-reducer/TOGGLE_IS_FETCHING";
+const SET_VALIDATION_STATUS =
+  "sodfu-inventory/unmarked-data-reducer/SET_VALIDATION_STATUS";
 
 let initialState = {
   columns: [],
@@ -13,22 +17,43 @@ let initialState = {
   values: [],
   filters: {
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    id: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] },
+    id: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+    },
     type: { value: null, matchMode: FilterMatchMode.IN },
-    name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] },
-    owner: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] },
-    purchase_price: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-    count: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-    note: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] },
+    name: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+    },
+    owner: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+    },
+    purchase_price: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
+    },
+    count: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
+    },
+    note: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+    },
     location: { value: null, matchMode: FilterMatchMode.IN },
     measurement: { value: null, matchMode: FilterMatchMode.IN },
-    updatedAt: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
+    updatedAt: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],
+    },
   },
   uploadedStatus: false,
   name: "",
   message: "",
   isFetching: false,
-  validationStatus: {}
+  validationStatus: {},
 };
 
 const unmarkedDataReducer = (state = initialState, action) => {
@@ -58,15 +83,27 @@ const unmarkedDataReducer = (state = initialState, action) => {
         ...state,
         validationStatus: { ...action.validationStatus },
       };
+    case RESET_STATE:
+      return initialState;
     default:
       return state;
   }
 };
 
 const setData = (data, message) => ({ type: SET_DATA, data, message });
-const setUploadStatus = (status) => ({ type: SET_UPLOAD_STATUS, uploadedStatus: status });
-const toggleIsFetching = (isFetching) => ({ type: TOGGLE_IS_FETCHING, isFetching: isFetching });
-const setValidationStatus = (validationStatus) => ({ type: SET_VALIDATION_STATUS, validationStatus: validationStatus });
+const resetState = () => ({ type: RESET_STATE });
+const setUploadStatus = (status) => ({
+  type: SET_UPLOAD_STATUS,
+  uploadedStatus: status,
+});
+const toggleIsFetching = (isFetching) => ({
+  type: TOGGLE_IS_FETCHING,
+  isFetching: isFetching,
+});
+const setValidationStatus = (validationStatus) => ({
+  type: SET_VALIDATION_STATUS,
+  validationStatus: validationStatus,
+});
 
 //Изменение формата даты со строки на объект Date (необходимо для правильной фильтрации)
 const changeDateFormat = (data) => {
@@ -95,7 +132,7 @@ const changeDateFormat = (data) => {
     });
     return v;
   });
-  return data
+  return data;
 };
 
 export const requestData = (userDivision) => {
@@ -130,7 +167,11 @@ export const deleteData = (rowId, userDivision) => {
 export const addData = (rowData, userDivision) => {
   return async (dispatch) => {
     dispatch(toggleIsFetching(true));
-    const validStatus = await DataAPI.addData("unmarked", rowData, userDivision);
+    const validStatus = await DataAPI.addData(
+      "unmarked",
+      rowData,
+      userDivision
+    );
     dispatch(setValidationStatus(validStatus));
     const data = await DataAPI.getData("unmarked", userDivision);
     dispatch(toggleIsFetching(false));
@@ -141,9 +182,15 @@ export const addData = (rowData, userDivision) => {
 export const uploadData = (data, userDivision) => {
   return async (dispatch) => {
     dispatch(toggleIsFetching(true));
-    await DataAPI.uploadData("unmarked", data, userDivision)
+    await DataAPI.uploadData("unmarked", data, userDivision);
     dispatch(toggleIsFetching(false));
     dispatch(setUploadStatus(true));
+  };
+};
+
+export const clearState = () => {
+  return (dispatch) => {
+    dispatch(resetState());
   };
 };
 

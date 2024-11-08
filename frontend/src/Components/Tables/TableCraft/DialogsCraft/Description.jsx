@@ -1,42 +1,29 @@
-import { DialogCraftFurniture } from "../Furniture/DialogCraftFurniture";
-import { DialogCraftIt } from "../It/DialogCraftIt";
-import { DialogCraftUnmarked } from "../Unmarked/DialogCraftUnmarked";
-import { DialogCraftAssets } from "../Assets/DialogCraftAssets";
+import { DescriptionIt } from "./Descriptions/DescriptionIt";
+import { DescriptionFurniture } from "./Descriptions/DescriptionFurniture";
+import { DescriptionUnmarked } from "./Descriptions/DescriptionUnmarked";
+import { DescriptionAssets } from "./Descriptions/DescriptionAssets";
 
-export const getDialog = (
-  name,
-  data,
-  columns,
-  setItemDialog,
-  ItemDialog,
-  item,
-  setItem,
-  values,
-  addData,
-  updateData,
-  emptyItem,
-  userAuth
-) => {
+export const Description = (props) => {
+  const {
+    name,
+    data,
+    columns,
+    setItemDialog,
+    ItemDialog,
+    item,
+    setItem,
+    values,
+    addData,
+    updateData,
+    emptyItem,
+    userAuth,
+    disabled,
+  } = props;
+
   switch (name) {
-    case "Мебель":
-      return (
-        <DialogCraftFurniture
-          data={data}
-          columns={columns}
-          setItemDialog={setItemDialog}
-          ItemDialog={ItemDialog}
-          item={item}
-          setItem={setItem}
-          values={values}
-          addData={addData}
-          updateData={updateData}
-          emptyItem={emptyItem}
-          userAuth={userAuth}
-        />
-      );
     case "Оборудование":
       return (
-        <DialogCraftIt
+        <DescriptionIt
           data={data}
           columns={columns}
           setItemDialog={setItemDialog}
@@ -48,11 +35,29 @@ export const getDialog = (
           updateData={updateData}
           emptyItem={emptyItem}
           userAuth={userAuth}
+          disabled={disabled}
+        />
+      );
+    case "Мебель":
+      return (
+        <DescriptionFurniture
+          data={data}
+          columns={columns}
+          setItemDialog={setItemDialog}
+          ItemDialog={ItemDialog}
+          item={item}
+          setItem={setItem}
+          values={values}
+          addData={addData}
+          updateData={updateData}
+          emptyItem={emptyItem}
+          userAuth={userAuth}
+          disabled={disabled}
         />
       );
     case "Прочее":
       return (
-        <DialogCraftUnmarked
+        <DescriptionUnmarked
           data={data}
           columns={columns}
           setItemDialog={setItemDialog}
@@ -64,11 +69,12 @@ export const getDialog = (
           updateData={updateData}
           emptyItem={emptyItem}
           userAuth={userAuth}
+          disabled={disabled}
         />
       );
     case "Основные средства":
       return (
-        <DialogCraftAssets
+        <DescriptionAssets
           data={data}
           columns={columns}
           setItemDialog={setItemDialog}
@@ -80,6 +86,7 @@ export const getDialog = (
           updateData={updateData}
           emptyItem={emptyItem}
           userAuth={userAuth}
+          disabled={disabled}
         />
       );
     default:

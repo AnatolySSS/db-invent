@@ -3,10 +3,9 @@
 # dependencies
 frontend/node_modules
 backend/node_modules
-node_modules
-/.pnp
-.pnp.js
+db_password.txt
 backend/.env
+.env
 
 # testing
 /coverage

@@ -1,63 +1,26 @@
-import React, {useState} from "react";
-import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { InputNumber } from "primereact/inputnumber";
 import { Dropdown } from "primereact/dropdown";
 import { Calendar } from "primereact/calendar";
 import { MultiStateCheckbox } from "primereact/multistatecheckbox";
+import styles from "./DescriptionCraft.module.css";
+import { multiStateCheckboxOptions } from "../../../Functions/Filters/getColumnFilterElement";
 import { getDropdownOptions } from "../Functions/getDropdownOptions";
 import { formatDate } from "../../../Functions/Helpers/formatDate";
-import { multiStateCheckboxOptions } from "../../../Functions/Filters/getColumnFilterElement";
-import { getItemDialogFooter } from "../Functions/getItemDialogFooter";
-import styles from "./DialogCraftIt.module.css";
-import { hideNew } from "../Functions/hideNew";
+import { imgBodyTemplate } from "../../../Functions/Body/getColumnBody";
 
-export const DialogCraftIt = (props) => {
-  const {
-    data,
-    columns,
-    setItemDialog,
-    ItemDialog,
-    item,
-    setItem,
-    values,
-    addData,
-    updateData,
-    emptyItem,
-    userAuth,
-  } = props;
-
-  const [disabled, setDisabled] = useState(true);
+export const DescriptionFurniture = (props) => {
+  const { columns, item, disabled, setItem, values } = props;
 
   //Переменная для массива наименований столбцов,
   //чтобы показывать только релевантные столбцы для конкретного филиала
-  let currentColumns = columns.map(column => column.field)
+  let currentColumns = columns.map((column) => column.field);
 
   return (
-    <Dialog
-      visible={ItemDialog}
-      style={{ width: "48rem" }}
-      breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-      header="Описание предмета"
-      modal
-      className="p-fluid"
-      footer={getItemDialogFooter(
-        addData,
-        updateData,
-        data,
-        item,
-        setItemDialog,
-        setItem,
-        emptyItem,
-        userAuth,
-        disabled,
-        setDisabled,
-      )}
-      onHide={hideNew(setItemDialog, setDisabled)}
-    >
-      <div className="grid">
-        {currentColumns.includes("name") && <div className="col-12">
+    <div className="grid">
+      {currentColumns.includes("name") && (
+        <div className="col-12">
           <label htmlFor="name" className={styles.label}>
             Наименование
           </label>
@@ -71,8 +34,10 @@ export const DialogCraftIt = (props) => {
             cols={20}
             disabled={disabled}
           />
-        </div>}
-        {currentColumns.includes("inventary_number") && <div className="col-6">
+        </div>
+      )}
+      {currentColumns.includes("inventary_number") && (
+        <div className="col-6">
           <label htmlFor="inventary_number" className={styles.label}>
             Инвентарный номер
           </label>
@@ -84,8 +49,10 @@ export const DialogCraftIt = (props) => {
             }
             disabled={disabled}
           />
-        </div>}
-        {currentColumns.includes("qr_code") && <div className="col-6">
+        </div>
+      )}
+      {currentColumns.includes("qr_code") && (
+        <div className="col-6">
           <label htmlFor="qr_code" className={styles.label}>
             QRCODE
           </label>
@@ -95,52 +62,10 @@ export const DialogCraftIt = (props) => {
             onChange={(e) => setItem({ ...item, qr_code: e.target.value })}
             disabled={disabled}
           />
-        </div>}
-        {currentColumns.includes("serial") && <div className="col-6">
-          <label htmlFor="serial" className={styles.label}>
-            Серийный номер
-          </label>
-          <InputText
-            id="serial"
-            value={item.serial || ""}
-            onChange={(e) => setItem({ ...item, serial: e.target.value })}
-            disabled={disabled}
-          />
-        </div>}
-        {currentColumns.includes("ad_name") &&  <div className="col-6">
-          <label htmlFor="ad_name" className={styles.label}>
-            Имя устройства в AD
-          </label>
-          <InputText
-            id="ad_name"
-            value={item.ad_name || ""}
-            onChange={(e) => setItem({ ...item, ad_name: e.target.value })}
-            disabled={disabled}
-          />
-        </div>}
-        {currentColumns.includes("owner") && <div className="col-6">
-          <label htmlFor="owner" className={styles.label}>
-            ФИО юзера
-          </label>
-          <InputText
-            id="owner"
-            value={item.owner || ""}
-            onChange={(e) => setItem({ ...item, owner: e.target.value })}
-            disabled={disabled}
-          />
-        </div>}
-        {currentColumns.includes("prev_owner") && <div className="col-6">
-          <label htmlFor="prev_owner" className={styles.label}>
-            ФИО предыдущего юзера
-          </label>
-          <InputText
-            id="prev_owner"
-            value={item.prev_owner || ""}
-            onChange={(e) => setItem({ ...item, prev_owner: e.target.value })}
-            disabled={disabled}
-          />
-        </div>}
-        {currentColumns.includes("type") && <div className="col-6">
+        </div>
+      )}
+      {currentColumns.includes("type") && (
+        <div className="col-6">
           <label htmlFor="type" className={styles.label}>
             Тип
           </label>
@@ -152,8 +77,10 @@ export const DialogCraftIt = (props) => {
             placeholder={item.type || ""}
             disabled={disabled}
           />
-        </div>}
-        {currentColumns.includes("location") && <div className="col-6">
+        </div>
+      )}
+      {currentColumns.includes("location") && (
+        <div className="col-6">
           <label htmlFor="location" className={styles.label}>
             Где установлено
           </label>
@@ -165,23 +92,10 @@ export const DialogCraftIt = (props) => {
             placeholder={item.location || ""}
             disabled={disabled}
           />
-        </div>}
-        {currentColumns.includes("workplace_type") && <div className="col-6">
-          <label htmlFor="workplace_type" className={styles.label}>
-            Тип рабочего места
-          </label>
-          <Dropdown
-            id="workplace_type"
-            value={item.workplace_type || ""}
-            options={getDropdownOptions("workplace_type", values)}
-            onChange={(e) =>
-              setItem({ ...item, workplace_type: e.target.value })
-            }
-            placeholder={item.workplace_type || ""}
-            disabled={disabled}
-          />
-        </div>}
-        {currentColumns.includes("serviceable") && <div className="col-6">
+        </div>
+      )}
+      {currentColumns.includes("serviceable") && (
+        <div className="col-6">
           <label htmlFor="serviceable" className={styles.label}>
             Состояние исправности
           </label>
@@ -193,19 +107,23 @@ export const DialogCraftIt = (props) => {
             placeholder={item.serviceable || ""}
             disabled={disabled}
           />
-        </div>}
-        {currentColumns.includes("set_with") && <div className="col-6">
-          <label htmlFor="set_with" className={styles.label}>
-            Образует одно устройство
+        </div>
+      )}
+      {currentColumns.includes("owner") && (
+        <div className="col-6">
+          <label htmlFor="owner" className={styles.label}>
+            ФИО юзера
           </label>
           <InputText
-            id="set_with"
-            value={item.set_with || ""}
-            onChange={(e) => setItem({ ...item, set_with: e.target.value })}
+            id="owner"
+            value={item.owner || ""}
+            onChange={(e) => setItem({ ...item, owner: e.target.value })}
             disabled={disabled}
           />
-        </div>}
-        {currentColumns.includes("purchase_price") && <div className="col-6">
+        </div>
+      )}
+      {currentColumns.includes("purchase_price") && (
+        <div className="col-6">
           <label htmlFor="purchase_price" className={styles.label}>
             Стоимость
           </label>
@@ -218,8 +136,10 @@ export const DialogCraftIt = (props) => {
             locale="ru-RU"
             disabled={disabled}
           />
-        </div>}
-        {currentColumns.includes("purchase_date") && <div className="col-6">
+        </div>
+      )}
+      {currentColumns.includes("purchase_date") && (
+        <div className="col-6">
           <label htmlFor="purchase_date" className={styles.label}>
             Дата приобретения
           </label>
@@ -234,8 +154,10 @@ export const DialogCraftIt = (props) => {
             disabled={disabled}
             // mask="99.99.9999"
           />
-        </div>}
-        {currentColumns.includes("release_date") && <div className="col-6">
+        </div>
+      )}
+      {currentColumns.includes("release_date") && (
+        <div className="col-6">
           <label htmlFor="release_date" className={styles.label}>
             Дата выпуска
           </label>
@@ -248,43 +170,17 @@ export const DialogCraftIt = (props) => {
             disabled={disabled}
             // mask="99.99.9999"
           />
-        </div>}
-        {currentColumns.includes("incoming_date") && <div className="col-6">
-          <label htmlFor="incoming_date" className={styles.label}>
-            Дата поступления в НН
-          </label>
-          <Calendar
-            id="incoming_date"
-            value={item.incoming_date || null}
-            onChange={(e) =>
-              setItem({ ...item, incoming_date: e.target.value })
-            }
-            dateFormat="dd.mm.yy"
-            placeholder={formatDate(item.incoming_date || null)}
-            disabled={disabled}
-            // mask="99.99.9999"
-          />
-        </div>}
-        {currentColumns.includes("last_setup_date") && <div className="col-6">
-          <label htmlFor="last_setup_date" className={styles.label}>
-            Дата установки пользователю
-          </label>
-          <Calendar
-            id="last_setup_date"
-            value={item.last_setup_date || null}
-            onChange={(e) =>
-              setItem({ ...item, last_setup_date: e.target.value })
-            }
-            dateFormat="dd.mm.yy"
-            placeholder={formatDate(item.last_setup_date || null)}
-            disabled={disabled}
-            // mask="99.99.9999"
-          />
-        </div>}
-        {currentColumns.includes("is_workplace") && <div className="col-6">
+        </div>
+      )}
+      {currentColumns.includes("is_workplace") && (
+        <div className="col-6">
           <MultiStateCheckbox
             inputid="is_workplace"
-            value={item.is_workplace != undefined ? item.is_workplace.toString() : null}
+            value={
+              item.is_workplace != undefined
+                ? item.is_workplace.toString()
+                : null
+            }
             onChange={(e) => setItem({ ...item, is_workplace: e.target.value })}
             options={multiStateCheckboxOptions}
             optionValue="value"
@@ -293,10 +189,12 @@ export const DialogCraftIt = (props) => {
           <label htmlFor="is_workplace" className="font-bold ml-2">
             Рабочее место
           </label>
-        </div>}
-        {currentColumns.includes("was_deleted") && <div className="col-6">
+        </div>
+      )}
+      {currentColumns.includes("was_deleted") && (
+        <div className="col-6">
           <MultiStateCheckbox
-            inputId="was_deleted"
+            inputid="was_deleted"
             value={
               item.was_deleted != undefined ? item.was_deleted.toString() : null
             }
@@ -308,8 +206,10 @@ export const DialogCraftIt = (props) => {
           <label htmlFor="was_deleted" className="font-bold ml-2">
             Списано
           </label>
-        </div>}
-        {currentColumns.includes("deleted_date") && <div className="col-6">
+        </div>
+      )}
+      {currentColumns.includes("deleted_date") && (
+        <div className="col-6">
           <label htmlFor="deleted_date" className={styles.label}>
             Дата списания
           </label>
@@ -322,8 +222,10 @@ export const DialogCraftIt = (props) => {
             disabled={disabled}
             // mask="99.99.9999"
           />
-        </div>}
-        {currentColumns.includes("deleted_grounds") && <div className="col-6">
+        </div>
+      )}
+      {currentColumns.includes("deleted_grounds") && (
+        <div className="col-6">
           <label htmlFor="deleted_grounds" className={styles.label}>
             Основание для списания
           </label>
@@ -337,8 +239,10 @@ export const DialogCraftIt = (props) => {
             cols={20}
             disabled={disabled}
           />
-        </div>}
-        {currentColumns.includes("note") && <div className="col-12">
+        </div>
+      )}
+      {currentColumns.includes("note") && (
+        <div className="col-12">
           <label htmlFor="note" className={styles.label}>
             Информация
           </label>
@@ -350,8 +254,8 @@ export const DialogCraftIt = (props) => {
             cols={20}
             disabled={disabled}
           />
-        </div>}
-      </div>
-    </Dialog>
+        </div>
+      )}
+    </div>
   );
 };

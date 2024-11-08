@@ -14,9 +14,11 @@ export const setUserMenuItems = (
   division,
   selectedItems,
   clearFilter,
+  clearState
 ) => {
   const makeLogout = (logout) => () => {
     clearFilter();
+    clearState();
     logout();
   };
 
@@ -83,7 +85,9 @@ export const setUserMenuItems = (
             <div className="flex flex-column align">
               <span className="font-bold">{`${fullName.split(" ")[0]} ${
                 Array.from(fullName.split(" ")[1])[0]
-              }.${Array.from(fullName.split(" ")[2])[0]}. (филиал №${division}) `}</span>
+              }.${
+                Array.from(fullName.split(" ")[2])[0]
+              }. (филиал №${division}) `}</span>
             </div>
           </button>
         );

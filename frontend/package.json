@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "PORT=3006 react-scripts start",
+    "start": "PORT=3007 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -55,5 +55,5 @@
     "xlsx": "0.18.5",
     "yup": "1.1.1"
   },
-  "proxy": "http://localhost:3005"
+  "proxy": "http://backend:3008"
 }

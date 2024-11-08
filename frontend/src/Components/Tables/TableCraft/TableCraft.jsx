@@ -14,10 +14,13 @@ import {
   getColumnFilterElement,
   getglobalFilterColumns,
 } from "../Functions/Filters/getColumnFilterElement";
-import { getColumnBody, imgBodyTemplate } from "../Functions/Body/getColumnBody";
+import {
+  getColumnBody,
+  imgBodyTemplate,
+} from "../Functions/Body/getColumnBody";
 import { getTableHeight } from "../Functions/Helpers/getTableHeight";
 import { Header } from "./Header";
-import { getDialog } from "./DialogsCraft/Functions/getDialog";
+import { DialogCraft } from "./DialogsCraft/DialogCraft";
 
 const TableCraft = (props) => {
   let {
@@ -38,9 +41,10 @@ const TableCraft = (props) => {
     beginInventory,
     requestCurrentInventory,
     hasCurrentInventory,
+    clearState,
   } = props;
 
-  const [visibleColumns, setVisibleColumns] = useState(columns);
+  const [visibleColumns, setVisibleColumns] = useState([]);
   const [filters, setFilters] = useState(props.filters);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
   const [ItemDialog, setItemDialog] = useState(false);
@@ -156,19 +160,22 @@ const TableCraft = (props) => {
     return (
       <React.Fragment>
         <Button
-          icon={`pi ${userAuth.role === "admin" ? "pi-pencil" : "pi-eye"}`}
+          // icon={`pi ${userAuth.role === "admin" ? "pi-pencil" : "pi-eye"}`}
+          icon={`pi pi-eye`}
           rounded
           outlined
           onClick={() => editItem(rowData)}
         />
-        {userAuth.role === "admin" && <Button
-          icon="pi pi-trash"
-          rounded
-          outlined
-          className="ml-2"
-          severity="danger"
-          onClick={() => confirmDeleteItem(rowData)}
-        />}
+        {userAuth.role === "admin" && (
+          <Button
+            icon="pi pi-trash"
+            rounded
+            outlined
+            className="ml-2"
+            severity="danger"
+            onClick={() => confirmDeleteItem(rowData)}
+          />
+        )}
       </React.Fragment>
     );
   };
@@ -211,6 +218,7 @@ const TableCraft = (props) => {
             beginInventory={beginInventory}
             hasCurrentInventory={hasCurrentInventory}
             requestCurrentInventory={requestCurrentInventory}
+            clearState={clearState}
           />
         }
         paginator
@@ -259,7 +267,7 @@ const TableCraft = (props) => {
             body={getColumnBody(col)}
           />
         ))}
-        {(name === "Мебель" || name === "Оборудование") && data.length != 0 && (
+        {name !== "Прочее" && data.length != 0 && (
           <Column
             key={visibleColumns.qr_code}
             field={visibleColumns.qr_code}
@@ -282,20 +290,20 @@ const TableCraft = (props) => {
           ></Column>
         )}
       </DataTable>
-      { getDialog(
-        name,
-        data,
-        columns,
-        setItemDialog,
-        ItemDialog,
-        item,
-        setItem,
-        values,
-        addData,
-        updateData,
-        emptyItem,
-        userAuth
-      ) }
+      <DialogCraft
+        name={name}
+        data={data}
+        columns={columns}
+        setItemDialog={setItemDialog}
+        ItemDialog={ItemDialog}
+        item={item}
+        setItem={setItem}
+        values={values}
+        addData={addData}
+        updateData={updateData}
+        emptyItem={emptyItem}
+        userAuth={userAuth}
+      />
 
       <Dialog
         visible={deleteItemDialog}

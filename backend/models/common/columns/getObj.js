@@ -1,5 +1,5 @@
-export default (sequelize, Sequelize) => {
-  const columnsDataIt = sequelize.define(`columnsDataIt`, {
+export const getObj = (Sequelize) => {
+  return {
     field: {
       type: Sequelize.STRING,
     },
@@ -21,9 +21,5 @@ export default (sequelize, Sequelize) => {
     dataType: {
       type: Sequelize.STRING,
     },
-  }, {
-    tableName: `it_meta`
-  });
-
-  return columnsDataIt;
+  };
 };

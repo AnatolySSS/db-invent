@@ -4,10 +4,21 @@ import { createId } from "./createId";
 import { setCurrentDateTimeString } from "../../../Functions/Helpers/setCurrentDateTimeString";
 
 export const saveItem =
-  (addData, updateData, data, item, setItemDialog, setItem, emptyItem, userAuth, setDisabled) =>
+  (
+    addData,
+    updateData,
+    data,
+    item,
+    setItemDialog,
+    setItem,
+    emptyItem,
+    userAuth,
+    setDisabled
+  ) =>
   () => {
     setDisabled(true);
     let _item = { ...item };
+    _item.changedDateTime = Date.now();
 
     Object.keys(_item).forEach((element) => {
       //Изменение пустой строки на null для избежания ошибки при сохранении в базе данных
@@ -27,6 +38,7 @@ export const saveItem =
 
     // _item.updatedAt = setCurrentDateTimeString();
     if (_item.id) {
+      _item.userName = userAuth.fullName;
       updateData(_item, userAuth.division);
     } else {
       _item.id = createId(data);

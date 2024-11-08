@@ -1,0 +1,59 @@
+services:
+  frontend:
+    container_name: db-invent-frontend
+    image: db-invent/frontend
+    build:
+      context: frontend
+    ports:
+      - 3007:3007
+    environment:
+      - AUTH_SERVICE_URL=http://backend:3008
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    links:
+      - backend
+    networks:
+      - my-app
+    depends_on:
+      - backend
+      
+  backend:
+    container_name: db-invent-backend
+    image: db-invent/backend
+    build:
+      context: backend
+    networks:
+      - my-app
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    container_name: invent-db
+    image: mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 1s
+      timeout: 10s
+      retries: 10
+    ports:
+      - 3308:3306
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./mysql-initdb:/docker-entrypoint-initdb.d
+    networks:
+      - my-app
+
+volumes:
+  db-data:
+    driver: local
+networks:
+  my-app:
+    driver: bridge

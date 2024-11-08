@@ -8,7 +8,7 @@ import { setUserMenuItems } from "../Functions/Helpers/setUserMenuItems";
 import { getUserLogo } from "../Functions/Helpers/getUserLogo";
 import { Toast } from "primereact/toast";
 import { classNames } from "primereact/utils";
-import styles from './Header.module.css';
+import styles from "./Header.module.css";
 import { MdOutlineInventory } from "react-icons/md";
 import { getTableHeight } from "../Functions/Helpers/getTableHeight";
 
@@ -34,6 +34,7 @@ export const Header = (props) => {
     beginInventory,
     hasCurrentInventory,
     requestCurrentInventory,
+    clearState,
   } = props;
 
   const userMenu = useRef(null);
@@ -69,7 +70,7 @@ export const Header = (props) => {
     setFilters(_filters);
     setGlobalFilterValue("");
   };
-  
+
   const userMenuItems = setUserMenuItems(
     data,
     logout,
@@ -80,6 +81,7 @@ export const Header = (props) => {
     userAuth.division,
     selectedItems,
     clearFilter,
+    clearState
   );
 
   if (userAuth.role === "admin") {
@@ -93,7 +95,11 @@ export const Header = (props) => {
   if (!hasCurrentInventory) {
     userMenuItems.splice(2, 0, {
       label: "Начать инвентаризацию",
-      icon: <i className="mr-2"><MdOutlineInventory /></i>,
+      icon: (
+        <i className="mr-2">
+          <MdOutlineInventory />
+        </i>
+      ),
       command: async () => {
         await beginInventory(type, userAuth.division);
         await requestCurrentInventory(type, userAuth.division);
@@ -101,7 +107,7 @@ export const Header = (props) => {
         userToast.current.show({
           severity: "success",
           summary: "Info",
-          detail: 'Инвентаризация инициирована',
+          detail: "Инвентаризация инициирована",
           life: 3000,
         });
       },
@@ -116,7 +122,12 @@ export const Header = (props) => {
           <Button icon="pi pi-bars" onClick={() => setVisible(true)} />
         </div>
       </div>
-      <div className={classNames("col flex justify-content-between align-content-center", styles.main)}>
+      <div
+        className={classNames(
+          "col flex justify-content-between align-content-center",
+          styles.main
+        )}
+      >
         <div className={"flex align-items-center justify-content-center"}>
           <MultiSelect
             value={visibleColumns}
@@ -128,12 +139,26 @@ export const Header = (props) => {
             display="chip"
           />
         </div>
-        <div className={classNames("align-items-center text-center justify-content-center min-w-max px-4", styles.name)}>
+        <div
+          className={classNames(
+            "align-items-center text-center justify-content-center min-w-max px-4",
+            styles.name
+          )}
+        >
           <h2>{`${name}  (общая)`}</h2>
-          {hasCurrentInventory && <small className="text-red-400">Инвентаризация в процессе</small>}
+          {hasCurrentInventory && (
+            <small className="text-red-400">Инвентаризация в процессе</small>
+          )}
         </div>
-        <div className={classNames("flex align-items-center justify-content-center", styles.globalFilterGroup)}>
-          <span className={classNames("p-input-icon-left", styles.globalFilter)}>
+        <div
+          className={classNames(
+            "flex align-items-center justify-content-center",
+            styles.globalFilterGroup
+          )}
+        >
+          <span
+            className={classNames("p-input-icon-left", styles.globalFilter)}
+          >
             <i className="pi pi-search" />
             <InputText
               value={globalFilterValue}

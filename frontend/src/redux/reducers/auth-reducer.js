@@ -8,7 +8,7 @@ let initialState = {
   isAuth: false,
   role: "",
   division: null,
-  message: ""
+  message: "",
 };
 
 const authReducer = (state = initialState, action) => {
@@ -28,9 +28,12 @@ const authReducer = (state = initialState, action) => {
   }
 };
 
-const setAuth = (login, fullName, isAuth, role, division, message) => ({ type: SET_AUTH, data: {login, fullName, isAuth, role, division, message} });
+const setAuth = (login, fullName, isAuth, role, division, message) => ({
+  type: SET_AUTH,
+  data: { login, fullName, isAuth, role, division, message },
+});
 
-const setMessage = (message) => ({ type: SET_MESSAGE, data: {message} })
+const setMessage = (message) => ({ type: SET_MESSAGE, data: { message } });
 
 export const getAuthUserData = () => {
   return async (dispatch) => {
@@ -54,7 +57,7 @@ export const login = (login, password) => (dispatch) => {
   AuthAPI.login(login, password).then((data) => {
     switch (data.resultCode) {
       case 0:
-        localStorage.setItem('accessToken', data.accessToken)
+        localStorage.setItem("accessToken", data.accessToken);
         dispatch(getAuthUserData());
         break;
       case 1:
@@ -73,7 +76,7 @@ export const logout = () => (dispatch) => {
   AuthAPI.logout().then((data) => {
     if (data.resultCode === 0) {
       dispatch(setAuth(null, null, false, null));
-      localStorage.removeItem('accessToken')
+      localStorage.removeItem("accessToken");
     }
   });
 };

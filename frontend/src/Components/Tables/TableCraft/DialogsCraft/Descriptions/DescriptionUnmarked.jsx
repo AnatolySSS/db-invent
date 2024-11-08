@@ -1,58 +1,20 @@
-import React, {useState} from "react";
-import { Dialog } from "primereact/dialog";
 import { InputTextarea } from "primereact/inputtextarea";
 import { InputNumber } from "primereact/inputnumber";
 import { Dropdown } from "primereact/dropdown";
+import styles from "./DescriptionCraft.module.css";
 import { getDropdownOptions } from "../Functions/getDropdownOptions";
-import { getItemDialogFooter } from "../Functions/getItemDialogFooter";
-import styles from "./DialogCraftUnmarked.module.css";
-import { hideNew } from "../Functions/hideNew";
 
-export const DialogCraftUnmarked = (props) => {
-  const {
-    data,
-    columns,
-    setItemDialog,
-    ItemDialog,
-    item,
-    setItem,
-    values,
-    addData,
-    updateData,
-    emptyItem,
-    userAuth,
-  } = props;
-
-  const [disabled, setDisabled] = useState(true);
+export const DescriptionUnmarked = (props) => {
+  const { columns, item, disabled, setItem, values } = props;
 
   //Переменная для массива наименований столбцов,
   //чтобы показывать только релевантные столбцы для конкретного филиала
-  let currentColumns = columns.map(column => column.field)
+  let currentColumns = columns.map((column) => column.field);
 
   return (
-    <Dialog
-      visible={ItemDialog}
-      style={{ width: "48rem" }}
-      breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-      header="Описание предмета"
-      modal
-      className="p-fluid"
-      footer={getItemDialogFooter(
-        addData,
-        updateData,
-        data,
-        item,
-        setItemDialog,
-        setItem,
-        emptyItem,
-        userAuth,
-        disabled,
-        setDisabled,
-      )}
-      onHide={hideNew(setItemDialog, setDisabled)}
-    >
-      <div className="grid">
-        {currentColumns.includes("name") && <div className="col-12">
+    <div className="grid">
+      {currentColumns.includes("name") && (
+        <div className="col-12">
           <label htmlFor="name" className={styles.label}>
             Наименование
           </label>
@@ -66,8 +28,10 @@ export const DialogCraftUnmarked = (props) => {
             cols={20}
             disabled={disabled}
           />
-        </div>}
-        {currentColumns.includes("type") && <div className="col-6">
+        </div>
+      )}
+      {currentColumns.includes("type") && (
+        <div className="col-6">
           <label htmlFor="type" className={styles.label}>
             Тип
           </label>
@@ -79,8 +43,10 @@ export const DialogCraftUnmarked = (props) => {
             placeholder={item.type || ""}
             disabled={disabled}
           />
-        </div>}
-        {currentColumns.includes("location") && <div className="col-6">
+        </div>
+      )}
+      {currentColumns.includes("location") && (
+        <div className="col-6">
           <label htmlFor="location" className={styles.label}>
             Где установлено
           </label>
@@ -92,8 +58,10 @@ export const DialogCraftUnmarked = (props) => {
             placeholder={item.location || ""}
             disabled={disabled}
           />
-        </div>}
-        {currentColumns.includes("count") && <div className="col-4">
+        </div>
+      )}
+      {currentColumns.includes("count") && (
+        <div className="col-4">
           <label htmlFor="count" className={styles.label}>
             Количество
           </label>
@@ -109,8 +77,10 @@ export const DialogCraftUnmarked = (props) => {
             min={0}
             disabled={disabled}
           />
-        </div>}
-        {currentColumns.includes("measurement") && <div className="col-4">
+        </div>
+      )}
+      {currentColumns.includes("measurement") && (
+        <div className="col-4">
           <label htmlFor="measurement" className={styles.label}>
             Единица измерения
           </label>
@@ -122,8 +92,10 @@ export const DialogCraftUnmarked = (props) => {
             placeholder={item.measurement || ""}
             disabled={disabled}
           />
-        </div>}
-        {currentColumns.includes("purchase_price") && <div className="col-4">
+        </div>
+      )}
+      {currentColumns.includes("purchase_price") && (
+        <div className="col-4">
           <label htmlFor="purchase_price" className={styles.label}>
             Стоимость
           </label>
@@ -136,8 +108,10 @@ export const DialogCraftUnmarked = (props) => {
             locale="ru-RU"
             disabled={disabled}
           />
-        </div>}
-        {currentColumns.includes("note") && <div className="col-12">
+        </div>
+      )}
+      {currentColumns.includes("note") && (
+        <div className="col-12">
           <label htmlFor="note" className={styles.label}>
             Информация
           </label>
@@ -149,8 +123,8 @@ export const DialogCraftUnmarked = (props) => {
             cols={20}
             disabled={disabled}
           />
-        </div>}
-      </div>
-    </Dialog>
+        </div>
+      )}
+    </div>
   );
 };

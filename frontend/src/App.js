@@ -30,16 +30,34 @@ class App extends React.Component {
               <Route path="/" element={<LoginCraftContainer />} />
               <Route path="/login" element={<LoginCraftContainer />} />
               <Route path="/it" element={<TableCraftItContainer />} />
-              <Route path="/furniture" element={<TableCraftFurnitureContainer />} />
-              <Route path="/unmarked" element={<TableCraftUnmarkedContainer />} />
+              <Route
+                path="/furniture"
+                element={<TableCraftFurnitureContainer />}
+              />
+              <Route
+                path="/unmarked"
+                element={<TableCraftUnmarkedContainer />}
+              />
               <Route path="/assets" element={<TableCraftAssetsContainer />} />
               <Route path="/upload" element={<UploadCraftContainer />} />
               <Route path="/charts" element={<ChartCraftContainer />} />
               <Route path="/users" element={<UsersCraftContainer />} />
-              <Route path={`/it/:year`} element={<YearInventoryContainer tableName="it"/>} />
-              <Route path={`/furniture/:year`} element={<YearInventoryContainer tableName="furniture"/>} />
-              <Route path={`/unmarked/:year`} element={<YearInventoryContainer tableName="unmarked"/>} />
-              <Route path={`/assets/:year`} element={<YearInventoryContainer tableName="assets"/>} />
+              <Route
+                path={`/it/:year`}
+                element={<YearInventoryContainer tableName="it" />}
+              />
+              <Route
+                path={`/furniture/:year`}
+                element={<YearInventoryContainer tableName="furniture" />}
+              />
+              <Route
+                path={`/unmarked/:year`}
+                element={<YearInventoryContainer tableName="unmarked" />}
+              />
+              <Route
+                path={`/assets/:year`}
+                element={<YearInventoryContainer tableName="assets" />}
+              />
             </Routes>
           </div>
         </div>

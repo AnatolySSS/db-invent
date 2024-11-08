@@ -3,9 +3,11 @@ import { FilterMatchMode, FilterOperator } from "primereact/api";
 import changeDateType from "../../function-helpers/changeDateType";
 
 const SET_DATA = "sodfu-inventory/it-data-reducer/SET_DATA";
+const RESET_STATE = "sodfu-inventory/it-data-reducer/RESET_STATE";
 const SET_UPLOAD_STATUS = "sodfu-inventory/it-data-reducer/SET_UPLOAD_STATUS";
 const TOGGLE_IS_FETCHING = "sodfu-inventory/it-data-reducer/TOGGLE_IS_FETCHING";
-const SET_VALIDATION_STATUS = "sodfu-inventory/it-data-reducer/SET_VALIDATION_STATUS";
+const SET_VALIDATION_STATUS =
+  "sodfu-inventory/it-data-reducer/SET_VALIDATION_STATUS";
 
 let initialState = {
   columns: [],
@@ -13,36 +15,90 @@ let initialState = {
   values: [],
   filters: {
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    id: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] },
-    inventary_number: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] },
-    qr_code: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] },
-    serial: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] },
+    id: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+    },
+    inventary_number: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+    },
+    qr_code: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+    },
+    serial: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+    },
     type: { value: null, matchMode: FilterMatchMode.IN },
-    name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] },
-    purchase_date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
-    purchase_price: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-    incoming_date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
-    last_setup_date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
-    ad_name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] },
-    owner: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] },
-    prev_owner: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] },
-    set_with: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] },
+    name: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+    },
+    purchase_date: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],
+    },
+    purchase_price: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
+    },
+    incoming_date: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],
+    },
+    last_setup_date: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],
+    },
+    ad_name: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+    },
+    owner: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+    },
+    prev_owner: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+    },
+    set_with: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+    },
     workplace_type: { value: null, matchMode: FilterMatchMode.IN },
     serviceable: { value: null, matchMode: FilterMatchMode.IN },
-    note: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] },
+    note: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+    },
     is_workplace: { value: null, matchMode: FilterMatchMode.EQUALS },
     location: { value: null, matchMode: FilterMatchMode.IN },
     was_deleted: { value: null, matchMode: FilterMatchMode.EQUALS },
-    deleted_date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
-    deleted_grounds: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] },
-    release_date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
-    updatedAt: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
+    deleted_date: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],
+    },
+    deleted_grounds: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+    },
+    release_date: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],
+    },
+    updatedAt: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],
+    },
   },
   uploadedStatus: false,
   name: "",
   message: "",
   isFetching: false,
-  validationStatus: {}
+  validationStatus: {},
 };
 
 const itDataReducer = (state = initialState, action) => {
@@ -72,15 +128,27 @@ const itDataReducer = (state = initialState, action) => {
         ...state,
         validationStatus: { ...action.validationStatus },
       };
+    case RESET_STATE:
+      return initialState;
     default:
       return state;
   }
 };
 
 const setData = (data, message) => ({ type: SET_DATA, data, message });
-const setUploadStatus = (status) => ({ type: SET_UPLOAD_STATUS, uploadedStatus: status });
-const toggleIsFetching = (isFetching) => ({ type: TOGGLE_IS_FETCHING, isFetching: isFetching });
-const setValidationStatus = (validationStatus) => ({ type: SET_VALIDATION_STATUS, validationStatus: validationStatus });
+const resetState = () => ({ type: RESET_STATE });
+const setUploadStatus = (status) => ({
+  type: SET_UPLOAD_STATUS,
+  uploadedStatus: status,
+});
+const toggleIsFetching = (isFetching) => ({
+  type: TOGGLE_IS_FETCHING,
+  isFetching: isFetching,
+});
+const setValidationStatus = (validationStatus) => ({
+  type: SET_VALIDATION_STATUS,
+  validationStatus: validationStatus,
+});
 
 //Изменение формата даты со строки на объект Date (необходимо для правильной фильтрации)
 const changeDateFormat = (data) => {
@@ -109,7 +177,7 @@ const changeDateFormat = (data) => {
     });
     return v;
   });
-  return data
+  return data;
 };
 
 export const requestData = (userDivision) => {
@@ -166,6 +234,12 @@ export const uploadData = (data, userDivision) => {
       dispatch(toggleIsFetching(false));
       dispatch(setUploadStatus(true));
     });
+  };
+};
+
+export const clearState = () => {
+  return (dispatch) => {
+    dispatch(resetState());
   };
 };
 
