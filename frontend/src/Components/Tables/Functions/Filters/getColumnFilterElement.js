@@ -4,13 +4,15 @@ import { MultiSelect } from "primereact/multiselect";
 import { MultiStateCheckbox } from "primereact/multistatecheckbox";
 
 export const getglobalFilterColumns = (visibleColumns) => {
-    return visibleColumns.map((obj) => obj.field)
-}
+  return visibleColumns.map((obj) => obj.field);
+};
 
 export const getColumnFilterElement = (col, values) => {
   switch (col.editingType) {
     case "dropdown":
-      return dropdownFilterTemplate(values[col.field]?.filter((obj) => obj !== ""));
+      return dropdownFilterTemplate(
+        values[col.field]?.filter((obj) => obj !== "")
+      );
 
     case "checkbox":
       return checkboxFilterTemplate;
@@ -38,7 +40,7 @@ const dropdownFilterTemplate = (dropdownType) => {
         className="p-column-filter"
         display="chip"
         filter
-        style={{maxWidth: "300px"}}
+        style={{ maxWidth: "300px" }}
       />
     );
   };

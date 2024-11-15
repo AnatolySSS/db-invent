@@ -33,6 +33,7 @@ sequelize.GLOBAL = new Sequelize(
       min: 0,
       idle: 10000,
     },
+    logging: false,
   }
 );
 
@@ -57,6 +58,7 @@ for (const DIVISION in config.DIVISIONS) {
         min: 0,
         idle: 10000,
       },
+      logging: false,
     }
   );
 }

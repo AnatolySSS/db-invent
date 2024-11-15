@@ -7,28 +7,31 @@ export const DataController = {
   async getData(request, responce) {
     try {
       let { type, userDivision } = request.body;
-      console.log(request.body);
 
       const {
         itLib,
         itLog,
         itValues,
         itColumns,
+        itTransfer,
         furnitureLib,
         furnitureLog,
         furnitureValues,
         furnitureColumns,
+        furnitureTransfer,
         unmarkedLib,
         unmarkedLog,
         unmarkedValues,
         unmarkedColumns,
+        unmarkedTransfer,
         assetsLib,
         assetsLog,
         assetsValues,
         assetsColumns,
+        assetsTransfer,
       } = db.DIVISIONS[`D${userDivision}`];
       let data = {};
-      let libTable, columnsTable, valuesTable, logTable;
+      let libTable, columnsTable, valuesTable, logTable, transferTable;
 
       switch (type) {
         case "it":
@@ -36,6 +39,7 @@ export const DataController = {
           columnsTable = itColumns;
           valuesTable = itValues;
           logTable = itLog;
+          transferTable = itTransfer;
           data.name = "Оборудование";
           break;
 
@@ -44,6 +48,7 @@ export const DataController = {
           columnsTable = furnitureColumns;
           valuesTable = furnitureValues;
           logTable = furnitureLog;
+          transferTable = furnitureTransfer;
           data.name = "Мебель";
           break;
 
@@ -52,6 +57,7 @@ export const DataController = {
           columnsTable = unmarkedColumns;
           valuesTable = unmarkedValues;
           logTable = unmarkedLog;
+          transferTable = unmarkedTransfer;
           data.name = "Прочее";
           break;
 
@@ -60,6 +66,7 @@ export const DataController = {
           columnsTable = assetsColumns;
           valuesTable = assetsValues;
           logTable = assetsLog;
+          transferTable = assetsTransfer;
           data.name = "Основные средства";
           break;
 
@@ -77,13 +84,14 @@ export const DataController = {
       data.columns = JSON.parse(JSON.stringify(data.columns));
       data.values = JSON.parse(JSON.stringify(data.values));
 
-      //Изменение наименование столбца
+      //Получение логов
       for (const lib of data.lib) {
         let logs = await logTable.findAll({
           where: { itemId: lib.id },
           raw: true,
         });
-        lib.logs = logs
+        //Изменение наименование столбца "changedFiled"
+        let logData = logs
           .map((log) => {
             for (const column of data.columns) {
               if (log.changedFiled === column.field) {
@@ -92,12 +100,20 @@ export const DataController = {
             }
             return log;
           })
+          //Сортировка по дате (сначала последние изменения)
           .sort((a, b) => {
             const dateA = new Date(a.changedDateTime);
             const dateB = new Date(b.changedDateTime);
 
             return dateB - dateA;
           });
+        lib.logs = logData;
+
+        let transfersData = await transferTable.findAll({
+          where: { itemId: lib.id },
+          raw: true,
+        });
+        lib.transfers = transfersData;
       }
 
       //Изменение null на "null"
@@ -126,7 +142,7 @@ export const DataController = {
         }
         return libObg;
       });
-      // console.log(data.lib[0]);
+
       data.values = getValues(data.values);
       responce.json(data);
     } catch (error) {
@@ -208,6 +224,7 @@ export const DataController = {
         unmarkedLib,
         unmarkedLog,
         assetsLib,
+        assetsLog,
       } = db.DIVISIONS[`D${userDivision}`];
       let table, tableLog;
 
@@ -226,6 +243,7 @@ export const DataController = {
           break;
         case "assets":
           table = assetsLib;
+          tableLog = assetsLog;
           break;
         default:
           break;
@@ -260,8 +278,8 @@ export const DataController = {
       //Запись логов при обновлении значений checkedValues (цикл for...of асинхронный)
       for (const key in rowData) {
         if (!nonCheckedValues.includes(key)) {
-          rowData[key] = rowData[key] == true ? 1 : rowData[key];
-          rowData[key] = rowData[key] == false ? 0 : rowData[key];
+          rowData[key] = rowData[key] === true ? 1 : rowData[key];
+          rowData[key] = rowData[key] === false ? 0 : rowData[key];
           if (originalData[key] instanceof Date) {
             originalData[key] = changeDateType(formatDate(originalData[key]));
           }
@@ -274,7 +292,6 @@ export const DataController = {
               oldValue: originalData[key],
               newValue: rowData[key],
             };
-            console.log(logRow);
             await tableLog.create(logRow);
           }
         }
@@ -288,6 +305,89 @@ export const DataController = {
       responce.json({});
     } catch (error) {
       console.log("__________DataController__updateData___________");
+      console.log(error);
+      responce.json(error);
+    }
+  },
+
+  async transferItem(request, responce) {
+    try {
+      let { type, items, transferData, userDivision } = request.body;
+      const {
+        itLib,
+        itLog,
+        itTransfer,
+        furnitureLib,
+        furnitureLog,
+        furnitureTransfer,
+        unmarkedLib,
+        unmarkedLog,
+        unmarkedTransfer,
+        assetsLib,
+        assetsLog,
+        assetsTransfer,
+      } = db.DIVISIONS[`D${userDivision}`];
+      let table, tableLog, tableTransfer;
+
+      switch (type) {
+        case "it":
+          table = itLib;
+          tableLog = itLog;
+          tableTransfer = itTransfer;
+          break;
+        case "furniture":
+          table = furnitureLib;
+          tableLog = furnitureLog;
+          tableTransfer = furnitureTransfer;
+          break;
+        case "unmarked":
+          table = unmarkedLib;
+          tableLog = unmarkedLog;
+          tableTransfer = unmarkedTransfer;
+          break;
+        case "assets":
+          table = assetsLib;
+          tableLog = assetsLog;
+          tableTransfer = assetsTransfer;
+          break;
+        default:
+          break;
+      }
+
+      for (const item of items) {
+        //Проверка на обновление значений
+        const originalData = await table.findOne({
+          where: { id: item.id },
+          raw: true,
+        });
+
+        //Обновление данных в основной таблице
+        await table.update(
+          { owner: transferData.name, last_setup_date: transferData.date },
+          { where: { id: item.id } }
+        );
+
+        //Добавление данных в таблицу перемещений
+        transferData.itemId = item.id;
+        await tableTransfer.create(transferData);
+
+        //Запись логов о смене пользователя
+        let logRow = {
+          itemId: item.id,
+          changedDateTime: new Date(),
+          changedEmployeeName: transferData.userName,
+          changedFiled: "owner",
+          oldValue: originalData.owner,
+          newValue: transferData.name,
+        };
+        console.log(logRow);
+
+        await tableLog.create(logRow);
+      }
+
+      responce.json({});
+    } catch (error) {
+      console.log("__________DataController__transferItem___________");
       console.log(error);
       responce.json(error);
     }

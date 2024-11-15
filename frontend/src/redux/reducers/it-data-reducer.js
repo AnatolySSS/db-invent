@@ -202,6 +202,20 @@ export const updateData = (rowData, userDivision) => {
   };
 };
 
+export const transferItem = (items, transferData, userDivision) => {
+  return (dispatch) => {
+    dispatch(toggleIsFetching(true));
+    DataAPI.transferItem("it", items, transferData, userDivision).then(
+      (message) => {
+        DataAPI.getData("it", userDivision).then((data) => {
+          dispatch(toggleIsFetching(false));
+          dispatch(setData(changeDateFormat(data), message.message));
+        });
+      }
+    );
+  };
+};
+
 export const deleteData = (rowId, userDivision) => {
   return (dispatch) => {
     dispatch(toggleIsFetching(true));

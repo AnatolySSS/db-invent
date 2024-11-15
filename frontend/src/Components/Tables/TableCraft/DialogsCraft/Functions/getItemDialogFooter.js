@@ -17,39 +17,41 @@ export const getItemDialogFooter = (
   activeTabIndex
 ) => (
   <React.Fragment>
-    {userAuth.role == "admin" &&
-      activeTabIndex === 0 &&
-      (disabled ? (
-        <Button
-          type="submit"
-          label="Изменить"
-          icon="pi pi-pencil"
-          onClick={() => setDisabled(false)}
-        />
-      ) : (
-        <Button
-          type="submit"
-          label="Сохранить"
-          icon="pi pi-check"
-          onClick={saveItem(
-            addData,
-            updateData,
-            data,
-            item,
-            setItemDialog,
-            setItem,
-            emptyItem,
-            userAuth,
-            setDisabled
-          )}
-        />
-      ))}
-    <Button
-      label="Выйти"
-      icon="pi pi-times"
-      className="mt-2"
-      outlined
-      onClick={hideNew(setItemDialog, setDisabled)}
-    />
+    <div className="mt-2">
+      {userAuth.role == "admin" &&
+        activeTabIndex === 0 &&
+        (disabled ? (
+          <Button
+            type="submit"
+            label="Изменить"
+            icon="pi pi-pencil"
+            onClick={() => setDisabled(false)}
+          />
+        ) : (
+          <Button
+            type="submit"
+            label="Сохранить"
+            icon="pi pi-check"
+            onClick={saveItem(
+              addData,
+              updateData,
+              data,
+              item,
+              setItemDialog,
+              setItem,
+              emptyItem,
+              userAuth,
+              setDisabled
+            )}
+          />
+        ))}
+      <Button
+        label="Выйти"
+        icon="pi pi-times"
+        // className="mt-2"
+        outlined
+        onClick={hideNew(setItemDialog, setDisabled)}
+      />
+    </div>
   </React.Fragment>
 );

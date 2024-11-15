@@ -8,12 +8,16 @@ export const setUserMenuItems = (
   data,
   logout,
   userToast,
+  transferToast,
   fullName,
   isAuth,
   login,
   division,
+  role,
   selectedItems,
   clearFilter,
+  openNew,
+  setTransferDialog,
   clearState
 ) => {
   const makeLogout = (logout) => () => {
@@ -25,6 +29,19 @@ export const setUserMenuItems = (
   const makeCommitmentHelper = () => makeCommitment(selectedItems, fullName);
 
   const makeQRCodeHelper = () => makeQRCode(selectedItems, division);
+
+  const handleTransfer = () => {
+    if (selectedItems.length !== 0) {
+      setTransferDialog(true);
+    } else {
+      transferToast.current.show({
+        severity: "info",
+        summary: "Предупреждение",
+        detail: `Для перемещения необходимо выбрать один или несколько объектов`,
+        life: 3000,
+      });
+    }
+  };
 
   const exportExcel = () => {
     import("xlsx").then((xlsx) => {
@@ -57,7 +74,7 @@ export const setUserMenuItems = (
     });
   };
 
-  return [
+  const userMenuItems = [
     {
       command: () => {
         userToast.current.show({
@@ -115,4 +132,19 @@ export const setUserMenuItems = (
       command: makeLogout(logout),
     },
   ];
+
+  if (role === "admin") {
+    userMenuItems.splice(1, 0, {
+      label: "Новое",
+      icon: "pi pi-plus",
+      command: openNew,
+    });
+    userMenuItems.splice(2, 0, {
+      label: "Переместить",
+      icon: "pi pi-angle-double-right",
+      command: handleTransfer,
+    });
+  }
+
+  return userMenuItems;
 };

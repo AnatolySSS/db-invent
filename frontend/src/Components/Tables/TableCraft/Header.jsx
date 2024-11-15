@@ -24,6 +24,7 @@ export const Header = (props) => {
     setFilters,
     setItem,
     setItemDialog,
+    setTransferDialog,
     setGlobalFilterValue,
     visibleColumns,
     setVisibleColumns,
@@ -39,6 +40,7 @@ export const Header = (props) => {
 
   const userMenu = useRef(null);
   const userToast = useRef(null);
+  const transferToast = useRef(null);
 
   const openNew = () => {
     setItem(emptyItem);
@@ -75,25 +77,21 @@ export const Header = (props) => {
     data,
     logout,
     userToast,
+    transferToast,
     userAuth.fullName,
     userAuth.isAuth,
     userAuth.login,
     userAuth.division,
+    userAuth.role,
     selectedItems,
     clearFilter,
+    openNew,
+    setTransferDialog,
     clearState
   );
 
-  if (userAuth.role === "admin") {
-    userMenuItems.splice(1, 0, {
-      label: "Новое",
-      icon: "pi pi-plus",
-      command: openNew,
-    });
-  }
-
   if (!hasCurrentInventory) {
-    userMenuItems.splice(2, 0, {
+    userMenuItems.splice(userAuth.role === "admin" ? 3 : 1, 0, {
       label: "Начать инвентаризацию",
       icon: (
         <i className="mr-2">
@@ -117,6 +115,7 @@ export const Header = (props) => {
   return (
     <div className={classNames("flex justify-content-between")}>
       <Toast ref={userToast} />
+      <Toast ref={transferToast} />
       <div className="col-fixed flex">
         <div className="flex align-items-center col-fixed">
           <Button icon="pi pi-bars" onClick={() => setVisible(true)} />

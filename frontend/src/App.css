@@ -2,3 +2,13 @@
 .p-column-filter-buttonbar {
     gap: 10px;
 }
+
+label {
+    display: inline-block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.p-timeline-event-opposite {
+    max-width: 0px;
+}

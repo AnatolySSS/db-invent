@@ -21,6 +21,9 @@ import {
 import { getTableHeight } from "../Functions/Helpers/getTableHeight";
 import { Header } from "./Header";
 import { DialogCraft } from "./DialogsCraft/DialogCraft";
+import { InputText } from "primereact/inputtext";
+import { InputTextarea } from "primereact/inputtextarea";
+import { Calendar } from "primereact/calendar";
 
 const TableCraft = (props) => {
   let {
@@ -32,6 +35,7 @@ const TableCraft = (props) => {
     requestData,
     addData,
     updateData,
+    transferItem,
     deleteData,
     setVisible,
     logout,
@@ -49,9 +53,15 @@ const TableCraft = (props) => {
   const [globalFilterValue, setGlobalFilterValue] = useState("");
   const [ItemDialog, setItemDialog] = useState(false);
   const [deleteItemDialog, setDeleteItemDialog] = useState(false);
+  const [transferDialog, setTransferDialog] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
   const toast = useRef(null);
   let emptyItem = {};
+  let emptyTransferItem = {
+    name: "",
+    date: "",
+    note: "",
+  };
 
   columns.map((obj) => {
     let dataType;
@@ -67,6 +77,7 @@ const TableCraft = (props) => {
   });
 
   const [item, setItem] = useState(emptyItem);
+  const [transferedItem, setTransferItem] = useState(emptyTransferItem);
 
   window.onresize = function (event) {
     getTableHeight();
@@ -110,6 +121,11 @@ const TableCraft = (props) => {
     setDeleteItemDialog(false);
   };
 
+  const hideTransferDialog = () => {
+    setTransferItem(emptyTransferItem);
+    setTransferDialog(false);
+  };
+
   const editItem = (rowData) => {
     setItem({ ...rowData });
     setItemDialog(true);
@@ -147,6 +163,31 @@ const TableCraft = (props) => {
         icon="pi pi-check"
         severity="danger"
         onClick={deleteItem}
+      />
+    </React.Fragment>
+  );
+
+  const handletransferItem = () => {
+    transferedItem.userName = userAuth.fullName;
+    transferItem(selectedItems, transferedItem, userAuth.division);
+    console.log(selectedItems);
+    console.log(transferedItem);
+    setTransferItem(emptyTransferItem);
+    setTransferDialog(false);
+  };
+
+  const transferDialogFooter = (
+    <React.Fragment>
+      <Button
+        label="Переместить"
+        icon="pi pi-check"
+        onClick={handletransferItem}
+      />
+      <Button
+        label="Выйти"
+        icon="pi pi-times"
+        outlined
+        onClick={hideTransferDialog}
       />
     </React.Fragment>
   );
@@ -208,6 +249,7 @@ const TableCraft = (props) => {
             setFilters={setFilters}
             setItem={setItem}
             setItemDialog={setItemDialog}
+            setTransferDialog={setTransferDialog}
             setGlobalFilterValue={setGlobalFilterValue}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
@@ -305,6 +347,7 @@ const TableCraft = (props) => {
         userAuth={userAuth}
       />
 
+      {/* Удаление элемента */}
       <Dialog
         visible={deleteItemDialog}
         style={{ width: "32rem" }}
@@ -324,6 +367,62 @@ const TableCraft = (props) => {
               Вы уверены, что хотите удалить <b>{item.name}</b>?
             </span>
           )}
+        </div>
+      </Dialog>
+
+      {/* Перемещение элементов */}
+      <Dialog
+        visible={transferDialog}
+        className="p-fluid"
+        style={{ width: "48rem" }}
+        breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+        closable={false} //для скрытия крестика в header dialog
+        header="Перемещение"
+        modal
+        footer={transferDialogFooter}
+        onHide={hideTransferDialog}
+      >
+        <div className="grid">
+          <div className="col-8">
+            <label htmlFor="name">ФИО</label>
+            <InputText
+              id="name"
+              value={transferedItem.name || ""}
+              onChange={(e) =>
+                setTransferItem({ ...transferedItem, name: e.target.value })
+              }
+              autoFocus={true}
+            />
+          </div>
+          <div className="col-4">
+            <label htmlFor="date">Дата перемещения</label>
+            <Calendar
+              id="date"
+              value={transferedItem.date || null}
+              onChange={(e) =>
+                setTransferItem({
+                  ...transferedItem,
+                  date: e.target.value,
+                })
+              }
+              dateFormat="dd.mm.yy"
+              mask="99.99.9999"
+            />
+          </div>
+          <div className="col-12">
+            <label htmlFor="note">Основание</label>
+            <InputTextarea
+              id="note"
+              aria-describedby="name"
+              value={transferedItem.note || ""}
+              onChange={(e) =>
+                setTransferItem({ ...transferedItem, note: e.target.value })
+              }
+              autoResize
+              rows={3}
+              cols={20}
+            />
+          </div>
         </div>
       </Dialog>
     </div>

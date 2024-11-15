@@ -8,6 +8,8 @@ import styles from "./DialogCraft.module.css";
 
 import { TimelinelHistoryCraft } from "./TabViewCraft/TimelineHistoryCraft";
 import { TablelHistoryCraft } from "./TabViewCraft/TableHistoryCraft";
+import { TablelHistoryCraft2 } from "./TabViewCraft/TableHistoryCraft2";
+import { TimelinelTransferCraft } from "./TabViewCraft/TimelineTransferCraft";
 
 export const DialogCraft = (props) => {
   const {
@@ -35,7 +37,11 @@ export const DialogCraft = (props) => {
   return (
     <Dialog
       visible={ItemDialog}
-      style={{ width: activeTabIndex == 2 ? "85rem" : "48rem" }}
+      style={{
+        height: "100%",
+        width: activeTabIndex !== 0 ? "85rem" : "48rem",
+      }}
+      headerStyle={{ padding: "0.2rem" }}
       contentStyle={{ padding: 0 }}
       breakpoints={{ "960px": "75vw", "641px": "90vw" }}
       closable={false} //для скрытия крестика в header dialog
@@ -62,7 +68,10 @@ export const DialogCraft = (props) => {
             header="Описание объекта"
             leftIcon="pi pi-objects-column mr-2"
           >
-            <div className={styles.tabContent}>
+            <div
+              className={styles.tabContent}
+              style={{ padding: activeTabIndex == 1 ? 0 : "1.25rem" }}
+            >
               <Description
                 name={name}
                 data={data}
@@ -80,7 +89,7 @@ export const DialogCraft = (props) => {
               />
             </div>
           </TabPanel>
-          {item.logs !== undefined && (
+          {/* {item.logs !== undefined && (
             <TabPanel
               header="История изменений (timeline)"
               leftIcon="pi pi-objects-column mr-2"
@@ -89,14 +98,34 @@ export const DialogCraft = (props) => {
                 <TimelinelHistoryCraft item={item} />
               </div>
             </TabPanel>
-          )}
+          )} */}
           {item.logs !== undefined && (
             <TabPanel
-              header="История изменений (table)"
+              header="История перемещений"
               leftIcon="pi pi-objects-column mr-2"
             >
               <div className={styles.tabContent}>
-                <TablelHistoryCraft item={item} />
+                <TimelinelTransferCraft transfers={item.transfers} />
+              </div>
+            </TabPanel>
+          )}
+          {item.logs !== undefined && (
+            <TabPanel
+              header="История изменений 1"
+              leftIcon="pi pi-objects-column mr-2"
+            >
+              <div className={styles.tabContent}>
+                <TablelHistoryCraft logs={item.logs} />
+              </div>
+            </TabPanel>
+          )}
+          {item.logs !== undefined && (
+            <TabPanel
+              header="История изменений 2"
+              leftIcon="pi pi-objects-column mr-2"
+            >
+              <div className={styles.tabContent}>
+                <TablelHistoryCraft2 columns={columns} logs={item.logs} />
               </div>
             </TabPanel>
           )}

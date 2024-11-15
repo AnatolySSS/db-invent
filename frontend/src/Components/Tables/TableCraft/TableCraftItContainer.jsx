@@ -5,6 +5,7 @@ import {
   requestData,
   addData,
   updateData,
+  transferItem,
   deleteData,
   clearState,
 } from "../../../redux/reducers/it-data-reducer";
@@ -34,6 +35,7 @@ let mapDispatchToProps = {
   requestData,
   addData,
   updateData,
+  transferItem,
   deleteData,
   setVisible,
   logout,
