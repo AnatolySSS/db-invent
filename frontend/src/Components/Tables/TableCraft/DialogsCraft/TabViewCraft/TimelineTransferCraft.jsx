@@ -68,7 +68,7 @@ export const TimelinelTransferCraft = (props) => {
   return (
     <div className="card mt-4">
       {transfers.length === 0 ? (
-        "С момента создания записи изменения не вносились"
+        "С момента создания записи перемещения не производились"
       ) : (
         <Timeline
           value={transfers}

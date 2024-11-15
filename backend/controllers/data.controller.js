@@ -273,6 +273,7 @@ export const DataController = {
         "changedDateTime",
         "userName",
         "logs",
+        "transfers",
       ];
 
       //Запись логов при обновлении значений checkedValues (цикл for...of асинхронный)
@@ -292,6 +293,8 @@ export const DataController = {
               oldValue: originalData[key],
               newValue: rowData[key],
             };
+            // console.log(logRow);
+
             await tableLog.create(logRow);
           }
         }
@@ -363,7 +366,11 @@ export const DataController = {
 
         //Обновление данных в основной таблице
         await table.update(
-          { owner: transferData.name, last_setup_date: transferData.date },
+          {
+            owner: transferData.name,
+            prev_owner: item.owner,
+            last_setup_date: transferData.date,
+          },
           { where: { id: item.id } }
         );
 
@@ -380,7 +387,6 @@ export const DataController = {
           oldValue: originalData.owner,
           newValue: transferData.name,
         };
-        console.log(logRow);
 
         await tableLog.create(logRow);
       }

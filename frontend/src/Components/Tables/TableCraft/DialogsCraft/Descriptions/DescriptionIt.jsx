@@ -107,7 +107,7 @@ export const DescriptionIt = (props) => {
             id="owner"
             value={item.owner || ""}
             onChange={(e) => setItem({ ...item, owner: e.target.value })}
-            disabled={disabled}
+            disabled={true}
           />
         </div>
       )}
@@ -120,7 +120,7 @@ export const DescriptionIt = (props) => {
             id="prev_owner"
             value={item.prev_owner || ""}
             onChange={(e) => setItem({ ...item, prev_owner: e.target.value })}
-            disabled={disabled}
+            disabled={true}
           />
         </div>
       )}

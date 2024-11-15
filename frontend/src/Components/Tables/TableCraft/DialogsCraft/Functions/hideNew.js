@@ -1,4 +1,6 @@
-export const hideNew = (setItemDialog, setDisabled) => () => {
-  setDisabled(true);
-  setItemDialog(false);
-};
+export const hideNew =
+  (setItemDialog, setDisabled, setActiveTabIndex) => () => {
+    setDisabled(true);
+    setItemDialog(false);
+    setActiveTabIndex(0);
+  };

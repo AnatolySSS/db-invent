@@ -58,7 +58,8 @@ export const DialogCraft = (props) => {
         userAuth,
         disabled,
         setDisabled,
-        activeTabIndex
+        activeTabIndex,
+        setActiveTabIndex
       )}
       onHide={hideNew(setItemDialog, setDisabled)}
     >

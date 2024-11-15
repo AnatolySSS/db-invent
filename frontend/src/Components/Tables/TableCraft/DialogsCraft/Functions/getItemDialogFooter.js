@@ -14,7 +14,8 @@ export const getItemDialogFooter = (
   userAuth,
   disabled,
   setDisabled,
-  activeTabIndex
+  activeTabIndex,
+  setActiveTabIndex
 ) => (
   <React.Fragment>
     <div className="mt-2">
@@ -50,7 +51,7 @@ export const getItemDialogFooter = (
         icon="pi pi-times"
         // className="mt-2"
         outlined
-        onClick={hideNew(setItemDialog, setDisabled)}
+        onClick={hideNew(setItemDialog, setDisabled, setActiveTabIndex)}
       />
     </div>
   </React.Fragment>
