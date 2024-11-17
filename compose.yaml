@@ -5,7 +5,7 @@ services:
     build:
       context: frontend
     ports:
-      - 80:3007
+      - 80:80
     environment:
       - AUTH_SERVICE_URL=http://backend:3008
     volumes:
