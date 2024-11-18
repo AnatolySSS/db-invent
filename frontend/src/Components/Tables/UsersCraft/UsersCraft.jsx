@@ -16,7 +16,7 @@ import {
 } from "../Functions/Filters/getColumnFilterElement";
 import { getColumnBody } from "../Functions/Body/getColumnBody";
 import { getTableHeight } from "../Functions/Helpers/getTableHeight";
-import { Header } from "./Header";
+import { TableHeader } from "../../Common/TableHeader/TableHeader";
 import { DialogCraftUsers } from "./DialogsCraft/Users/DialogCraftUsers";
 
 const UsersCraft = (props) => {
@@ -34,6 +34,7 @@ const UsersCraft = (props) => {
     logout,
     userAuth,
     isFetching,
+    clearState,
   } = props;
 
   const [visibleColumns, setVisibleColumns] = useState(columns);
@@ -167,7 +168,7 @@ const UsersCraft = (props) => {
         globalFilterFields={getglobalFilterColumns(visibleColumns)}
         dataKey="id"
         header={
-          <Header
+          <TableHeader
             type={type}
             data={data}
             logout={logout}
@@ -183,8 +184,10 @@ const UsersCraft = (props) => {
             setVisibleColumns={setVisibleColumns}
             columns={columns}
             filters={filters}
-            name={name}
+            tableName={name}
+            userMenuType="users"
             globalFilterValue={globalFilterValue}
+            clearState={clearState}
           />
         }
         paginator
@@ -246,18 +249,18 @@ const UsersCraft = (props) => {
         )}
       </DataTable>
       <DialogCraftUsers
-          data={data}
-          columns={columns}
-          setItemDialog={setItemDialog}
-          ItemDialog={ItemDialog}
-          item={item}
-          setItem={setItem}
-          values={values}
-          addData={addData}
-          updateData={updateData}
-          emptyItem={emptyItem}
-          userAuth={userAuth}
-        />
+        data={data}
+        columns={columns}
+        setItemDialog={setItemDialog}
+        ItemDialog={ItemDialog}
+        item={item}
+        setItem={setItem}
+        values={values}
+        addData={addData}
+        updateData={updateData}
+        emptyItem={emptyItem}
+        userAuth={userAuth}
+      />
       <Dialog
         visible={deleteItemDialog}
         style={{ width: "32rem" }}

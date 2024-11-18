@@ -3,8 +3,11 @@ import { FilterMatchMode, FilterOperator } from "primereact/api";
 import changeDateType from "../../function-helpers/changeDateType";
 
 const SET_DATA = "sodfu-inventory/users-data-reducer/SET_DATA";
-const SET_UPLOAD_STATUS = "sodfu-inventory/users-data-reducer/SET_UPLOAD_STATUS";
-const TOGGLE_IS_FETCHING = "sodfu-inventory/users-data-reducer/TOGGLE_IS_FETCHING";
+const RESET_STATE = "sodfu-inventory/users-data-reducer/RESET_STATE";
+const SET_UPLOAD_STATUS =
+  "sodfu-inventory/users-data-reducer/SET_UPLOAD_STATUS";
+const TOGGLE_IS_FETCHING =
+  "sodfu-inventory/users-data-reducer/TOGGLE_IS_FETCHING";
 
 let initialState = {
   columns: [],
@@ -12,12 +15,24 @@ let initialState = {
   values: [],
   filters: {
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    id: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] },
-    login: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] },
-    full_name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] },
+    id: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+    },
+    login: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+    },
+    full_name: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+    },
     role: { value: null, matchMode: FilterMatchMode.IN },
     division: { value: null, matchMode: FilterMatchMode.IN },
-    updatedAt: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
+    updatedAt: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],
+    },
   },
   uploadedStatus: false,
   name: "",
@@ -47,13 +62,19 @@ const usersDataReducer = (state = initialState, action) => {
         ...state,
         isFetching: action.isFetching,
       };
+    case RESET_STATE:
+      return initialState;
     default:
       return state;
   }
 };
 
 const setData = (data, message) => ({ type: SET_DATA, data, message });
-const toggleIsFetching = (isFetching) => ({ type: TOGGLE_IS_FETCHING, isFetching: isFetching });
+const resetState = () => ({ type: RESET_STATE });
+const toggleIsFetching = (isFetching) => ({
+  type: TOGGLE_IS_FETCHING,
+  isFetching: isFetching,
+});
 
 //Изменение формата даты со строки на объект Date (необходимо для правильной фильтрации)
 const changeDateFormat = (data) => {
@@ -82,7 +103,7 @@ const changeDateFormat = (data) => {
     });
     return v;
   });
-  return data
+  return data;
 };
 
 export const requestData = (userDivision) => {
@@ -121,6 +142,12 @@ export const addData = (rowData, userDivision) => {
     const data = await UsersAPI.getUsers(userDivision);
     dispatch(toggleIsFetching(false));
     dispatch(setData(changeDateFormat(data)));
+  };
+};
+
+export const clearState = () => {
+  return (dispatch) => {
+    dispatch(resetState());
   };
 };
 

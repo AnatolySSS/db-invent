@@ -1,13 +1,15 @@
 import { connect } from "react-redux";
 import { compose } from "redux";
 import YearInventoryCraft from "./YearInventoryCraft";
-import { requestData } from "../../../redux/reducers/year-inventory-reducer";
+import {
+  requestData,
+  clearState,
+} from "../../../redux/reducers/year-inventory-reducer";
 import { setVisible } from "../../../redux/reducers/side-bar-reducer";
 import { logout } from "../../../redux/reducers/auth-reducer";
 import { withAuthNavigate } from "../../../hoc/withAuthNavigate";
 
 let mapStateToProps = (state, ownProps) => {
-
   return {
     tableName: ownProps.tableName,
     data: state.yearInventory.data,
@@ -21,10 +23,11 @@ let mapStateToProps = (state, ownProps) => {
   };
 };
 
-let mapDispatchToProps =  {
-    requestData,
-    setVisible,
-    logout,
+let mapDispatchToProps = {
+  requestData,
+  setVisible,
+  clearState,
+  logout,
 };
 
 export default compose(

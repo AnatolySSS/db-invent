@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom"
+import { useParams } from "react-router-dom";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
@@ -13,9 +13,12 @@ import {
   getColumnFilterElement,
   getglobalFilterColumns,
 } from "../Functions/Filters/getColumnFilterElement";
-import { getColumnBody, imgBodyTemplate } from "../Functions/Body/getColumnBody";
+import {
+  getColumnBody,
+  imgBodyTemplate,
+} from "../Functions/Body/getColumnBody";
 import { getTableHeight } from "../Functions/Helpers/getTableHeight";
-import { Header } from "./Header";
+import { TableHeader } from "../../Common/TableHeader/TableHeader";
 
 const YearInventoryCraft = (props) => {
   const { year } = useParams();
@@ -30,6 +33,7 @@ const YearInventoryCraft = (props) => {
     userAuth,
     isFetching,
     tableName,
+    clearState,
   } = props;
 
   const [visibleColumns, setVisibleColumns] = useState(columns);
@@ -101,7 +105,7 @@ const YearInventoryCraft = (props) => {
         globalFilterFields={getglobalFilterColumns(visibleColumns)}
         dataKey="id"
         header={
-          <Header
+          <TableHeader
             data={data}
             logout={logout}
             userAuth={userAuth}
@@ -112,9 +116,10 @@ const YearInventoryCraft = (props) => {
             setVisibleColumns={setVisibleColumns}
             columns={columns}
             filters={filters}
-            name={name}
+            tableName={`${name}  (${year})`}
+            userMenuType="year"
             globalFilterValue={globalFilterValue}
-            year={year}
+            clearState={clearState}
           />
         }
         paginator

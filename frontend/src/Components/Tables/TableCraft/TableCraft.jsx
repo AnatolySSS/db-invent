@@ -19,7 +19,7 @@ import {
   imgBodyTemplate,
 } from "../Functions/Body/getColumnBody";
 import { getTableHeight } from "../Functions/Helpers/getTableHeight";
-import { Header } from "./Header";
+import { TableHeader } from "../../Common/TableHeader/TableHeader";
 import { DialogCraft } from "./DialogsCraft/DialogCraft";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
@@ -238,7 +238,7 @@ const TableCraft = (props) => {
         globalFilterFields={getglobalFilterColumns(visibleColumns)}
         dataKey="id"
         header={
-          <Header
+          <TableHeader
             type={type}
             data={data}
             logout={logout}
@@ -255,12 +255,13 @@ const TableCraft = (props) => {
             setVisibleColumns={setVisibleColumns}
             columns={columns}
             filters={filters}
-            name={name}
+            tableName={`${name}  (общая)`}
             globalFilterValue={globalFilterValue}
             beginInventory={beginInventory}
             hasCurrentInventory={hasCurrentInventory}
             requestCurrentInventory={requestCurrentInventory}
             clearState={clearState}
+            userMenuType="main"
           />
         }
         paginator

@@ -1,13 +1,18 @@
 import { connect } from "react-redux";
 import { compose } from "redux";
 import UsersCraft from "./UsersCraft";
-import { requestData, addData, updateData, deleteData } from "../../../redux/reducers/users-data-reducer";
+import {
+  requestData,
+  addData,
+  updateData,
+  deleteData,
+  clearState,
+} from "../../../redux/reducers/users-data-reducer";
 import { setVisible } from "../../../redux/reducers/side-bar-reducer";
 import { logout } from "../../../redux/reducers/auth-reducer";
 import { withAuthNavigate } from "../../../hoc/withAuthNavigate";
 
 let mapStateToProps = (state) => {
-
   return {
     type: "users",
     data: state.usersData.data,
@@ -21,13 +26,14 @@ let mapStateToProps = (state) => {
   };
 };
 
-let mapDispatchToProps =  {
-    requestData,
-    addData,
-    updateData,
-    deleteData,
-    setVisible,
-    logout,
+let mapDispatchToProps = {
+  requestData,
+  addData,
+  updateData,
+  deleteData,
+  setVisible,
+  clearState,
+  logout,
 };
 
 export default compose(
