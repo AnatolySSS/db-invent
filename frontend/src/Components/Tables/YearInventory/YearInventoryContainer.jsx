@@ -1,10 +1,8 @@
 import { connect } from "react-redux";
 import { compose } from "redux";
 import YearInventoryCraft from "./YearInventoryCraft";
-import {
-  requestData,
-  clearState,
-} from "../../../redux/reducers/year-inventory-reducer";
+import { requestData } from "../../../redux/reducers/year-inventory-reducer";
+import { clearState } from "../../../redux/reducers/it-data-reducer";
 import { setVisible } from "../../../redux/reducers/side-bar-reducer";
 import { logout } from "../../../redux/reducers/auth-reducer";
 import { withAuthNavigate } from "../../../hoc/withAuthNavigate";

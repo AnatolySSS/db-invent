@@ -6,8 +6,8 @@ import {
   addData,
   updateData,
   deleteData,
-  clearState,
 } from "../../../redux/reducers/users-data-reducer";
+import { clearState } from "../../../redux/reducers/it-data-reducer";
 import { setVisible } from "../../../redux/reducers/side-bar-reducer";
 import { logout } from "../../../redux/reducers/auth-reducer";
 import { withAuthNavigate } from "../../../hoc/withAuthNavigate";

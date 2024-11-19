@@ -142,7 +142,13 @@ export const setUserMenuItems = (
 
       break;
     case "year":
-      addTypes = [];
+      addTypes = [
+        {
+          label: "Сформировать EXCEL",
+          icon: "pi pi-file-excel",
+          command: exportExcel,
+        },
+      ];
       break;
     case "users":
       addTypes = [

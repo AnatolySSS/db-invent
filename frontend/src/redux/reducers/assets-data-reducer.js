@@ -3,7 +3,7 @@ import { FilterMatchMode, FilterOperator } from "primereact/api";
 import changeDateType from "../../function-helpers/changeDateType";
 
 const SET_DATA = "sodfu-inventory/assets-data-reducer/SET_DATA";
-const RESET_STATE = "sodfu-inventory/it-data-reducer/RESET_STATE";
+// const RESET_STATE = "sodfu-inventory/it-data-reducer/RESET_STATE";
 const SET_UPLOAD_STATUS =
   "sodfu-inventory/assets-data-reducer/SET_UPLOAD_STATUS";
 const TOGGLE_IS_FETCHING =
@@ -130,15 +130,15 @@ const assetsDataReducer = (state = initialState, action) => {
         ...state,
         validationStatus: { ...action.validationStatus },
       };
-    case RESET_STATE:
-      return initialState;
+    // case RESET_STATE:
+    //   return initialState;
     default:
       return state;
   }
 };
 
 const setData = (data, message) => ({ type: SET_DATA, data, message });
-const resetState = () => ({ type: RESET_STATE });
+// const resetState = () => ({ type: RESET_STATE });
 const setUploadStatus = (status) => ({
   type: SET_UPLOAD_STATUS,
   uploadedStatus: status,
@@ -239,10 +239,10 @@ export const uploadData = (data, userDivision) => {
   };
 };
 
-export const clearState = () => {
-  return (dispatch) => {
-    dispatch(resetState());
-  };
-};
+// export const clearState = () => {
+//   return (dispatch) => {
+//     dispatch(resetState());
+//   };
+// };
 
 export default assetsDataReducer;

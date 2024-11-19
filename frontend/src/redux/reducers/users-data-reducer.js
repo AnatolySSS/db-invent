@@ -3,7 +3,7 @@ import { FilterMatchMode, FilterOperator } from "primereact/api";
 import changeDateType from "../../function-helpers/changeDateType";
 
 const SET_DATA = "sodfu-inventory/users-data-reducer/SET_DATA";
-const RESET_STATE = "sodfu-inventory/users-data-reducer/RESET_STATE";
+// const RESET_STATE = "sodfu-inventory/users-data-reducer/RESET_STATE";
 const SET_UPLOAD_STATUS =
   "sodfu-inventory/users-data-reducer/SET_UPLOAD_STATUS";
 const TOGGLE_IS_FETCHING =
@@ -62,15 +62,15 @@ const usersDataReducer = (state = initialState, action) => {
         ...state,
         isFetching: action.isFetching,
       };
-    case RESET_STATE:
-      return initialState;
+    // case RESET_STATE:
+    //   return initialState;
     default:
       return state;
   }
 };
 
 const setData = (data, message) => ({ type: SET_DATA, data, message });
-const resetState = () => ({ type: RESET_STATE });
+// const resetState = () => ({ type: RESET_STATE });
 const toggleIsFetching = (isFetching) => ({
   type: TOGGLE_IS_FETCHING,
   isFetching: isFetching,
@@ -145,10 +145,10 @@ export const addData = (rowData, userDivision) => {
   };
 };
 
-export const clearState = () => {
-  return (dispatch) => {
-    dispatch(resetState());
-  };
-};
+// export const clearState = () => {
+//   return (dispatch) => {
+//     dispatch(resetState());
+//   };
+// };
 
 export default usersDataReducer;

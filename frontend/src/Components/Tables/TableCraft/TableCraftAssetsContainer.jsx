@@ -6,8 +6,8 @@ import {
   addData,
   updateData,
   deleteData,
-  clearState,
 } from "../../../redux/reducers/assets-data-reducer";
+import { clearState } from "../../../redux/reducers/it-data-reducer";
 import { beginInventory } from "../../../redux/reducers/panel-menu-reducer";
 import { requestCurrentInventory } from "../../../redux/reducers/year-inventory-reducer";
 import { setVisible } from "../../../redux/reducers/side-bar-reducer";

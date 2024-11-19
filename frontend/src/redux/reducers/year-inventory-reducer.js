@@ -3,7 +3,7 @@ import { FilterMatchMode, FilterOperator } from "primereact/api";
 import changeDateType from "../../function-helpers/changeDateType";
 
 const SET_DATA = "sodfu-inventory/year-inventory-reducer/SET_DATA";
-const RESET_STATE = "sodfu-inventory/year-data-reducer/RESET_STATE";
+// const RESET_STATE = "sodfu-inventory/year-data-reducer/RESET_STATE";
 const SET_CURRENT_INVENTORY =
   "sodfu-inventory/year-inventory-reducer/SET_CURRENT_INVENTORY";
 const TOGGLE_IS_FETCHING =
@@ -128,15 +128,15 @@ const yearInventoryReducer = (state = initialState, action) => {
         ...state,
         hasCurrentInventory: action.hasCurrentInventory,
       };
-    case RESET_STATE:
-      return initialState;
+    // case RESET_STATE:
+    //   return initialState;
     default:
       return state;
   }
 };
 
 const setData = (data, message) => ({ type: SET_DATA, data, message });
-const resetState = () => ({ type: RESET_STATE });
+// const resetState = () => ({ type: RESET_STATE });
 const setCurrentInventory = (hasCurrentInventory) => ({
   type: SET_CURRENT_INVENTORY,
   hasCurrentInventory,
@@ -189,10 +189,10 @@ export const requestCurrentInventory = (tableName, userDivision) => {
   };
 };
 
-export const clearState = () => {
-  return (dispatch) => {
-    dispatch(resetState());
-  };
-};
+// export const clearState = () => {
+//   return (dispatch) => {
+//     dispatch(resetState());
+//   };
+// };
 
 export default yearInventoryReducer;
