@@ -10,6 +10,7 @@ import { TimelinelHistoryCraft } from "./TabViewCraft/TimelineHistoryCraft";
 import { TablelHistoryCraft } from "./TabViewCraft/TableHistoryCraft";
 import { TablelHistoryCraft2 } from "./TabViewCraft/TableHistoryCraft2";
 import { TimelinelTransferCraft } from "./TabViewCraft/TimelineTransferCraft";
+import { TreeTablelHistoryCraft } from "./TabViewCraft/TreeTableHistoryCraft";
 
 export const DialogCraft = (props) => {
   const {
@@ -64,7 +65,11 @@ export const DialogCraft = (props) => {
       onHide={hideNew(setItemDialog, setDisabled)}
     >
       <div className={styles.tabContainer}>
-        <TabView activeIndex={activeTabIndex} onTabChange={handleTabChange}>
+        <TabView
+          activeIndex={activeTabIndex}
+          onTabChange={handleTabChange}
+          scrollable
+        >
           <TabPanel
             header="Описание объекта"
             leftIcon="pi pi-objects-column mr-2"
@@ -127,6 +132,16 @@ export const DialogCraft = (props) => {
             >
               <div className={styles.tabContent}>
                 <TablelHistoryCraft2 columns={columns} logs={item.logs} />
+              </div>
+            </TabPanel>
+          )}
+          {item.logs !== undefined && (
+            <TabPanel
+              header="История изменений 3"
+              leftIcon="pi pi-objects-column mr-2"
+            >
+              <div className={styles.tabContent}>
+                <TreeTablelHistoryCraft columns={columns} logs={item.logs} />
               </div>
             </TabPanel>
           )}

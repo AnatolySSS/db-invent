@@ -24,7 +24,6 @@ export const TimelinelTransferCraft = (props) => {
     })
     //Изменение нумерации (вверху последние)
     .map((tr, i) => ({ ...tr, id: transfers.length - i }));
-  console.log(transfers);
 
   const customizedSubTitle = (item) => {
     return (
@@ -41,8 +40,6 @@ export const TimelinelTransferCraft = (props) => {
   };
 
   const customizedContent = (item) => {
-    console.log(item);
-
     return (
       <Card
         title={item.name}
