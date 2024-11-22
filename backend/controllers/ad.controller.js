@@ -28,23 +28,18 @@ export const ADController = {
         opts
       );
 
-      //   for await (const entry of searchResult.entries) {
-      //     entries.push({
-      //       cn: entry.attributes.cn ? entry.attributes.cn[0] : null,
-      //       sn: entry.attributes.sn ? entry.attributes.sn[0] : null,
-      //       mail: entry.attributes.mail ? entry.attributes.mail[0] : null,
-      //       sAMAccountName: entry.attributes.sAMAccountName
-      //         ? entry.attributes.sAMAccountName[0]
-      //         : null,
-      //       dn: entry.dn,
-      //     });
-      //   }
+      let entries = [];
+      for await (const entry of searchEntries) {
+        if (entry.cn.length !== 0) {
+          entries.push(entry);
+        }
+      }
 
       //   console.log("Результаты поиска:", searchResult);
 
       //   console.log(searchEntries);
 
-      responce.json({ searchEntries });
+      responce.json({ entries });
     } catch (error) {
       console.log("__________ADController__getADData___________");
       console.log(error);
