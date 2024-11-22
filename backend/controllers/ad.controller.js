@@ -4,7 +4,6 @@ import { Client } from "ldapts";
 let config = {
   url: "ldap://10.205.0.11:389",
   bindDN: "cn=gitlab,cn=Users,dc=sfurf,dc=office",
-  username: "gitlab@sfurf.office",
   password: "Pdfi#1khgg",
 };
 
@@ -20,8 +19,8 @@ export const ADController = {
       const opts = {
         sizeLimit: 1000,
         scope: "sub",
-        // filter: "(objectClass=*)",
-        // attributes: ["cn", "sn", "mail", "sAMAccountName"],
+        filter: "(&(objectClass=*)(!(cn=ExchangeActiveSyncDevices)))",
+        attributes: ["cn", "telephoneNumber", "mail", "department", "title"],
       };
 
       const { searchEntries } = await client.search(
@@ -42,11 +41,6 @@ export const ADController = {
       //   }
 
       //   console.log("Результаты поиска:", searchResult);
-
-      //   const { searchEntries, searchReferences } = await client.search(
-      //     "dc=sfurf,dc=office",
-      //     opts
-      //   );
 
       //   console.log(searchEntries);
 
