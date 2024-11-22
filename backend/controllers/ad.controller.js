@@ -20,11 +20,11 @@ export const ADController = {
       const opts = {
         sizeLimit: 1000,
         scope: "sub",
-        filter: "(objectClass=*)",
+        // filter: "(objectClass=*)",
         // attributes: ["cn", "sn", "mail", "sAMAccountName"],
       };
 
-      const searchResult = await client.search(
+      const { searchEntries } = await client.search(
         "ou=User,dc=sfurf,dc=office",
         opts
       );
@@ -50,7 +50,7 @@ export const ADController = {
 
       //   console.log(searchEntries);
 
-      responce.json({ searchResult });
+      responce.json({ searchEntries });
     } catch (error) {
       console.log("__________ADController__getADData___________");
       console.log(error);
