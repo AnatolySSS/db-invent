@@ -24,7 +24,10 @@ export const ADController = {
         attributes: ["cn", "sn", "mail", "sAMAccountName"],
       };
 
-      const searchResult = await client.search("dc=sfurf,dc=office", opts);
+      const searchResult = await client.search(
+        "ou=User Accounts,dc=sfurf,dc=office",
+        opts
+      );
 
       //   for await (const entry of searchResult.entries) {
       //     entries.push({
