@@ -20,7 +20,7 @@ export const ADController = {
       const opts = {
         sizeLimit: 1000,
         scope: "sub",
-        // filter: "(objectClass=*)",
+        filter: "(objectClass=*)",
         // attributes: ["cn", "sn", "mail", "sAMAccountName"],
       };
 
