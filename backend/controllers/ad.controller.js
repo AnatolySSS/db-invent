@@ -18,13 +18,13 @@ export const ADController = {
       console.log("Успешно подключились к LDAP-серверу");
 
       const opts = {
-        sizeLimit: 100,
+        sizeLimit: 1000,
         scope: "sub",
         filter: "(objectClass=*)",
         attributes: ["cn", "sn", "mail", "sAMAccountName"],
       };
 
-      const searchResult = await client.search("cn=Users", opts);
+      const searchResult = await client.search("dc=sfurf,dc=office", opts);
 
       //   for await (const entry of searchResult.entries) {
       //     entries.push({
