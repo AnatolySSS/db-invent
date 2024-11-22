@@ -17,10 +17,10 @@ export const ADController = {
       console.log("Успешно подключились к LDAP-серверу");
 
       const opts = {
-        sizeLimit: 100,
+        sizeLimit: 1000,
         scope: "sub",
         filter: "(&(objectClass=person)(title=*))",
-        // attributes: ["cn", "telephoneNumber", "mail", "department", "title"],
+        attributes: ["cn", "telephoneNumber", "mail", "department", "title"],
       };
 
       const { searchEntries } = await client.search("dc=sfurf,dc=office", opts);
