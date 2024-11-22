@@ -21,11 +21,11 @@ export const ADController = {
         sizeLimit: 1000,
         scope: "sub",
         filter: "(objectClass=*)",
-        attributes: ["cn", "sn", "mail", "sAMAccountName"],
+        // attributes: ["cn", "sn", "mail", "sAMAccountName"],
       };
 
       const searchResult = await client.search(
-        "ou=User Accounts,dc=sfurf,dc=office",
+        "ou=User,dc=sfurf,dc=office",
         opts
       );
 
