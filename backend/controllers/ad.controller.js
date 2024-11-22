@@ -19,7 +19,7 @@ export const ADController = {
       const opts = {
         sizeLimit: 9000,
         scope: "sub",
-        filter: "(&(objectClass=person)(!(objectClass=computer)))",
+        filter: "(&(objectClass=person)(title=*))",
         // attributes: [
         //   "cn",
         //   "telephoneNumber",
