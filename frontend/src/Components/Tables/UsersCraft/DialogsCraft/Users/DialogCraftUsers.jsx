@@ -67,7 +67,7 @@ export const DialogCraftUsers = (props) => {
     >
       <div className="grid">
         {currentColumns.includes("full_name") && (
-          <div className="col-12">
+          <div className="col-8">
             <label htmlFor="full_name" className={styles.label}>
               ФИО пользователя
             </label>
@@ -89,7 +89,7 @@ export const DialogCraftUsers = (props) => {
             /> */}
           </div>
         )}
-        {currentColumns.includes("login") && (
+        {/* {currentColumns.includes("login") && (
           <div className="col-8">
             <label htmlFor="login" className={styles.label}>
               Логин
@@ -101,7 +101,7 @@ export const DialogCraftUsers = (props) => {
               disabled={disabled}
             />
           </div>
-        )}
+        )} */}
         {currentColumns.includes("role") && (
           <div className="col-4">
             <label htmlFor="role" className={styles.label}>
