@@ -17,7 +17,7 @@ export const ADController = {
       await client.bind(config.bindDN, config.password);
 
       const { searchEntries, searchReferences } = await client.search(
-        "ou=Users,dc=sfurf,dc=office",
+        "dc=sfurf,dc=office",
         {
           scope: "sub",
           //   filter: "(mail=peter.parker@marvel.com)",
@@ -26,7 +26,7 @@ export const ADController = {
 
       console.log(searchEntries);
 
-      responce.json({ searchEntries });
+      responce.json({ searchEntries, searchReferences });
     } catch (error) {
       console.log("__________ADController__getADData___________");
       console.log(error);
