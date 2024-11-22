@@ -36,17 +36,17 @@ export const ADController = {
       );
 
       let entries = [];
-      for await (const entry of searchEntries) {
-        if (entry.cn.length !== 0) {
-          entries.push(entry);
-        }
-      }
+      //   for await (const entry of searchEntries) {
+      //     if (entry.cn.length !== 0) {
+      //       entries.push(entry);
+      //     }
+      //   }
 
       //   console.log("Результаты поиска:", searchResult);
 
       //   console.log(searchEntries);
 
-      responce.json({ entries });
+      responce.json({ searchEntries });
     } catch (error) {
       console.log("__________ADController__getADData___________");
       console.log(error);
