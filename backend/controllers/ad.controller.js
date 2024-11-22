@@ -12,12 +12,6 @@ export const ADController = {
       };
       const client = new Client({
         url: config.url,
-        timeout: 0,
-        connectTimeout: 0,
-        tlsOptions: {
-          minVersion: "TLSv1.2",
-        },
-        strictDN: true,
       });
 
       await client.bind(config.bindDN, config.password);
