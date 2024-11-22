@@ -23,7 +23,7 @@ export const ADController = {
         attributes: ["cn", "sn", "mail", "sAMAccountName"],
       };
 
-      //   const searchResult = await client.search("dc=sfurf,dc=office", opts);
+      const searchResult = await client.search("dc=sfurf,dc=office", opts);
 
       //   for await (const entry of searchResult.entries) {
       //     entries.push({
@@ -46,7 +46,7 @@ export const ADController = {
 
       //   console.log(searchEntries);
 
-      responce.json({ searchResult: client });
+      responce.json({ searchResult });
     } catch (error) {
       console.log("__________ADController__getADData___________");
       console.log(error);
