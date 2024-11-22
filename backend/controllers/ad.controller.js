@@ -1,23 +1,20 @@
 import ActiveDirectory from "activedirectory2";
 import { Client } from "ldapts";
 
+let config = {
+  url: "ldap://10.205.0.11:389",
+  bindDN: "cn=gitlab,cn=Users,dc=sfurf,dc=office",
+  username: "gitlab@sfurf.office",
+  password: "Pdfi#1khgg",
+};
+
 export const ADController = {
   async getADData(request, responce) {
     const client = new Client({
-      url: "ldap://10.205.0.11:389",
-      bindDN: "cn=gitlab,cn=Users,dc=sfurf,dc=office",
-      // username: "gitlab@sfurf.office",
-      password: "Pdfi#1khgg",
+      url: config.url,
     });
     try {
-      //   let config = {
-      //     url: "ldap://10.205.0.11:389",
-      //     bindDN: "cn=gitlab,cn=Users,dc=sfurf,dc=office",
-      //     username: "gitlab@sfurf.office",
-      //     password: "Pdfi#1khgg",
-      //   };
-
-      await client.bind();
+      await client.bind(config.bindDN, config.password);
       console.log("Успешно подключились к LDAP-серверу");
 
       const opts = {
