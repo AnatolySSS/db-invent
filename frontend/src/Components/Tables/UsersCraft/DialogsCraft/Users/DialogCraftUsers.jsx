@@ -29,7 +29,7 @@ export const DialogCraftUsers = (props) => {
 
   const adUsersFullNames = adUsers.map((user) => user.cn);
   const search = (event) => {
-    setUserNames(adUsersFullNames.filter((item) => event.query === iter));
+    setUserNames(adUsersFullNames.filter((item) => event.query === item));
   };
 
   //Переменная для массива наименований столбцов,
