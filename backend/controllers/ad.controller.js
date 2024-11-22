@@ -30,10 +30,7 @@ export const ADController = {
         ],
       };
 
-      const { searchEntries } = await client.search(
-        "ou=User Accounts,dc=sfurf,dc=office",
-        opts
-      );
+      const { searchEntries } = await client.search("dc=sfurf,dc=office", opts);
 
       let entries = [];
       //   for await (const entry of searchEntries) {
