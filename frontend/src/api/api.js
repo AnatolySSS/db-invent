@@ -126,7 +126,7 @@ export const UsersAPI = {
 };
 
 export const ADAPI = {
-  async getADataD() {
+  async getData() {
     const responce = await instance.get(`getADData`);
     return responce.data;
   },

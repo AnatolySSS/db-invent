@@ -1,4 +1,5 @@
 import { getAuthUserData } from "./auth-reducer";
+import { requestData } from "./ad-reducer";
 
 const SET_INITIALIZED = "sodfu-inventory/appReducer/SET_INITIALIZED";
 
@@ -27,6 +28,7 @@ export const initializedSuccess = () => {
 export const initializeApp = () => {
   return async (dispatch) => {
     await dispatch(getAuthUserData());
+    await dispatch(requestData());
     dispatch(initializedSuccess());
   };
 };

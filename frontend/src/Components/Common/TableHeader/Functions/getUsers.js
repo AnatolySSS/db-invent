@@ -1,6 +1,8 @@
 import { ADAPI } from "../../../../api/api";
+import { requestData } from "../../../../redux/reducers/ad-reducer";
 
 export const getUsers = async () => {
-  const adData = await ADAPI.getADataD();
+  const adData = await ADAPI.getData();
+  requestData();
   console.log(adData);
 };
