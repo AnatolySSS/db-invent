@@ -17,10 +17,17 @@ export const ADController = {
       console.log("Успешно подключились к LDAP-серверу");
 
       const opts = {
-        sizeLimit: 1000,
+        sizeLimit: 9000,
         scope: "sub",
-        filter: "(&(objectClass=*)(!(cn=ExchangeActiveSyncDevices)))",
-        attributes: ["cn", "telephoneNumber", "mail", "department", "title"],
+        // filter: "(&(objectClass=*)(!(cn=ExchangeActiveSyncDevices)))",
+        attributes: [
+          "cn",
+          "telephoneNumber",
+          "mail",
+          "department",
+          "title",
+          "objectclass",
+        ],
       };
 
       const { searchEntries } = await client.search(
