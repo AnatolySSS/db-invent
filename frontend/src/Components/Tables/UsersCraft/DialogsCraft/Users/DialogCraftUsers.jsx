@@ -28,8 +28,11 @@ export const DialogCraftUsers = (props) => {
   const [UserNames, setUserNames] = useState([]);
 
   const adUsersFullNames = adUsers.map((user) => user.cn);
+  console.log(adUsers);
+  console.log(adUsersFullNames);
+
   const search = (event) => {
-    setUserNames(adUsersFullNames.filter((item) => event.query === item));
+    setUserNames(adUsersFullNames.filter((item) => item.includes(event.query)));
   };
 
   //Переменная для массива наименований столбцов,
@@ -71,14 +74,15 @@ export const DialogCraftUsers = (props) => {
               completeMethod={search}
               onChange={(e) => setItem({ ...item, full_name: e.target.value })}
               forceSelection
+              disabled={disabled}
             />
-            <InputText
+            {/* <InputText
               id="full_name"
               value={item.full_name || ""}
               onChange={(e) => setItem({ ...item, full_name: e.target.value })}
               autoFocus={true}
               disabled={disabled}
-            />
+            /> */}
           </div>
         )}
         {currentColumns.includes("login") && (
