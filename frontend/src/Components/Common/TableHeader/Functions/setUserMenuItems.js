@@ -5,6 +5,7 @@ import { Avatar } from "primereact/avatar";
 import { classNames } from "primereact/utils";
 import { getTableHeight } from "../../../Tables/Functions/Helpers/getTableHeight";
 import { MdOutlineInventory } from "react-icons/md";
+import { getUsers } from "./getUsers";
 
 export const setUserMenuItems = (
   type,
@@ -97,6 +98,11 @@ export const setUserMenuItems = (
           label: "Сформировать QR-коды",
           icon: "pi pi-qrcode",
           command: makeQRCodeHelper,
+        },
+        {
+          label: "Загрузить пользователей",
+          icon: "pi pi-users",
+          command: getUsers,
         },
         {
           label: "Сформировать EXCEL",

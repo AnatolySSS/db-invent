@@ -5,6 +5,7 @@ import { InventaryController } from "./controllers/inventary.controller.js";
 import { InventaryYearsController } from "./controllers/inventary.years.controller.js";
 import { UsersController } from "./controllers/users.controller.js";
 import authJwt from "./middleware/authJwt.js";
+import { ADController } from "./controllers/ad.controller.js";
 
 const router = new Router();
 
@@ -51,5 +52,7 @@ router.post("/checkStatus", InventaryController.checkStatus);
 router.post("/checkStatusType", InventaryController.checkStatusType);
 router.post("/checkStatusLocations", InventaryController.checkStatusLocations);
 router.post("/getLocations", InventaryController.getLocations);
+
+router.get("/getADData", ADController.getADData);
 
 export default router;

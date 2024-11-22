@@ -124,3 +124,10 @@ export const UsersAPI = {
     return responce.data;
   },
 };
+
+export const ADAPI = {
+  async getADataD() {
+    const responce = await instance.get(`getADData`);
+    return responce.data;
+  },
+};
