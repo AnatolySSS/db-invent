@@ -17,7 +17,7 @@ export const ADController = {
       console.log("Успешно подключились к LDAP-серверу");
 
       const opts = {
-        // sizeLimit: 9000,
+        sizeLimit: 9000,
         scope: "sub",
         filter: "objectClass=person",
         attributes: [
