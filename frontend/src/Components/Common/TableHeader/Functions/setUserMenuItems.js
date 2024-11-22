@@ -1,5 +1,5 @@
 import { makeCommitment } from "../../../../function-helpers/makeCommitment";
-import { makeQRCode } from "../../../../function-helpers/makeQRCode";
+import { makeQRCode } from "../../../../function-helpers/makeQRCode2";
 import { getUserLogo } from "../../../Tables/Functions/Helpers/getUserLogo";
 import { Avatar } from "primereact/avatar";
 import { classNames } from "primereact/utils";

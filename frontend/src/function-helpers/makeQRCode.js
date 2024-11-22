@@ -58,7 +58,7 @@ export function makeQRCode(selectedItems, div) {
 
   promise.then(
     (result) => {
-      doc.save("qr_codes.pdf");
+      // doc.save("qr_codes.pdf");
     },
     (error) => {}
   );

@@ -6,7 +6,6 @@ import { Calendar } from "primereact/calendar";
 import styles from "./DescriptionCraft.module.css";
 import { getDropdownOptions } from "../Functions/getDropdownOptions";
 import { formatDate } from "../../../Functions/Helpers/formatDate";
-import { imgBodyTemplate } from "../../../Functions/Body/getColumnBody";
 
 export const DescriptionAssets = (props) => {
   const { columns, item, disabled, setItem, values } = props;

@@ -1,5 +1,4 @@
 import { classNames } from "primereact/utils";
-import { Image } from "primereact/image";
 import { formatDate } from "../Helpers/formatDate";
 
 export const getColumnBody = (col) => {
@@ -16,8 +15,8 @@ export const getColumnBody = (col) => {
     case "date":
       return dateBodyTemplate(col.field);
 
-    case "img":
-      return imgBodyTemplate;
+    // case "img":
+    //   return imgBodyTemplate;
 
     default:
       return null;
@@ -50,33 +49,3 @@ const priceBodyTemplate = (rowData) =>
     style: "currency",
     currency: "RUB",
   }).format(rowData.purchase_price);
-
-const getQrCodeImg = (qr_code, div) => {
-  try {
-    return require(`../../../../img/division_${div}/qr_code/${qr_code}.png`);
-  } catch (error) {
-    return require(`../../../../img/no_data.png`);
-  }
-};
-export const imgBodyTemplate =
-  (div, type = "tablerow") =>
-  (rowData) => {
-    let qrCodeHeight, qrCodeWidth;
-    if (type == "tablerow") {
-      qrCodeWidth = 60;
-      div == 3 ? (qrCodeHeight = 70) : (qrCodeHeight = 60);
-    } else {
-      qrCodeWidth = "100%";
-      qrCodeHeight = "100%";
-    }
-    return (
-      <Image
-        src={getQrCodeImg(rowData.qr_code, div)}
-        zoomSrc={getQrCodeImg(rowData.qr_code, div)}
-        alt="No Image"
-        width={qrCodeWidth}
-        height={qrCodeHeight}
-        preview
-      />
-    );
-  };

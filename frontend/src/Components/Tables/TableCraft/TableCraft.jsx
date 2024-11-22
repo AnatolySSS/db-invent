@@ -14,16 +14,15 @@ import {
   getColumnFilterElement,
   getglobalFilterColumns,
 } from "../Functions/Filters/getColumnFilterElement";
-import {
-  getColumnBody,
-  imgBodyTemplate,
-} from "../Functions/Body/getColumnBody";
+import { getColumnBody } from "../Functions/Body/getColumnBody";
+import { getImgBodyTemplate } from "../Functions/Body/getImgBodyTemplate3";
 import { getTableHeight } from "../Functions/Helpers/getTableHeight";
 import { TableHeader } from "../../Common/TableHeader/TableHeader";
 import { DialogCraft } from "./DialogsCraft/DialogCraft";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Calendar } from "primereact/calendar";
+import { generateQRCode } from "../Functions/Body/getImgBodyTemplate2";
 
 const TableCraft = (props) => {
   let {
@@ -90,6 +89,13 @@ const TableCraft = (props) => {
     creactLocale();
     locale("ru");
   }, []);
+
+  // useEffect(() => {
+  //   if (qrRefs.current[item.id] && !qrRefs.current[item.id].hasQRCode) {
+  //     generateQRCode(item.qrData, qrRefs.current[item.id]);
+  //     qrRefs.current[item.id].hasQRCode = true;
+  //   }
+  // }, [data]);
 
   useEffect(() => {
     getTableHeight();
@@ -170,8 +176,6 @@ const TableCraft = (props) => {
   const handletransferItem = () => {
     transferedItem.userName = userAuth.fullName;
     transferItem(selectedItems, transferedItem, userAuth.division);
-    console.log(selectedItems);
-    console.log(transferedItem);
     setTransferItem(emptyTransferItem);
     setTransferDialog(false);
   };
@@ -316,8 +320,8 @@ const TableCraft = (props) => {
             field={visibleColumns.qr_code}
             header={"QRCODE IMG"}
             dataType={"text"}
-            style={{ minWidth: "10rem" }}
-            body={imgBodyTemplate(userAuth.division)}
+            style={{ minWidth: "10rem", padding: "0.5rem" }}
+            body={getImgBodyTemplate()}
             bodyClassName="text-center"
           />
         )}

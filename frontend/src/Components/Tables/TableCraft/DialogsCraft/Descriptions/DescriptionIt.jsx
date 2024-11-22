@@ -8,7 +8,7 @@ import styles from "./DescriptionCraft.module.css";
 import { multiStateCheckboxOptions } from "../../../Functions/Filters/getColumnFilterElement";
 import { getDropdownOptions } from "../Functions/getDropdownOptions";
 import { formatDate } from "../../../Functions/Helpers/formatDate";
-import { imgBodyTemplate } from "../../../Functions/Body/getColumnBody";
+import { getImgBodyTemplate } from "../../../Functions/Body/getImgBodyTemplate3";
 
 export const DescriptionIt = (props) => {
   const { columns, item, disabled, setItem, values, userAuth } = props;
@@ -69,9 +69,7 @@ export const DescriptionIt = (props) => {
           )}
         </div>
       </div>
-      <div className="col-3 mt-4">
-        {imgBodyTemplate(userAuth.division, "")(item)}
-      </div>
+      <div className="col-3 mt-4">{getImgBodyTemplate("")(item)}</div>
       {currentColumns.includes("serial") && (
         <div className="col-6">
           <label htmlFor="serial" className={styles.label}>
@@ -307,7 +305,7 @@ export const DescriptionIt = (props) => {
       {currentColumns.includes("was_deleted") && (
         <div className="col-6">
           <MultiStateCheckbox
-            inputId="was_deleted"
+            inputid="was_deleted"
             value={
               item.was_deleted != undefined ? item.was_deleted.toString() : null
             }

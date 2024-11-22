@@ -10,7 +10,5 @@ export const getTableHeight = () => {
       "p-datatable-wrapper"
     )[0].style.height = `${tableHeight}px`;
     return `${tableHeight}px`;
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 };

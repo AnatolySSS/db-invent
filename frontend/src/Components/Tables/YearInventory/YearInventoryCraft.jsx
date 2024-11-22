@@ -13,12 +13,10 @@ import {
   getColumnFilterElement,
   getglobalFilterColumns,
 } from "../Functions/Filters/getColumnFilterElement";
-import {
-  getColumnBody,
-  imgBodyTemplate,
-} from "../Functions/Body/getColumnBody";
+import { getColumnBody } from "../Functions/Body/getColumnBody";
 import { getTableHeight } from "../Functions/Helpers/getTableHeight";
 import { TableHeader } from "../../Common/TableHeader/TableHeader";
+import { getImgBodyTemplate } from "../Functions/Body/getImgBodyTemplate";
 
 const YearInventoryCraft = (props) => {
   const { year } = useParams();
@@ -161,14 +159,14 @@ const YearInventoryCraft = (props) => {
             body={getColumnBody(col)}
           />
         ))}
-        {(name === "Мебель" || name === "Оборудование") && data.length != 0 && (
+        {name !== "Прочее" && data.length != 0 && (
           <Column
             key={visibleColumns.qr_code}
             field={visibleColumns.qr_code}
             header={"QRCODE IMG"}
             dataType={"text"}
-            style={{ minWidth: "10rem" }}
-            body={imgBodyTemplate}
+            style={{ minWidth: "10rem", padding: "0.5rem" }}
+            body={getImgBodyTemplate(userAuth.division)}
             bodyClassName="text-center"
           />
         )}

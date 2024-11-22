@@ -135,7 +135,7 @@ export const TableHeader = (props) => {
           >
             <i className="pi pi-search" />
             <InputText
-              value={globalFilterValue}
+              value={globalFilterValue || ""}
               onChange={onGlobalFilterChange}
               placeholder="Поиск..."
             />

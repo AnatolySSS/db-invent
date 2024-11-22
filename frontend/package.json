@@ -43,6 +43,8 @@
     "primeflex": "3.3.0",
     "primeicons": "6.0.1",
     "primereact": "9.2.3",
+    "qr-code-styling": "^1.8.4",
+    "qrcode.react": "^4.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^5.0.1",

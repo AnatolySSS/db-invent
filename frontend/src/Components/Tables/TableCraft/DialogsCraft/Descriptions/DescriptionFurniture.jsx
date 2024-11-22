@@ -8,7 +8,6 @@ import styles from "./DescriptionCraft.module.css";
 import { multiStateCheckboxOptions } from "../../../Functions/Filters/getColumnFilterElement";
 import { getDropdownOptions } from "../Functions/getDropdownOptions";
 import { formatDate } from "../../../Functions/Helpers/formatDate";
-import { imgBodyTemplate } from "../../../Functions/Body/getColumnBody";
 
 export const DescriptionFurniture = (props) => {
   const { columns, item, disabled, setItem, values } = props;
