@@ -28,17 +28,17 @@ export const ADController = {
 
       const searchResult = await client.search("dc=sfurf,dc=office", opts);
 
-      for await (const entry of searchResult.entries) {
-        entries.push({
-          cn: entry.attributes.cn ? entry.attributes.cn[0] : null,
-          sn: entry.attributes.sn ? entry.attributes.sn[0] : null,
-          mail: entry.attributes.mail ? entry.attributes.mail[0] : null,
-          sAMAccountName: entry.attributes.sAMAccountName
-            ? entry.attributes.sAMAccountName[0]
-            : null,
-          dn: entry.dn,
-        });
-      }
+      //   for await (const entry of searchResult.entries) {
+      //     entries.push({
+      //       cn: entry.attributes.cn ? entry.attributes.cn[0] : null,
+      //       sn: entry.attributes.sn ? entry.attributes.sn[0] : null,
+      //       mail: entry.attributes.mail ? entry.attributes.mail[0] : null,
+      //       sAMAccountName: entry.attributes.sAMAccountName
+      //         ? entry.attributes.sAMAccountName[0]
+      //         : null,
+      //       dn: entry.dn,
+      //     });
+      //   }
 
       console.log("Результаты поиска:", searchResult);
 
@@ -49,7 +49,7 @@ export const ADController = {
 
       //   console.log(searchEntries);
 
-      responce.json({ entries });
+      responce.json({ searchResult });
     } catch (error) {
       console.log("__________ADController__getADData___________");
       console.log(error);
