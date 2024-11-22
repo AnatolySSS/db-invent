@@ -3,34 +3,60 @@ import { Client } from "ldapts";
 
 export const ADController = {
   async getADData(request, responce) {
+    const client = new Client({
+      url: "ldap://10.205.0.11:389",
+      bindDN: "cn=gitlab,cn=Users,dc=sfurf,dc=office",
+      // username: "gitlab@sfurf.office",
+      password: "Pdfi#1khgg",
+    });
     try {
-      let config = {
-        url: "ldap://10.205.0.11:389",
-        bindDN: "cn=gitlab,cn=Users,dc=sfurf,dc=office",
-        username: "gitlab@sfurf.office",
-        password: "Pdfi#1khgg",
+      //   let config = {
+      //     url: "ldap://10.205.0.11:389",
+      //     bindDN: "cn=gitlab,cn=Users,dc=sfurf,dc=office",
+      //     username: "gitlab@sfurf.office",
+      //     password: "Pdfi#1khgg",
+      //   };
+
+      await client.bind();
+      console.log("Успешно подключились к LDAP-серверу");
+
+      const opts = {
+        scope: "sub",
+        filter: "(objectClass=*)",
+        attributes: ["cn", "sn", "mail", "sAMAccountName"],
       };
-      const client = new Client({
-        url: config.url,
-      });
 
-      await client.bind(config.bindDN, config.password);
+      const searchResult = await client.search("dc=sfurf,dc=office", opts);
 
-      const { searchEntries, searchReferences } = await client.search(
-        "dc=sfurf,dc=office",
-        {
-          scope: "sub",
-          //   filter: "(mail=peter.parker@marvel.com)",
-        }
-      );
+      for await (const entry of searchResult.entries) {
+        entries.push({
+          cn: entry.attributes.cn ? entry.attributes.cn[0] : null,
+          sn: entry.attributes.sn ? entry.attributes.sn[0] : null,
+          mail: entry.attributes.mail ? entry.attributes.mail[0] : null,
+          sAMAccountName: entry.attributes.sAMAccountName
+            ? entry.attributes.sAMAccountName[0]
+            : null,
+          dn: entry.dn,
+        });
+      }
 
-      console.log(searchEntries);
+      console.log("Результаты поиска:", searchResult);
 
-      responce.json({ searchEntries });
+      //   const { searchEntries, searchReferences } = await client.search(
+      //     "dc=sfurf,dc=office",
+      //     opts
+      //   );
+
+      //   console.log(searchEntries);
+
+      responce.json({ entries });
     } catch (error) {
       console.log("__________ADController__getADData___________");
       console.log(error);
       responce.json(error);
+    } finally {
+      await client.unbind();
+      console.log("Соединение закрыто");
     }
   },
   async getADData2(request, responce) {
