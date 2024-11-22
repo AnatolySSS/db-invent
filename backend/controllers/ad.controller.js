@@ -26,7 +26,7 @@ export const ADController = {
 
       console.log(searchEntries);
 
-      responce.json({ searchEntries, searchReferences });
+      responce.json({ searchEntries });
     } catch (error) {
       console.log("__________ADController__getADData___________");
       console.log(error);
