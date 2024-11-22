@@ -20,28 +20,10 @@ export const ADController = {
         sizeLimit: 9000,
         scope: "sub",
         filter: "(&(objectClass=person)(title=*))",
-        // attributes: [
-        //   "cn",
-        //   "telephoneNumber",
-        //   "mail",
-        //   "department",
-        //   "title",
-        //   "objectclass",
-        // ],
+        attributes: ["cn", "telephoneNumber", "mail", "department", "title"],
       };
 
-      const { searchEntries } = await client.search("dc=sfurf,dc=office", opts);
-
-      let entries = [];
-      //   for await (const entry of searchEntries) {
-      //     if (entry.cn.length !== 0) {
-      //       entries.push(entry);
-      //     }
-      //   }
-
-      //   console.log("Результаты поиска:", searchResult);
-
-      //   console.log(searchEntries);
+      const searchEntries = await client.search("dc=sfurf,dc=office", opts);
 
       responce.json({ searchEntries });
     } catch (error) {
