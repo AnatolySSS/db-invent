@@ -1,7 +1,8 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
+import { AutoComplete } from "primereact/autocomplete";
 import { getDropdownOptions } from "../Functions/getDropdownOptions";
 import { getItemDialogFooter } from "../Functions/getItemDialogFooter";
 import styles from "./DialogCraftUsers.module.css";
@@ -20,13 +21,20 @@ export const DialogCraftUsers = (props) => {
     updateData,
     emptyItem,
     userAuth,
+    adUsers,
   } = props;
 
   const [disabled, setDisabled] = useState(true);
+  const [UserNames, setUserNames] = useState([]);
+
+  const adUsersFullNames = adUsers.map((user) => user.cn);
+  const search = (event) => {
+    setUserNames(adUsersFullNames.filter((item) => event.query === iter));
+  };
 
   //Переменная для массива наименований столбцов,
   //чтобы показывать только релевантные столбцы для конкретного филиала
-  let currentColumns = columns.map(column => column.field)
+  let currentColumns = columns.map((column) => column.field);
 
   return (
     <Dialog
@@ -46,49 +54,61 @@ export const DialogCraftUsers = (props) => {
         emptyItem,
         userAuth,
         disabled,
-        setDisabled,
+        setDisabled
       )}
       onHide={hideNew(setItemDialog, setDisabled)}
     >
       <div className="grid">
-        {currentColumns.includes("full_name") && <div className="col-12">
-          <label htmlFor="full_name" className={styles.label}>
-            ФИО пользователя
-          </label>
-          <InputText
-            id="full_name"
-            value={item.full_name || ""}
-            onChange={(e) => setItem({ ...item, full_name: e.target.value })}
-            autoFocus={true}
-            disabled={disabled}
-          />
-        </div>}
-        {currentColumns.includes("login") && <div className="col-8">
-          <label htmlFor="login" className={styles.label}>
-            Логин
-          </label>
-          <InputText
-            id="login"
-            value={item.login || ""}
-            onChange={(e) =>
-              setItem({ ...item, login: e.target.value })
-            }
-            disabled={disabled}
-          />
-        </div>}
-        {currentColumns.includes("role") && <div className="col-4">
-          <label htmlFor="role" className={styles.label}>
-            Роль
-          </label>
-          <Dropdown
-            id="role"
-            value={item.role || ""}
-            options={getDropdownOptions("role", values)}
-            onChange={(e) => setItem({ ...item, role: e.target.value })}
-            placeholder={item.role || ""}
-            disabled={disabled}
-          />
-        </div>}
+        {currentColumns.includes("full_name") && (
+          <div className="col-12">
+            <label htmlFor="full_name" className={styles.label}>
+              ФИО пользователя
+            </label>
+            <AutoComplete
+              id="full_name"
+              value={item.full_name || ""}
+              suggestions={UserNames}
+              completeMethod={search}
+              onChange={(e) => setItem({ ...item, full_name: e.target.value })}
+              forceSelection
+            />
+            <InputText
+              id="full_name"
+              value={item.full_name || ""}
+              onChange={(e) => setItem({ ...item, full_name: e.target.value })}
+              autoFocus={true}
+              disabled={disabled}
+            />
+          </div>
+        )}
+        {currentColumns.includes("login") && (
+          <div className="col-8">
+            <label htmlFor="login" className={styles.label}>
+              Логин
+            </label>
+            <InputText
+              id="login"
+              value={item.login || ""}
+              onChange={(e) => setItem({ ...item, login: e.target.value })}
+              disabled={disabled}
+            />
+          </div>
+        )}
+        {currentColumns.includes("role") && (
+          <div className="col-4">
+            <label htmlFor="role" className={styles.label}>
+              Роль
+            </label>
+            <Dropdown
+              id="role"
+              value={item.role || ""}
+              options={getDropdownOptions("role", values)}
+              onChange={(e) => setItem({ ...item, role: e.target.value })}
+              placeholder={item.role || ""}
+              disabled={disabled}
+            />
+          </div>
+        )}
       </div>
     </Dialog>
   );

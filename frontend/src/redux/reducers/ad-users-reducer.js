@@ -23,7 +23,7 @@ const setData = (data) => ({ type: SET_DATA, data });
 export const requestData = () => {
   return (dispatch) => {
     ADAPI.getData().then((data) => {
-      dispatch(setData(data));
+      dispatch(setData(data.data.searchEntries));
     });
   };
 };

@@ -15,7 +15,7 @@ import authReducer from "./reducers/auth-reducer";
 import appReducer from "./reducers/app-reducer";
 import thunkMiddleware from "redux-thunk";
 import usersDataReducer from "./reducers/users-data-reducer";
-import adReducer from "./reducers/ad-reducer";
+import adUsersReducer from "./reducers/ad-users-reducer";
 
 let reducers = combineReducers({
   itData: itDataReducer,
@@ -28,7 +28,7 @@ let reducers = combineReducers({
   app: appReducer,
   yearInventory: yearInventoryReducer,
   usersData: usersDataReducer,
-  ad: adReducer,
+  adUsers: adUsersReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

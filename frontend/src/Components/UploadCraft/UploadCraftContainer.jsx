@@ -9,7 +9,6 @@ import { setVisible } from "../../redux/reducers/side-bar-reducer";
 import { withAuthNavigate } from "../../hoc/withAuthNavigate";
 
 let mapStateToProps = (state) => {
-
   return {
     uploadedStatusIt: state.itData.uploadedStatus,
     uploadedStatusFurniture: state.furnitureData.uploadedStatus,
@@ -19,7 +18,7 @@ let mapStateToProps = (state) => {
   };
 };
 
-let mapDispatchToProps =  {
+let mapDispatchToProps = {
   uploadItData,
   uploadFurnitureData,
   uploadUnmarkedData,

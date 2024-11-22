@@ -35,6 +35,7 @@ const UsersCraft = (props) => {
     userAuth,
     isFetching,
     clearState,
+    adUsers,
   } = props;
 
   const [visibleColumns, setVisibleColumns] = useState(columns);
@@ -260,6 +261,7 @@ const UsersCraft = (props) => {
         updateData={updateData}
         emptyItem={emptyItem}
         userAuth={userAuth}
+        adUsers={adUsers}
       />
       <Dialog
         visible={deleteItemDialog}

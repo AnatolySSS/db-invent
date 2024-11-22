@@ -1,5 +1,5 @@
 import { AuthAPI } from "../../api/api";
-import { requestData } from "./ad-reducer";
+import { requestData } from "./ad-users-reducer";
 const SET_AUTH = "sodfu-inventory/authReducer/IS_AUTH";
 const SET_MESSAGE = "sodfu-inventory/authReducer/SET_MESSAGE";
 

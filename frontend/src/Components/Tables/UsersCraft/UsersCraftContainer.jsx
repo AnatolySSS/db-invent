@@ -23,6 +23,7 @@ let mapStateToProps = (state) => {
     message: state.usersData.message,
     userAuth: state.auth,
     isFetching: state.usersData.isFetching,
+    adUsers: state.adUsers,
   };
 };
 
