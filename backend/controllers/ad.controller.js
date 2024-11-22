@@ -20,12 +20,12 @@ export const ADController = {
       const opts = {
         sizeLimit: 1000,
         scope: "sub",
-        filter: "(objectClass=*)",
+        // filter: "(objectClass=*)",
         // attributes: ["cn", "sn", "mail", "sAMAccountName"],
       };
 
       const { searchEntries } = await client.search(
-        "ou=User,dc=sfurf,dc=office",
+        "ou=User Accounts,dc=sfurf,dc=office",
         opts
       );
 
