@@ -4,25 +4,27 @@ import { hideNew } from "./hideNew";
 import { saveItem } from "./saveItem";
 
 export const getItemDialogFooter = (
-    addData,
-    updateData,
-    data,
-    item,
-    setItemDialog,
-    setItem,
-    emptyItem,
-    userAuth,
-    disabled,
-    setDisabled,
-  ) => (
-    <React.Fragment>
-      <Button
-        label="Выйти"
-        icon="pi pi-times"
-        outlined
-        onClick={hideNew(setItemDialog, setDisabled)}
-      />
-      {userAuth.role == "admin" && (disabled ? (
+  addData,
+  updateData,
+  data,
+  item,
+  setItemDialog,
+  setItem,
+  emptyItem,
+  userAuth,
+  disabled,
+  setDisabled,
+  adUsers
+) => (
+  <React.Fragment>
+    <Button
+      label="Выйти"
+      icon="pi pi-times"
+      outlined
+      onClick={hideNew(setItemDialog, setDisabled)}
+    />
+    {userAuth.role == "admin" &&
+      (disabled ? (
         <Button
           type="submit"
           label="Изменить"
@@ -43,10 +45,10 @@ export const getItemDialogFooter = (
             setItem,
             emptyItem,
             userAuth,
-            setDisabled
+            setDisabled,
+            adUsers
           )}
         />
       ))}
-    </React.Fragment>
-  );
-  
+  </React.Fragment>
+);

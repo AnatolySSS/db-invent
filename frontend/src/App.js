@@ -15,10 +15,14 @@ import LoginCraftContainer from "./Components/LoginCraft/LoginCraftContainer";
 import YearInventoryContainer from "./Components/Tables/YearInventory/YearInventoryContainer";
 import ChartCraftContainer from "./Components/Charts/ChartCraftContainer";
 import UsersCraftContainer from "./Components/Tables/UsersCraft/UsersCraftContainer";
+import { getTableHeight } from "./Components/Tables/Functions/Helpers/getTableHeight";
 
 class App extends React.Component {
   async componentDidMount() {
     await this.props.initializeApp();
+    window.onresize = function (event) {
+      getTableHeight();
+    };
   }
   render() {
     return (

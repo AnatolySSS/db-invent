@@ -1,4 +1,4 @@
-import bcrypt from "bcryptjs"
+import bcrypt from "bcryptjs";
 import generator from "generate-password";
 import nodemailer from "nodemailer";
 import db from "../models/_index.js";
@@ -11,14 +11,22 @@ export const UsersController = {
 
       const { user, userValues, userColumns } = db.GLOBAL;
       let data = {};
-      
+
       data.lib = await user.findAll({
         where: { division: userDivision },
-        attributes: { exclude: ["createdAt", "is_auth", "last_logon", "password", "division"] },
+        attributes: {
+          exclude: [
+            "createdAt",
+            "is_auth",
+            "last_logon",
+            "password",
+            "division",
+          ],
+        },
       });
       data.columns = await userColumns.findAll();
       data.values = await userValues.findAll({
-        attributes: { exclude: ['id', 'createdAt', 'updatedAt'] }
+        attributes: { exclude: ["id", "createdAt", "updatedAt"] },
       });
       data.name = "Пользователи";
 
@@ -31,9 +39,15 @@ export const UsersController = {
       //Изменение null на "null"
       data.lib = data.lib.map((libObg) => {
         for (const libKey in libObg) {
-          data.columns.forEach(columnObg => {
-            if (columnObg.dbFieldType == "boolean" && columnObg.field == libKey) {
-              libObg[libKey] = libObg[libKey] === null ? libObg[libKey] === "null" : libObg[libKey];
+          data.columns.forEach((columnObg) => {
+            if (
+              columnObg.dbFieldType == "boolean" &&
+              columnObg.field == libKey
+            ) {
+              libObg[libKey] =
+                libObg[libKey] === null
+                  ? libObg[libKey] === "null"
+                  : libObg[libKey];
             }
           });
         }
@@ -79,22 +93,22 @@ export const UsersController = {
       //     },
       // });
 
-      let transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: 'anatoly.shilyaev@gmail.com',
-            pass: 'sqot kogx iijd fuyr',
-        },
-      });
+      // let transporter = nodemailer.createTransport({
+      //   service: 'gmail',
+      //   auth: {
+      //       user: 'anatoly.shilyaev@gmail.com',
+      //       pass: 'sqot kogx iijd fuyr',
+      //   },
+      // });
 
-      let result = await transporter.sendMail({
-          from: '"Inventory" <anatoly.shilyaev@gmail.com>',
-          to: `${rowData.login}@finombudsman.ru`,
-          subject: 'Инвентаризация (логин & пароль)',
-          html:`Учетные данные для входа в систему инвентаризации:<br><br>
-                <strong>Логин:</strong> ${rowData.login}<br>
-                <strong>Пароль:</strong> ${passwordGen}`,
-      });
+      // let result = await transporter.sendMail({
+      //     from: '"Inventory" <anatoly.shilyaev@gmail.com>',
+      //     to: `${rowData.login}@finombudsman.ru`,
+      //     subject: 'Инвентаризация (логин & пароль)',
+      //     html:`Учетные данные для входа в систему инвентаризации:<br><br>
+      //           <strong>Логин:</strong> ${rowData.login}<br>
+      //           <strong>Пароль:</strong> ${passwordGen}`,
+      // });
 
       responce.json();
     } catch (error) {

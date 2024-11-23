@@ -20,9 +20,9 @@ import { getTableHeight } from "../Functions/Helpers/getTableHeight";
 import { TableHeader } from "../../Common/TableHeader/TableHeader";
 import { DialogCraft } from "./DialogsCraft/DialogCraft";
 import { InputText } from "primereact/inputtext";
+import { AutoComplete } from "primereact/autocomplete";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Calendar } from "primereact/calendar";
-import { generateQRCode } from "../Functions/Body/getImgBodyTemplate2";
 
 const TableCraft = (props) => {
   let {
@@ -45,6 +45,7 @@ const TableCraft = (props) => {
     requestCurrentInventory,
     hasCurrentInventory,
     clearState,
+    adUsers,
   } = props;
 
   const [visibleColumns, setVisibleColumns] = useState([]);
@@ -85,13 +86,6 @@ const TableCraft = (props) => {
     creactLocale();
     locale("ru");
   }, []);
-
-  // useEffect(() => {
-  //   if (qrRefs.current[item.id] && !qrRefs.current[item.id].hasQRCode) {
-  //     generateQRCode(item.qrData, qrRefs.current[item.id]);
-  //     qrRefs.current[item.id].hasQRCode = true;
-  //   }
-  // }, [data]);
 
   useEffect(() => {
     getTableHeight();
@@ -218,6 +212,18 @@ const TableCraft = (props) => {
           />
         )}
       </React.Fragment>
+    );
+  };
+
+  const [UserNames, setUserNames] = useState([]);
+
+  const adUsersFullNames = adUsers.map((user) => user.cn);
+
+  const search = (event) => {
+    setUserNames(
+      adUsersFullNames.filter((item) =>
+        item.toLowerCase().includes(event.query.toLowerCase())
+      )
     );
   };
 
@@ -386,14 +392,25 @@ const TableCraft = (props) => {
         <div className="grid">
           <div className="col-8">
             <label htmlFor="name">ФИО</label>
-            <InputText
+            <AutoComplete
+              id="name"
+              value={transferedItem.name || ""}
+              suggestions={UserNames}
+              completeMethod={search}
+              onChange={(e) =>
+                setTransferItem({ ...transferedItem, name: e.target.value })
+              }
+              forceSelection
+              autoFocus={true}
+            />
+            {/* <InputText
               id="name"
               value={transferedItem.name || ""}
               onChange={(e) =>
                 setTransferItem({ ...transferedItem, name: e.target.value })
               }
               autoFocus={true}
-            />
+            /> */}
           </div>
           <div className="col-4">
             <label htmlFor="date">Дата перемещения</label>

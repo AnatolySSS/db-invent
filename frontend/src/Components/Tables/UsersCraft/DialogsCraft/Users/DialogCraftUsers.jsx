@@ -28,8 +28,6 @@ export const DialogCraftUsers = (props) => {
   const [UserNames, setUserNames] = useState([]);
 
   const adUsersFullNames = adUsers.map((user) => user.cn);
-  console.log(adUsers);
-  console.log(adUsersFullNames);
 
   const search = (event) => {
     setUserNames(
@@ -61,7 +59,8 @@ export const DialogCraftUsers = (props) => {
         emptyItem,
         userAuth,
         disabled,
-        setDisabled
+        setDisabled,
+        adUsers
       )}
       onHide={hideNew(setItemDialog, setDisabled)}
     >

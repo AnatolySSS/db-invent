@@ -28,6 +28,7 @@ let mapStateToProps = (state) => {
     isFetching: state.furnitureData.isFetching,
     validationStatus: state.furnitureData.validationStatus,
     hasCurrentInventory: state.yearInventory.hasCurrentInventory,
+    adUsers: state.adUsers.data,
   };
 };
 

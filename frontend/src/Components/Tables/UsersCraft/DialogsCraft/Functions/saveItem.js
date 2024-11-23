@@ -1,10 +1,26 @@
 import { formatDate } from "../../../Functions/Helpers/formatDate";
 import changeDateType from "../../../../../function-helpers/changeDateType";
-import { createId } from "./createId";
 
 export const saveItem =
-  (addData, updateData, data, item, setItemDialog, setItem, emptyItem, userAuth, setDisabled) =>
+  (
+    addData,
+    updateData,
+    data,
+    item,
+    setItemDialog,
+    setItem,
+    emptyItem,
+    userAuth,
+    setDisabled,
+    adUsers
+  ) =>
   () => {
+    adUsers.forEach((asUser) => {
+      if (asUser.cn === item.full_name) {
+        item.login = asUser.mail;
+      }
+    });
+
     setDisabled(true);
     let _item = { ...item };
 
@@ -23,13 +39,9 @@ export const saveItem =
         }
       }
     });
-
-    // _item.updatedAt = setCurrentDateTimeString();
     if (_item.id) {
       updateData(_item, userAuth.division);
     } else {
-      // _item.id = createId(data);
-      // _item.createdAt = setCurrentDateTimeString();
       addData(_item, userAuth.division);
     }
     setItemDialog(false);

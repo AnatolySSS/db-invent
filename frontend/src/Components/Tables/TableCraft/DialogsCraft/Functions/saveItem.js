@@ -1,7 +1,6 @@
 import { formatDate } from "../../../Functions/Helpers/formatDate";
 import changeDateType from "../../../../../function-helpers/changeDateType";
 import { createId } from "./createId";
-import { setCurrentDateTimeString } from "../../../Functions/Helpers/setCurrentDateTimeString";
 
 export const saveItem =
   (
@@ -36,13 +35,11 @@ export const saveItem =
       }
     });
 
-    // _item.updatedAt = setCurrentDateTimeString();
     if (_item.id) {
       _item.userName = userAuth.fullName;
       updateData(_item, userAuth.division);
     } else {
       _item.id = createId(data);
-      // _item.createdAt = setCurrentDateTimeString();
       addData(_item, userAuth.division);
     }
     setItemDialog(false);
