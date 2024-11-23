@@ -94,16 +94,16 @@ export const setUserMenuItems = (
           icon: "pi pi-file-word",
           command: makeCommitmentHelper,
         },
-        {
-          label: "Сформировать QR-коды",
-          icon: "pi pi-qrcode",
-          command: makeQRCodeHelper,
-        },
-        {
-          label: "Загрузить пользователей",
-          icon: "pi pi-users",
-          command: getUsers,
-        },
+        // {
+        //   label: "Сформировать QR-коды",
+        //   icon: "pi pi-qrcode",
+        //   command: makeQRCodeHelper,
+        // },
+        // {
+        //   label: "Загрузить пользователей",
+        //   icon: "pi pi-users",
+        //   command: getUsers,
+        // },
         {
           label: "Сформировать EXCEL",
           icon: "pi pi-file-excel",

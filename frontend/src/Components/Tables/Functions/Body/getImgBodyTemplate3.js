@@ -31,7 +31,7 @@ export const getImgBodyTemplate =
 
     return (
       <div className="flex align-items-center justify-content-center">
-        {qrCode}
+        {/* {qrCode} */}
       </div>
     );
   };

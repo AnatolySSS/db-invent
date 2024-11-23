@@ -352,6 +352,7 @@ const TableCraft = (props) => {
         updateData={updateData}
         emptyItem={emptyItem}
         userAuth={userAuth}
+        adUsersFullNames={adUsersFullNames}
       />
 
       {/* Удаление элемента */}

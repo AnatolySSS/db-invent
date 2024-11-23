@@ -1,68 +1,87 @@
+import { useState } from "react";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { InputNumber } from "primereact/inputnumber";
 import { Dropdown } from "primereact/dropdown";
 import { Calendar } from "primereact/calendar";
+import { AutoComplete } from "primereact/autocomplete";
 import { MultiStateCheckbox } from "primereact/multistatecheckbox";
 import styles from "./DescriptionCraft.module.css";
 import { multiStateCheckboxOptions } from "../../../Functions/Filters/getColumnFilterElement";
 import { getDropdownOptions } from "../Functions/getDropdownOptions";
 import { formatDate } from "../../../Functions/Helpers/formatDate";
+import { getImgBodyTemplate } from "../../../Functions/Body/getImgBodyTemplate3";
 
 export const DescriptionFurniture = (props) => {
-  const { columns, item, disabled, setItem, values } = props;
+  const { columns, item, disabled, setItem, values, adUsersFullNames } = props;
 
+  const [UserNames, setUserNames] = useState([]);
   //Переменная для массива наименований столбцов,
   //чтобы показывать только релевантные столбцы для конкретного филиала
   let currentColumns = columns.map((column) => column.field);
 
+  // const search = (event) => {
+  //   setUserNames(
+  //     adUsersFullNames.filter((item) =>
+  //       item.toLowerCase().includes(event.query.toLowerCase())
+  //     )
+  //   );
+  // };
+
   return (
-    <div className="grid">
-      {currentColumns.includes("name") && (
-        <div className="col-12">
-          <label htmlFor="name" className={styles.label}>
-            Наименование
-          </label>
-          <InputTextarea
-            id="name"
-            aria-describedby="name-help"
-            value={item.name || ""}
-            onChange={(e) => setItem({ ...item, name: e.target.value })}
-            autoFocus={true}
-            rows={3}
-            cols={20}
-            disabled={disabled}
-          />
+    <div className="grid nested-grid">
+      <div className="col-9">
+        <div className="grid">
+          {currentColumns.includes("name") && (
+            <div className="col-12">
+              <label htmlFor="name" className={styles.label}>
+                Наименование
+              </label>
+              <InputTextarea
+                id="name"
+                aria-describedby="name-help"
+                value={item.name || ""}
+                onChange={(e) => setItem({ ...item, name: e.target.value })}
+                autoFocus={true}
+                autoResize
+                rows={3}
+                cols={20}
+                disabled={disabled}
+              />
+            </div>
+          )}
+          {currentColumns.includes("inventary_number") && (
+            <div className="col-6">
+              <label htmlFor="inventary_number" className={styles.label}>
+                Инвентарный номер
+              </label>
+              <InputText
+                id="inventary_number"
+                value={item.inventary_number || ""}
+                onChange={(e) =>
+                  setItem({ ...item, inventary_number: e.target.value })
+                }
+                disabled={disabled}
+              />
+            </div>
+          )}
+          {currentColumns.includes("qr_code") && (
+            <div className="col-6">
+              <label htmlFor="qr_code" className={styles.label}>
+                QRCODE
+              </label>
+              <InputText
+                id="qr_code"
+                value={item.qr_code || ""}
+                onChange={(e) => setItem({ ...item, qr_code: e.target.value })}
+                disabled={disabled}
+              />
+            </div>
+          )}
         </div>
-      )}
-      {currentColumns.includes("inventary_number") && (
-        <div className="col-6">
-          <label htmlFor="inventary_number" className={styles.label}>
-            Инвентарный номер
-          </label>
-          <InputText
-            id="inventary_number"
-            value={item.inventary_number || ""}
-            onChange={(e) =>
-              setItem({ ...item, inventary_number: e.target.value })
-            }
-            disabled={disabled}
-          />
-        </div>
-      )}
-      {currentColumns.includes("qr_code") && (
-        <div className="col-6">
-          <label htmlFor="qr_code" className={styles.label}>
-            QRCODE
-          </label>
-          <InputText
-            id="qr_code"
-            value={item.qr_code || ""}
-            onChange={(e) => setItem({ ...item, qr_code: e.target.value })}
-            disabled={disabled}
-          />
-        </div>
-      )}
+      </div>
+      <div className="col-3 mt-4">{getImgBodyTemplate("")(item)}</div>
+
       {currentColumns.includes("type") && (
         <div className="col-6">
           <label htmlFor="type" className={styles.label}>
@@ -113,11 +132,20 @@ export const DescriptionFurniture = (props) => {
           <label htmlFor="owner" className={styles.label}>
             ФИО юзера
           </label>
+          {/* <AutoComplete
+            id="owner"
+            value={item.owner || ""}
+            suggestions={UserNames}
+            completeMethod={search}
+            onChange={(e) => setItem({ ...item, owner: e.target.value })}
+            forceSelection
+            disabled={disabled}
+          /> */}
           <InputText
             id="owner"
             value={item.owner || ""}
             onChange={(e) => setItem({ ...item, owner: e.target.value })}
-            disabled={disabled}
+            disabled={true}
           />
         </div>
       )}
@@ -234,6 +262,7 @@ export const DescriptionFurniture = (props) => {
             onChange={(e) =>
               setItem({ ...item, deleted_grounds: e.target.value })
             }
+            autoResize
             rows={1}
             cols={20}
             disabled={disabled}

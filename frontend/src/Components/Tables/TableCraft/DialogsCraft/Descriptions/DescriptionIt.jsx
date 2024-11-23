@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { InputNumber } from "primereact/inputnumber";
 import { Dropdown } from "primereact/dropdown";
 import { Calendar } from "primereact/calendar";
+import { AutoComplete } from "primereact/autocomplete";
 import { MultiStateCheckbox } from "primereact/multistatecheckbox";
 import styles from "./DescriptionCraft.module.css";
 import { multiStateCheckboxOptions } from "../../../Functions/Filters/getColumnFilterElement";
@@ -11,11 +13,21 @@ import { formatDate } from "../../../Functions/Helpers/formatDate";
 import { getImgBodyTemplate } from "../../../Functions/Body/getImgBodyTemplate3";
 
 export const DescriptionIt = (props) => {
-  const { columns, item, disabled, setItem, values, userAuth } = props;
+  const { columns, item, disabled, setItem, values, adUsersFullNames } = props;
+
+  const [UserNames, setUserNames] = useState([]);
 
   //Переменная для массива наименований столбцов,
   //чтобы показывать только релевантные столбцы для конкретного филиала
   let currentColumns = columns.map((column) => column.field);
+
+  // const search = (event) => {
+  //   setUserNames(
+  //     adUsersFullNames.filter((item) =>
+  //       item.toLowerCase().includes(event.query.toLowerCase())
+  //     )
+  //   );
+  // };
 
   return (
     <div className="grid nested-grid">
@@ -101,6 +113,15 @@ export const DescriptionIt = (props) => {
           <label htmlFor="owner" className={styles.label}>
             ФИО юзера
           </label>
+          {/* <AutoComplete
+            id="owner"
+            value={item.owner || ""}
+            suggestions={UserNames}
+            completeMethod={search}
+            onChange={(e) => setItem({ ...item, owner: e.target.value })}
+            forceSelection
+            disabled={disabled}
+          /> */}
           <InputText
             id="owner"
             value={item.owner || ""}

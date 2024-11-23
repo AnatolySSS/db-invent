@@ -24,6 +24,7 @@ export const DescriptionUnmarked = (props) => {
             value={item.name || ""}
             onChange={(e) => setItem({ ...item, name: e.target.value })}
             autoFocus={true}
+            autoResize
             rows={3}
             cols={20}
             disabled={disabled}
@@ -119,6 +120,7 @@ export const DescriptionUnmarked = (props) => {
             id="note"
             value={item.note || ""}
             onChange={(e) => setItem({ ...item, note: e.target.value })}
+            autoResize
             rows={3}
             cols={20}
             disabled={disabled}
