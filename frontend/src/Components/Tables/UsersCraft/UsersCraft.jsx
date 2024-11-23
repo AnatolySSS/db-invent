@@ -62,10 +62,6 @@ const UsersCraft = (props) => {
 
   const [item, setItem] = useState(emptyItem);
 
-  window.onresize = function (event) {
-    getTableHeight();
-  };
-
   useEffect(() => {
     requestData(userAuth.division);
     initFilters();

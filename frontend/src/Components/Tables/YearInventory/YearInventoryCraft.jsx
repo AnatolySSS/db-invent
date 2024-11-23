@@ -50,10 +50,6 @@ const YearInventoryCraft = (props) => {
     }
   });
 
-  window.onresize = function (event) {
-    getTableHeight();
-  };
-
   useEffect(() => {
     initFilters();
     creactLocale();

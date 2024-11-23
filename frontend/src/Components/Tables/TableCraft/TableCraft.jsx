@@ -78,10 +78,6 @@ const TableCraft = (props) => {
   const [item, setItem] = useState(emptyItem);
   const [transferedItem, setTransferItem] = useState(emptyTransferItem);
 
-  window.onresize = function (event) {
-    getTableHeight();
-  };
-
   useEffect(() => {
     requestData(userAuth.division);
     requestCurrentInventory(type, userAuth.division);

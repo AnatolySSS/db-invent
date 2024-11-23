@@ -55,9 +55,13 @@ export async function makeQRCode(selectedItems) {
     pdf.text(selectedItems[totalCounter - 1].qr_code, x + 10, y + 45);
   };
 
-  for (const canvas of canvasContainers) {
+  for (const container of canvasContainers) {
     ++totalCounter;
-    let img = canvas.children[0].toDataURL("image/png");
+
+    let img = container.children[0].toDataURL("image/png");
+    console.log(container);
+
+    console.log(img);
     addImagetoPDF(img);
 
     totalCounter % 4 === 0 ? (y += 48) : (y = y);
@@ -69,5 +73,5 @@ export async function makeQRCode(selectedItems) {
       y = 8;
     }
   }
-  pdf.save("canvas.pdf");
+  // pdf.save("canvas.pdf");
 }

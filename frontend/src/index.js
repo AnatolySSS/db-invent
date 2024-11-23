@@ -5,6 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import store from "./redux/store";
 import { Provider } from "react-redux";
+import { getTableHeight } from "./Components/Tables/Functions/Helpers/getTableHeight";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -15,6 +16,10 @@ root.render(
   </Provider>
   // </React.StrictMode>
 );
+
+window.onresize = function (event) {
+  getTableHeight();
+};
 
 window.store = store;
 
