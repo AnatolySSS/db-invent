@@ -24,7 +24,8 @@ export const setUserMenuItems = (
   requestCurrentInventory,
   emptyItem,
   setItem,
-  setItemDialog
+  setItemDialog,
+  adUsers
 ) => {
   const openNew = () => {
     setItem(emptyItem);
@@ -38,7 +39,7 @@ export const setUserMenuItems = (
   };
 
   const makeCommitmentHelper = () =>
-    makeCommitment(selectedItems, userAuth.fullName);
+    makeCommitment(selectedItems, adUsers, userAuth.fullName);
 
   const makeQRCodeHelper = () => makeQRCode(selectedItems, userAuth.division);
 

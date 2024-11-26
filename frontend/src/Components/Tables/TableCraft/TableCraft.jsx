@@ -268,6 +268,7 @@ const TableCraft = (props) => {
             requestCurrentInventory={requestCurrentInventory}
             clearState={clearState}
             userMenuType="main"
+            adUsers={adUsers}
           />
         }
         paginator

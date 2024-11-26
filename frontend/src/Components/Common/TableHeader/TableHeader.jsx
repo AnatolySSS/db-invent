@@ -35,6 +35,7 @@ export const TableHeader = (props) => {
     beginInventory,
     requestCurrentInventory,
     clearState,
+    adUsers,
   } = props;
 
   const userMenu = useRef(null);
@@ -84,7 +85,8 @@ export const TableHeader = (props) => {
     requestCurrentInventory,
     emptyItem,
     setItem,
-    setItemDialog
+    setItemDialog,
+    adUsers
   );
 
   return (

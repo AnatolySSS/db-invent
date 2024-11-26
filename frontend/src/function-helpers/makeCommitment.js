@@ -21,8 +21,21 @@ import {
 import { inclineFirstname, inclineMiddlename, inclineLastname } from "lvovich";
 import { saveAs } from "file-saver";
 
-export function makeCommitment(selectedItems, fullName) {
-console.log(selectedItems);
+export function makeCommitment(selectedItems, adUsers, fullName) {
+  const department = adUsers.filter(
+    (user) => user.cn == selectedItems[0].owner
+  )[0]?.department;
+  console.log(department);
+
+  const title = adUsers.filter((user) => user.cn == selectedItems[0].owner)[0]
+    ?.title;
+  console.log(title);
+
+  const telephoneNumber = adUsers.filter(
+    (user) => user.cn == selectedItems[0].owner
+  )[0]?.telephoneNumber;
+  console.log(telephoneNumber);
+
   let owners = [];
   let names = [];
   selectedItems.forEach((item) => {
@@ -366,7 +379,11 @@ console.log(selectedItems);
                     children: [
                       new Paragraph({
                         style: "myCustomStyle",
-                        children: [],
+                        children: [
+                          new TextRun({
+                            text: department,
+                          }),
+                        ],
                         alignment: AlignmentType.CENTER,
                       }),
                     ],
@@ -400,7 +417,11 @@ console.log(selectedItems);
                     children: [
                       new Paragraph({
                         style: "myCustomStyle",
-                        children: [],
+                        children: [
+                          new TextRun({
+                            text: title,
+                          }),
+                        ],
                         alignment: AlignmentType.CENTER,
                       }),
                     ],
@@ -476,7 +497,11 @@ console.log(selectedItems);
                     children: [
                       new Paragraph({
                         style: "myCustomStyle",
-                        children: [],
+                        children: [
+                          new TextRun({
+                            text: telephoneNumber,
+                          }),
+                        ],
                         alignment: AlignmentType.CENTER,
                       }),
                     ],
