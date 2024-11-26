@@ -17,7 +17,7 @@ export const saveItem =
   () => {
     adUsers.forEach((asUser) => {
       if (asUser.cn === item.full_name) {
-        item.login = asUser.mail;
+        item.login = asUser.mailNickname;
       }
     });
 

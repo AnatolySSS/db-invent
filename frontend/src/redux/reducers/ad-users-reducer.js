@@ -10,6 +10,7 @@ let initialState = {
         "Отдел перспективного развития и новых технологий Управления информатизации",
       dn: "",
       mail: "anatoly_shilyaev@mail.ru",
+      mailNickname: "anatoly_shilyaev",
       telephoneNumber: "9200124721",
       title: "Главный эксперт",
     },

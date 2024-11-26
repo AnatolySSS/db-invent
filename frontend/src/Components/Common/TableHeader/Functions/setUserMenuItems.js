@@ -38,8 +38,29 @@ export const setUserMenuItems = (
     logout();
   };
 
-  const makeCommitmentHelper = () =>
-    makeCommitment(selectedItems, adUsers, userAuth.fullName);
+  const makeCommitmentHelper = () => {
+    //Получение массива текущих пользователей
+    const owners = selectedItems.map((item) => item.owner);
+    //Проверка на совпадение пользователя (пользователь должен быть один и тот же)
+    let check = true;
+    for (let i = 1; i < owners.length; i++) {
+      if (owners[0] !== owners[i]) {
+        check = false;
+        break;
+      }
+    }
+    if (check) {
+      return makeCommitment(selectedItems, adUsers, userAuth.fullName);
+    } else {
+      userToast.current.show({
+        severity: "info",
+        summary: "Предупреждение",
+        detail:
+          "Выбранные единицы оборудования закреплены за разными сотрудниками",
+        life: 3000,
+      });
+    }
+  };
 
   const makeQRCodeHelper = () => makeQRCode(selectedItems, userAuth.division);
 
