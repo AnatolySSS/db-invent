@@ -123,5 +123,5 @@ const sidToString = (base64) => {
   const ADDR = LE_SID_HEX.split("-");
 
   const SID = "S-1-" + ADDR.map((x) => parseInt(x, 16)).join("-");
-  return G;
+  return SID;
 };
