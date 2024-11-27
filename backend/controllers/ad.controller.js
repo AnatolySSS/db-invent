@@ -38,7 +38,11 @@ export const ADController = {
       console.log(searchEntries[10]);
 
       searchEntries = searchEntries.map((entry) => {
-        return { ...entry, objectSid2: sidToString(entry.objectSid) };
+        return {
+          ...entry,
+          objectSid: sidToString(entry.objectSid),
+          objectGUID: sidToString(entry.objectGUID),
+        };
       });
 
       responce.json({ searchEntries });
