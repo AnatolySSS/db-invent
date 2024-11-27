@@ -74,42 +74,35 @@ export const ADController = {
 };
 
 function decodeSID(sid) {
-  const strSid = ["S"];
+  const strSid = new StringBuilder("S-");
 
-  // Первый байт (byte[0]) — это уровень ревизии (revision level)
+  // get byte(0) - revision level
   const revision = sid[0];
-  strSid.push(revision.toString());
+  strSid.append(revision);
 
-  // Второй байт (byte[1]) — количество под-идентификаторов (sub-authorities)
+  //next byte byte(1) - count of sub-authorities
   const countSubAuths = sid[1] & 0xff;
+  strSid.append("-");
 
-  // Байты с 2 по 7 (byte[2-7]) — это 48-битный идентификатор органа (authority ID, Big-Endian)
-  let authority = 0n; // Используем BigInt для работы с большими числами
+  //byte(2-7) - 48 bit authority ([Big-Endian])
+  let authority = 0;
   for (let i = 2; i <= 7; i++) {
-    authority |= BigInt(sid[i]) << BigInt(8 * (5 - (i - 2)));
+    authority |= (sid[i] & 0xff) << (8 * (5 - (i - 2)));
   }
-  strSid.push(authority.toString(10)); // Преобразуем authority в строку в десятичной системе
+  strSid.append(authority.toString(16));
 
-  // Байты, следующие за authority, — это идентификаторы под-органов (sub-authorities, Little-Endian)
+  //iterate all the sub-auths and then countSubAuths x 32 bit sub authorities ([Little-Endian])
   let offset = 8;
-  const size = 4; // Каждый под-идентификатор занимает 4 байта
+  let size = 4;
   for (let j = 0; j < countSubAuths; j++) {
     let subAuthority = 0;
     for (let k = 0; k < size; k++) {
-      subAuthority |= (sid[offset + k] & 0xff) << (8 * k); // Little-Endian
+      subAuthority |= (sid[offset + k] & 0xff) << (8 * k);
     }
-    strSid.push(subAuthority.toString(10)); // Добавляем значение subAuthority в строку
+    strSid.append("-");
+    strSid.append(subAuthority.toString(16));
     offset += size;
   }
 
-  // Возвращаем строку SID в формате "S-1-..."
-  return strSid.join("-");
+  return strSid.toString();
 }
-
-// Пример использования:
-const sid = Buffer.from([
-  1, 5, 0, 0, 0, 0, 0, 5, 21, 0, 0, 0, 255, 255, 255, 255, 1, 0, 0, 0, 44, 0, 0,
-  0,
-]);
-console.log(decodeSID(sid));
-// Вывод: "S-1-5-21-4294967295-1-44"
