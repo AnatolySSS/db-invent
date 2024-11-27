@@ -20,6 +20,7 @@ export const ADController = {
         sizeLimit: 1000,
         scope: "sub",
         filter: "(&(objectClass=person)(title=*))",
+        explicitBufferAttributes: ["objectGUID", "objectSid"],
         // attributes: [
         //   "cn",
         //   "telephoneNumber",
