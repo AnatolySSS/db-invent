@@ -53,15 +53,16 @@ export const ADController = {
   },
   async getADData(request, responce) {
     try {
-      let ad = new ActiveDirectory(config);
+      let ad = new ActiveDirectory(config).promiseWrapper;
       ad.find("dc=sfurf,dc=office", (err, results) => {
         if (err || !results) {
           console.log("ERROR: " + JSON.stringify(err));
           return;
         }
         // console.log(results);
-        responce.json({ ad });
+        // responce.json({ ad });
       });
+      responce.json({ ad });
     } catch (error) {
       console.log("__________ADController__getADData___________");
       console.log(error);
