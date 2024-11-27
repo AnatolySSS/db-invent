@@ -8,7 +8,7 @@ let config = {
 };
 
 export const ADController = {
-  async getADData(request, responce) {
+  async getADData2(request, responce) {
     const client = new Client({
       url: config.url,
     });
@@ -29,7 +29,6 @@ export const ADController = {
           "title",
           "objectGUID",
           "objectSid",
-          "raw",
         ],
       };
 
@@ -52,21 +51,15 @@ export const ADController = {
       console.log("Соединение закрыто");
     }
   },
-  async getADData2(request, responce) {
+  async getADData(request, responce) {
     try {
-      let config = {
-        url: "ldap://10.205.0.11:389",
-        baseDN: "cn=gitlab,cn=Users,dc=sfurf,dc=office",
-        username: "gitlab@sfurf.office",
-        password: "Pdfi#1khgg",
-      };
       let ad = new ActiveDirectory(config);
-      ad.find("cn=*Exchange*", (err, results) => {
+      ad.find("dc=sfurf,dc=office", (err, results) => {
         if (err || !results) {
           console.log("ERROR: " + JSON.stringify(err));
           return;
         }
-        console.log(results);
+        // console.log(results);
         responce.json({ ad });
       });
     } catch (error) {
