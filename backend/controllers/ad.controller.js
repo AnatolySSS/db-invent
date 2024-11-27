@@ -27,8 +27,8 @@ export const ADController = {
           "mailNickname",
           "department",
           "title",
-          "ObjectGUID",
-          "SID",
+          "objectGUID",
+          "objectSid",
         ],
       };
 
