@@ -35,7 +35,7 @@ export const ADController = {
       let { searchEntries } = await client.search("dc=sfurf,dc=office", opts);
 
       searchEntries = searchEntries.map((entry) => {
-        return { ...entry, objectSid: decodeSID(entry.objectSid) };
+        return { ...entry, objectSid: sidToString(entry.objectSid) };
       });
 
       responce.json({ searchEntries });
@@ -73,36 +73,55 @@ export const ADController = {
   },
 };
 
-function decodeSID(sid) {
-  const strSid = new StringBuilder("S-");
+const sidToString = (base64) => {
+  //Конвертируем строку base64 в Buffer, а потом его преобразуем в HEX
+  const buffer = Buffer.from(base64, "base64");
+  const array = buffer.toString("hex"); //010500000000000515000000e967bb98d6b7d7bf82051e6c28060000
+  const G = array.toString().match(/.{1,2}/g);
 
-  // get byte(0) - revision level
-  const revision = sid[0];
-  strSid.append(revision);
+  /* G array
+    [
+      '01', '05', '00', '00', '00',
+      '00', '00', '05', '15', '00',
+      '00', '00', 'e9', '67', 'bb',
+      '98', 'd6', 'b7', 'd7', 'bf',
+      '82', '05', '1e', '6c', '28',
+      '06', '00', '00'
+    ]
+    */
 
-  //next byte byte(1) - count of sub-authorities
-  const countSubAuths = sid[1] & 0xff;
-  strSid.append("-");
+  const BESA2 = `${G[8]}${G[9]}${G[10]}${G[11]}`;
+  const BESA3 = `${G[12]}${G[13]}${G[14]}${G[15]}`;
+  const BESA4 = `${G[16]}${G[17]}${G[18]}${G[19]}`;
+  const BESA5 = `${G[20]}${G[21]}${G[22]}${G[23]}`;
+  const BERID = `${G[24]}${G[25]}${G[26]}${G[27]}`;
+  const LESA1 = `${G[2]}${G[3]}${G[4]}${G[5]}${G[6]}${G[7]}`;
 
-  //byte(2-7) - 48 bit authority ([Big-Endian])
-  let authority = 0;
-  for (let i = 2; i <= 7; i++) {
-    authority |= (sid[i] & 0xff) << (8 * (5 - (i - 2)));
-  }
-  strSid.append(authority.toString(16));
+  const LESA2 = `${BESA2.substr(6, 2)}${BESA2.substr(4, 2)}${BESA2.substr(
+    2,
+    2
+  )}${BESA2.substr(0, 2)}`;
+  const LESA3 = `${BESA3.substr(6, 2)}${BESA3.substr(4, 2)}${BESA3.substr(
+    2,
+    2
+  )}${BESA3.substr(0, 2)}`;
+  const LESA4 = `${BESA4.substr(6, 2)}${BESA4.substr(4, 2)}${BESA4.substr(
+    2,
+    2
+  )}${BESA4.substr(0, 2)}`;
+  const LESA5 = `${BESA5.substr(6, 2)}${BESA5.substr(4, 2)}${BESA5.substr(
+    2,
+    2
+  )}${BESA5.substr(0, 2)}`;
+  const LERID = `${BERID.substr(6, 2)}${BERID.substr(4, 2)}${BERID.substr(
+    2,
+    2
+  )}${BERID.substr(0, 2)}`;
 
-  //iterate all the sub-auths and then countSubAuths x 32 bit sub authorities ([Little-Endian])
-  let offset = 8;
-  let size = 4;
-  for (let j = 0; j < countSubAuths; j++) {
-    let subAuthority = 0;
-    for (let k = 0; k < size; k++) {
-      subAuthority |= (sid[offset + k] & 0xff) << (8 * k);
-    }
-    strSid.append("-");
-    strSid.append(subAuthority.toString(16));
-    offset += size;
-  }
+  const LE_SID_HEX = `${LESA1}-${LESA2}-${LESA3}-${LESA4}-${LESA5}-${LERID}`;
 
-  return strSid.toString();
-}
+  const ADDR = LE_SID_HEX.split("-");
+
+  const SID = "S-1-" + ADDR.map((x) => parseInt(x, 16)).join("-");
+  return G;
+};
