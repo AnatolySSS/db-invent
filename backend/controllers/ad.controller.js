@@ -20,14 +20,14 @@ export const ADController = {
         sizeLimit: 1000,
         scope: "sub",
         filter: "(&(objectClass=person)(title=*))",
-        attributes: [
-          "cn",
-          "telephoneNumber",
-          "mail",
-          "mailNickname",
-          "department",
-          "title",
-        ],
+        // attributes: [
+        //   "cn",
+        //   "telephoneNumber",
+        //   "mail",
+        //   "mailNickname",
+        //   "department",
+        //   "title",
+        // ],
       };
 
       const { searchEntries } = await client.search("dc=sfurf,dc=office", opts);
