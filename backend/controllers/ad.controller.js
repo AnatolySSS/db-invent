@@ -32,7 +32,11 @@ export const ADController = {
         ],
       };
 
-      const { searchEntries } = await client.search("dc=sfurf,dc=office", opts);
+      let { searchEntries } = await client.search("dc=sfurf,dc=office", opts);
+
+      searchEntries = searchEntries.map((entry) => {
+        return { ...entry, objectSid: decodeObjectSid(entry.objectSid) };
+      });
 
       responce.json({ searchEntries });
     } catch (error) {
@@ -68,3 +72,17 @@ export const ADController = {
     }
   },
 };
+
+function decodeObjectSid(buffer) {
+  let sid = "S-";
+  // Первый байт — это версия
+  sid += buffer[0].toString();
+  // Следующие 6 байтов — это идентификатор органа (Authority ID)
+  sid += "-" + buffer.readUIntBE(2, 6).toString();
+  // Оставшиеся байты — это идентификаторы под-авторитетов (Sub-authorities)
+  const subAuthorityCount = buffer[1];
+  for (let i = 0; i < subAuthorityCount; i++) {
+    sid += "-" + buffer.readUInt32LE(8 + i * 4).toString();
+  }
+  return sid;
+}
