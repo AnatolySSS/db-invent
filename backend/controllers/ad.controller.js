@@ -35,7 +35,6 @@ export const ADController = {
       let { searchEntries } = await client.search("dc=sfurf,dc=office", opts);
 
       console.log(searchEntries[10].objectGUID);
-      console.log(searchEntries[10].objectSid);
 
       // searchEntries = searchEntries.map((entry) => {
       //   return { ...entry, objectSid2: sidToString(entry.objectSid) };
