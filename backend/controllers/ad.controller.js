@@ -35,7 +35,7 @@ export const ADController = {
       let { searchEntries } = await client.search("dc=sfurf,dc=office", opts);
 
       searchEntries = searchEntries.map((entry) => {
-        return { ...entry, objectSid: sidToString(entry.objectSid) };
+        return { ...entry, objectSid: decodeSID(entry.objectSid) };
       });
 
       responce.json({ searchEntries });
@@ -73,55 +73,43 @@ export const ADController = {
   },
 };
 
-const sidToString = (base64) => {
-  //Конвертируем строку base64 в Buffer, а потом его преобразуем в HEX
-  const buffer = Buffer.from(base64, "base64");
-  const array = buffer.toString("hex"); //010500000000000515000000e967bb98d6b7d7bf82051e6c28060000
-  const G = array.toString().match(/.{1,2}/g);
+function decodeSID(sid) {
+  const strSid = ["S"];
 
-  /* G array
-    [
-      '01', '05', '00', '00', '00',
-      '00', '00', '05', '15', '00',
-      '00', '00', 'e9', '67', 'bb',
-      '98', 'd6', 'b7', 'd7', 'bf',
-      '82', '05', '1e', '6c', '28',
-      '06', '00', '00'
-    ]
-    */
+  // Первый байт (byte[0]) — это уровень ревизии (revision level)
+  const revision = sid[0];
+  strSid.push(revision.toString());
 
-  const BESA2 = `${G[8]}${G[9]}${G[10]}${G[11]}`;
-  const BESA3 = `${G[12]}${G[13]}${G[14]}${G[15]}`;
-  const BESA4 = `${G[16]}${G[17]}${G[18]}${G[19]}`;
-  const BESA5 = `${G[20]}${G[21]}${G[22]}${G[23]}`;
-  const BERID = `${G[24]}${G[25]}${G[26]}${G[27]}`;
-  const LESA1 = `${G[2]}${G[3]}${G[4]}${G[5]}${G[6]}${G[7]}`;
+  // Второй байт (byte[1]) — количество под-идентификаторов (sub-authorities)
+  const countSubAuths = sid[1] & 0xff;
 
-  const LESA2 = `${BESA2.substr(6, 2)}${BESA2.substr(4, 2)}${BESA2.substr(
-    2,
-    2
-  )}${BESA2.substr(0, 2)}`;
-  const LESA3 = `${BESA3.substr(6, 2)}${BESA3.substr(4, 2)}${BESA3.substr(
-    2,
-    2
-  )}${BESA3.substr(0, 2)}`;
-  const LESA4 = `${BESA4.substr(6, 2)}${BESA4.substr(4, 2)}${BESA4.substr(
-    2,
-    2
-  )}${BESA4.substr(0, 2)}`;
-  const LESA5 = `${BESA5.substr(6, 2)}${BESA5.substr(4, 2)}${BESA5.substr(
-    2,
-    2
-  )}${BESA5.substr(0, 2)}`;
-  const LERID = `${BERID.substr(6, 2)}${BERID.substr(4, 2)}${BERID.substr(
-    2,
-    2
-  )}${BERID.substr(0, 2)}`;
+  // Байты с 2 по 7 (byte[2-7]) — это 48-битный идентификатор органа (authority ID, Big-Endian)
+  let authority = 0n; // Используем BigInt для работы с большими числами
+  for (let i = 2; i <= 7; i++) {
+    authority |= BigInt(sid[i]) << BigInt(8 * (5 - (i - 2)));
+  }
+  strSid.push(authority.toString(10)); // Преобразуем authority в строку в десятичной системе
 
-  const LE_SID_HEX = `${LESA1}-${LESA2}-${LESA3}-${LESA4}-${LESA5}-${LERID}`;
+  // Байты, следующие за authority, — это идентификаторы под-органов (sub-authorities, Little-Endian)
+  let offset = 8;
+  const size = 4; // Каждый под-идентификатор занимает 4 байта
+  for (let j = 0; j < countSubAuths; j++) {
+    let subAuthority = 0;
+    for (let k = 0; k < size; k++) {
+      subAuthority |= (sid[offset + k] & 0xff) << (8 * k); // Little-Endian
+    }
+    strSid.push(subAuthority.toString(10)); // Добавляем значение subAuthority в строку
+    offset += size;
+  }
 
-  const ADDR = LE_SID_HEX.split("-");
+  // Возвращаем строку SID в формате "S-1-..."
+  return strSid.join("-");
+}
 
-  const SID = "S-1-" + ADDR.map((x) => parseInt(x, 16)).join("-");
-  return array;
-};
+// Пример использования:
+const sid = Buffer.from([
+  1, 5, 0, 0, 0, 0, 0, 5, 21, 0, 0, 0, 255, 255, 255, 255, 1, 0, 0, 0, 44, 0, 0,
+  0,
+]);
+console.log(decodeSID(sid));
+// Вывод: "S-1-5-21-4294967295-1-44"
