@@ -21,25 +21,25 @@ export const ADController = {
         scope: "sub",
         filter: "(&(objectClass=person)(title=*))",
         explicitBufferAttributes: ["objectGUID", "objectSid"],
-        // attributes: [
-        //   "cn",
-        //   "telephoneNumber",
-        //   "mail",
-        //   "mailNickname",
-        //   "department",
-        //   "title",
-        //   "objectGUID",
-        //   "objectSid",
-        // ],
+        attributes: [
+          "cn",
+          "telephoneNumber",
+          "mail",
+          "mailNickname",
+          "department",
+          "title",
+          "objectGUID",
+          "objectSid",
+        ],
       };
 
       let { searchEntries } = await client.search("dc=sfurf,dc=office", opts);
 
       console.log(searchEntries[10]);
 
-      // searchEntries = searchEntries.map((entry) => {
-      //   return { ...entry, objectSid2: sidToString(entry.objectSid) };
-      // });
+      searchEntries = searchEntries.map((entry) => {
+        return { ...entry, objectSid2: sidToString(entry.objectSid) };
+      });
 
       responce.json({ searchEntries });
     } catch (error) {
