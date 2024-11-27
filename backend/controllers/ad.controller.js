@@ -8,7 +8,7 @@ let config = {
 };
 
 export const ADController = {
-  async getADData2(request, responce) {
+  async getADData(request, responce) {
     const client = new Client({
       url: config.url,
     });
@@ -20,16 +20,16 @@ export const ADController = {
         sizeLimit: 1000,
         scope: "sub",
         filter: "(&(objectClass=person)(title=*))",
-        attributes: [
-          "cn",
-          "telephoneNumber",
-          "mail",
-          "mailNickname",
-          "department",
-          "title",
-          "objectGUID",
-          "objectSid",
-        ],
+        // attributes: [
+        //   "cn",
+        //   "telephoneNumber",
+        //   "mail",
+        //   "mailNickname",
+        //   "department",
+        //   "title",
+        //   "objectGUID",
+        //   "objectSid",
+        // ],
       };
 
       let { searchEntries } = await client.search("dc=sfurf,dc=office", opts);
@@ -37,9 +37,9 @@ export const ADController = {
       // console.log(searchEntries[10]);
       // console.log(searchEntries[10].objectSid);
 
-      searchEntries = searchEntries.map((entry) => {
-        return { ...entry, objectSid2: sidToString(entry.objectSid) };
-      });
+      // searchEntries = searchEntries.map((entry) => {
+      //   return { ...entry, objectSid2: sidToString(entry.objectSid) };
+      // });
 
       responce.json({ searchEntries });
     } catch (error) {
@@ -51,9 +51,9 @@ export const ADController = {
       console.log("Соединение закрыто");
     }
   },
-  async getADData(request, responce) {
+  async getADData2(request, responce) {
     try {
-      let ad = new ActiveDirectory(config).promiseWrapper;
+      let ad = new ActiveDirectory(config);
       ad.find("dc=sfurf,dc=office", (err, results) => {
         if (err || !results) {
           console.log("ERROR: " + JSON.stringify(err));
