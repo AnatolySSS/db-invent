@@ -88,15 +88,15 @@ const toggleIsFetching = (isFetching) => ({
 export const getDatafromAD = () => {
   return async (dispatch) => {
     const data = await ADAPI.getData();
-    // data.code !== "ECONNREFUSED" && dispatch(setData(data.searchEntries));
+    data.code !== "ECONNREFUSED" && dispatch(setData(data.searchEntries));
   };
 };
 
 export const requestData = () => {
   return async (dispatch) => {
     dispatch(toggleIsFetching(true));
-    const data = await ADAPI.getUsers();
-    dispatch(setData(data));
+    // const data = await ADAPI.getUsers();
+    // dispatch(setData(data));
     dispatch(toggleIsFetching(false));
   };
 };

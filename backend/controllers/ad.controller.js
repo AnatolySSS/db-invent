@@ -43,7 +43,7 @@ export const ADController = {
         };
       });
 
-      for (const obj of searchEntries) await adUser.create(obj);
+      // for (const obj of searchEntries) await adUser.create(obj);
 
       responce.json({ searchEntries });
     } catch (error) {
