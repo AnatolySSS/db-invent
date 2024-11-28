@@ -66,7 +66,7 @@ const ADUsersCraft = (props) => {
     ...new Set(
       data
         .map((element) => element.department)
-        .filter((element) => element !== "")
+        .filter((element) => element.length !== 0)
     ),
   ];
   console.log(values);
