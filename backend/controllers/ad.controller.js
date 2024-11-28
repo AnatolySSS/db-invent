@@ -48,7 +48,7 @@ export const ADController = {
       data.name = "Сотрудники";
       // for (const obj of searchEntries) await adUser.create(obj);
 
-      responce.json({ data });
+      responce.json(data);
     } catch (error) {
       console.log("__________ADController__getADData___________");
       console.log(error);
