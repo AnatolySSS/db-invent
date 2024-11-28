@@ -62,7 +62,13 @@ const ADUsersCraft = (props) => {
 
   const [item, setItem] = useState(emptyItem);
 
-  values = [...new Set(data.map((element) => element.department))];
+  values = [
+    ...new Set(
+      data
+        .map((element) => element.department)
+        .filter((element) => element !== "")
+    ),
+  ];
   console.log(values);
 
   useEffect(() => {
