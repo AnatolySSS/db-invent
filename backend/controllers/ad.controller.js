@@ -13,7 +13,7 @@ export const ADController = {
       url: config.url,
     });
     try {
-      const { adUser } = db.GLOBAL;
+      const { adUser, adUserColumns } = db.GLOBAL;
 
       await client.bind(config.bindDN, config.password);
       console.log("Успешно подключились к LDAP-серверу");
@@ -42,10 +42,13 @@ export const ADController = {
           objectSid: sidToString(entry.objectSid),
         };
       });
-
+      let data = {};
+      data.lib = JSON.parse(JSON.stringify(searchEntries));
+      data.columns = await adUserColumns.findAll();
+      data.name = "Сотрудники";
       // for (const obj of searchEntries) await adUser.create(obj);
 
-      responce.json({ searchEntries });
+      responce.json({ data });
     } catch (error) {
       console.log("__________ADController__getADData___________");
       console.log(error);
