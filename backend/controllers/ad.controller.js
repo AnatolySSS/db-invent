@@ -23,15 +23,15 @@ export const ADController = {
         scope: "sub",
         filter: "(&(objectClass=person)(title=*))",
         explicitBufferAttributes: ["objectSid"],
-        attributes: [
-          "cn",
-          "telephoneNumber",
-          "mail",
-          "mailNickname",
-          "department",
-          "title",
-          "objectSid",
-        ],
+        // attributes: [
+        //   "cn",
+        //   "telephoneNumber",
+        //   "mail",
+        //   "mailNickname",
+        //   "department",
+        //   "title",
+        //   "objectSid",
+        // ],
       };
 
       let { searchEntries } = await client.search("dc=sfurf,dc=office", opts);
