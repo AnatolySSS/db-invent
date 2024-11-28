@@ -1,7 +1,9 @@
 import { Sequelize } from "sequelize";
-import userModel from "./user.model.js";
-import userValuesModel from "./user.values.model.js";
-import userColumnsModel from "./user.columns.model.js";
+import userModel from "./global/users/user.model.js";
+import userValuesModel from "./global/users/user.values.model.js";
+import userColumnsModel from "./common/columns/user.columns.model.js";
+import adUserModel from "./global/adUsers/adUser.model.js";
+import adUserColumnsModel from "./common/columns/adUser.columns.model.js";
 import { getDbConfig } from "../config/getDbConfig.js";
 import getDb_D0 from "./division_0/_getDb.js";
 import getDb_D1 from "./division_1/_getDb.js";
@@ -36,6 +38,11 @@ sequelize.GLOBAL = new Sequelize(
     logging: false,
   }
 );
+
+db.GLOBAL.adUser = adUserModel(sequelize.GLOBAL, Sequelize);
+db.GLOBAL.adUser.sync();
+db.GLOBAL.adUserColumns = adUserColumnsModel(sequelize.GLOBAL, Sequelize);
+db.GLOBAL.adUserColumns.sync();
 
 db.GLOBAL.user = userModel(sequelize.GLOBAL, Sequelize);
 db.GLOBAL.user.sync();

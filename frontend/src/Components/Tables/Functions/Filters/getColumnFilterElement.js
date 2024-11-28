@@ -8,6 +8,9 @@ export const getglobalFilterColumns = (visibleColumns) => {
 };
 
 export const getColumnFilterElement = (col, values) => {
+  // console.log(col);
+  // console.log(values);
+
   switch (col.editingType) {
     case "dropdown":
       return dropdownFilterTemplate(

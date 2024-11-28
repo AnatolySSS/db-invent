@@ -130,4 +130,8 @@ export const ADAPI = {
     const responce = await instance.get(`getADData`);
     return responce.data;
   },
+  async getUsers() {
+    const responce = await instance.get(`getADUsers`);
+    return responce.data;
+  },
 };

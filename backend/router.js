@@ -54,5 +54,6 @@ router.post("/checkStatusLocations", InventaryController.checkStatusLocations);
 router.post("/getLocations", InventaryController.getLocations);
 
 router.get("/getADData", ADController.getADData);
+router.get("/getADUsers", ADController.getADUsers);
 
 export default router;

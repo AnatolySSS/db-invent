@@ -1,5 +1,5 @@
-import ActiveDirectory from "activedirectory2";
 import { Client } from "ldapts";
+import db from "../models/_index.js";
 
 let config = {
   url: "ldap://10.205.0.11:389",
@@ -13,6 +13,8 @@ export const ADController = {
       url: config.url,
     });
     try {
+      const { adUser } = db.GLOBAL;
+
       await client.bind(config.bindDN, config.password);
       console.log("Успешно подключились к LDAP-серверу");
 
@@ -20,7 +22,7 @@ export const ADController = {
         sizeLimit: 1000,
         scope: "sub",
         filter: "(&(objectClass=person)(title=*))",
-        explicitBufferAttributes: ["objectGUID", "objectSid"],
+        explicitBufferAttributes: ["objectSid"],
         attributes: [
           "cn",
           "telephoneNumber",
@@ -28,22 +30,20 @@ export const ADController = {
           "mailNickname",
           "department",
           "title",
-          "objectGUID",
           "objectSid",
         ],
       };
 
       let { searchEntries } = await client.search("dc=sfurf,dc=office", opts);
 
-      console.log(searchEntries[10]);
-
       searchEntries = searchEntries.map((entry) => {
         return {
           ...entry,
           objectSid: sidToString(entry.objectSid),
-          objectGUID: sidToString(entry.objectGUID),
         };
       });
+
+      for (const obj of searchEntries) await adUser.create(obj);
 
       responce.json({ searchEntries });
     } catch (error) {
@@ -55,20 +55,53 @@ export const ADController = {
       console.log("Соединение закрыто");
     }
   },
-  async getADData2(request, responce) {
+
+  async getADUsers(request, responce) {
     try {
-      let ad = new ActiveDirectory(config);
-      ad.find("dc=sfurf,dc=office", (err, results) => {
-        if (err || !results) {
-          console.log("ERROR: " + JSON.stringify(err));
-          return;
-        }
-        // console.log(results);
-        // responce.json({ ad });
+      // let { userDivision } = request.body;
+
+      const { adUser, adUserColumns } = db.GLOBAL;
+      let data = {};
+
+      data.lib = await adUser.findAll({
+        // where: { division: userDivision },
+        attributes: {
+          exclude: ["createdAt"],
+        },
       });
-      responce.json({ ad });
+      data.columns = await adUserColumns.findAll();
+      // data.values = await userValues.findAll({
+      //   attributes: { exclude: ["id", "createdAt", "updatedAt"] },
+      // });
+      data.name = "Сотрудники";
+
+      data.lib = JSON.parse(JSON.stringify(data.lib));
+      data.columns = JSON.parse(JSON.stringify(data.columns));
+      // data.values = JSON.parse(JSON.stringify(data.values));
+
+      // data.values = getValues(data.values);
+
+      //Изменение null на "null"
+      data.lib = data.lib.map((libObg) => {
+        for (const libKey in libObg) {
+          data.columns.forEach((columnObg) => {
+            if (
+              columnObg.dbFieldType == "boolean" &&
+              columnObg.field == libKey
+            ) {
+              libObg[libKey] =
+                libObg[libKey] === null
+                  ? libObg[libKey] === "null"
+                  : libObg[libKey];
+            }
+          });
+        }
+        return libObg;
+      });
+
+      responce.json(data);
     } catch (error) {
-      console.log("__________ADController__getADData___________");
+      console.log("__________ADController__getUsers___________");
       console.log(error);
       responce.json(error);
     }

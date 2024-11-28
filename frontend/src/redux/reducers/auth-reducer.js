@@ -1,5 +1,5 @@
 import { AuthAPI } from "../../api/api";
-import { requestData } from "./ad-users-reducer";
+import { getDatafromAD } from "./ad-users-reducer";
 const SET_AUTH = "sodfu-inventory/authReducer/IS_AUTH";
 const SET_MESSAGE = "sodfu-inventory/authReducer/SET_MESSAGE";
 
@@ -45,7 +45,7 @@ export const getAuthUserData = () => {
         await dispatch(
           setAuth(login, full_name, true, role, division, data.message)
         );
-        await dispatch(requestData());
+        await dispatch(getDatafromAD());
         break;
       case 1:
         dispatch(setMessage(data.message));

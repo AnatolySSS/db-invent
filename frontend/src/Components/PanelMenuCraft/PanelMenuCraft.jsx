@@ -91,7 +91,9 @@ const PanelMenuCraft = (props) => {
               color: "#495057",
             }}
           >
-            <i className="mr-3"><PiOfficeChairBold/></i>
+            <i className="mr-3">
+              <PiOfficeChairBold />
+            </i>
             Мебель
           </NavLink>
         );
@@ -100,7 +102,11 @@ const PanelMenuCraft = (props) => {
 
     yearsMenuItems.push({
       label: "Мебель",
-      icon: <i className="mr-3"><PiOfficeChairBold/></i>,
+      icon: (
+        <i className="mr-3">
+          <PiOfficeChairBold />
+        </i>
+      ),
       items: yearsFurniture.map((year) => {
         return {
           template: (item, options) => {
@@ -237,7 +243,6 @@ const PanelMenuCraft = (props) => {
       icon: "pi pi-fw pi-calendar",
       items: yearsMenuItems,
     },
-    
   ];
 
   if (userAuth.role == "admin") {
@@ -248,44 +253,74 @@ const PanelMenuCraft = (props) => {
         {
           template: (item, options) => {
             return (
-                <NavLink to="/users"
-                  className={classNames(options.className,"w-full p-link flex align-items-center")}
-                  style={{
-                    textDecoration: "none",
-                    color: "#495057",
-                  }}>
-                  <i className="pi pi-fw pi-user-edit mr-2"></i>
-                  Редактировать
-                </NavLink>
+              <NavLink
+                to="/users"
+                className={classNames(
+                  options.className,
+                  "w-full p-link flex align-items-center"
+                )}
+                style={{
+                  textDecoration: "none",
+                  color: "#495057",
+                }}
+              >
+                <i className="pi pi-fw pi-user-edit mr-2"></i>
+                Редактировать
+              </NavLink>
             );
           },
         },
-      ],
-    })
-  }
-
-  // if (userDivision == 3 && userAuth.login == "user3") {
-    items.push({
-      label: "Загрузить данные",
-      icon: "pi pi-fw pi-download",
-      items: [
         {
           template: (item, options) => {
             return (
-                <NavLink to="/upload"
-                  className={classNames(options.className,"w-full p-link flex align-items-center")}
-                  style={{
-                    textDecoration: "none",
-                    color: "#495057",
-                  }}>
-                  <i className="pi pi-fw pi-download mr-2"></i>
-                  Загрузить данные
-                </NavLink>
+              <NavLink
+                to="/adusers"
+                className={classNames(
+                  options.className,
+                  "w-full p-link flex align-items-center"
+                )}
+                style={{
+                  textDecoration: "none",
+                  color: "#495057",
+                }}
+              >
+                <i className="pi pi-fw pi-user-edit mr-2"></i>
+                Сотрудники
+              </NavLink>
             );
           },
         },
       ],
-    })
+    });
+  }
+
+  // if (userDivision == 3 && userAuth.login == "user3") {
+  items.push({
+    label: "Загрузить данные",
+    icon: "pi pi-fw pi-download",
+    items: [
+      {
+        template: (item, options) => {
+          return (
+            <NavLink
+              to="/upload"
+              className={classNames(
+                options.className,
+                "w-full p-link flex align-items-center"
+              )}
+              style={{
+                textDecoration: "none",
+                color: "#495057",
+              }}
+            >
+              <i className="pi pi-fw pi-download mr-2"></i>
+              Загрузить данные
+            </NavLink>
+          );
+        },
+      },
+    ],
+  });
   // }
 
   return (

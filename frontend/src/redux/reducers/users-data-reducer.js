@@ -15,10 +15,6 @@ let initialState = {
   values: [],
   filters: {
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    id: {
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
-    },
     login: {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
@@ -28,7 +24,6 @@ let initialState = {
       constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
     },
     role: { value: null, matchMode: FilterMatchMode.IN },
-    division: { value: null, matchMode: FilterMatchMode.IN },
     updatedAt: {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],
@@ -48,7 +43,7 @@ const usersDataReducer = (state = initialState, action) => {
         columns: action.data.columns,
         data: action.data.lib,
         values: action.data.values,
-        filters: { ...state.filters },
+        // filters: { ...state.filters },
         name: action.data.name,
         message: action.message,
       };
