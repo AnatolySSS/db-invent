@@ -68,7 +68,7 @@ const ADUsersCraft = (props) => {
         .map((element) => element.department)
         .filter((element) => element.length !== 0)
     ),
-  ];
+  ].sort((a, b) => a.localeCompare(b));
   console.log(values);
 
   useEffect(() => {
