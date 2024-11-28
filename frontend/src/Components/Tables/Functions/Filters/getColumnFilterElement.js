@@ -14,7 +14,8 @@ export const getColumnFilterElement = (col, values) => {
   switch (col.editingType) {
     case "dropdown":
       return dropdownFilterTemplate(
-        values[col.field]?.filter((obj) => obj !== "")
+        values[col.field]
+        // values[col.field]?.filter((obj) => obj !== "")
       );
 
     case "checkbox":
