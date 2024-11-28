@@ -163,7 +163,7 @@ const ADUsersCraft = (props) => {
         filters={filters}
         filterDisplay="menu"
         globalFilterFields={getglobalFilterColumns(visibleColumns)}
-        dataKey="id"
+        dataKey="objectSid"
         header={
           <TableHeader
             type={type}
