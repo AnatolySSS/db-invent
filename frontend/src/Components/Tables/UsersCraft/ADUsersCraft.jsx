@@ -62,7 +62,7 @@ const ADUsersCraft = (props) => {
 
   const [item, setItem] = useState(emptyItem);
 
-  values = [
+  values.department = [
     ...new Set(
       data
         .map((element) => element.department)
