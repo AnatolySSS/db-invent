@@ -9,15 +9,15 @@ import { withAuthNavigate } from "../../../hoc/withAuthNavigate";
 
 let mapStateToProps = (state) => {
   return {
-    type: "users",
+    type: "adusers",
     data: state.adUsers.data,
     columns: state.adUsers.columns,
-    values: state.usersData.values,
-    filters: state.usersData.filters,
-    name: state.usersData.name,
-    message: state.usersData.message,
+    values: state.adUsers.values,
+    filters: state.adUsers.filters,
+    name: state.adUsers.name,
+    message: state.adUsers.message,
     userAuth: state.auth,
-    isFetching: state.usersData.isFetching,
+    isFetching: state.adUsers.isFetching,
     adUsers: state.adUsers.data,
   };
 };
