@@ -70,7 +70,6 @@ const ADUsersCraft = (props) => {
     ),
   ].sort((a, b) => a.localeCompare(b));
   values.department.push("");
-  console.log(values);
 
   useEffect(() => {
     requestData(userAuth.division);
@@ -192,7 +191,7 @@ const ADUsersCraft = (props) => {
             columns={columns}
             filters={filters}
             tableName={name}
-            userMenuType="users"
+            userMenuType="adusers"
             globalFilterValue={globalFilterValue}
             clearState={clearState}
           />

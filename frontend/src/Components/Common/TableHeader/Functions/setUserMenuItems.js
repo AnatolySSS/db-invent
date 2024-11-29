@@ -170,6 +170,7 @@ export const setUserMenuItems = (
 
       break;
     case "year":
+    case "adusers":
       addTypes = [
         {
           label: "Сформировать EXCEL",
@@ -187,7 +188,6 @@ export const setUserMenuItems = (
         },
       ];
       break;
-
     default:
       addTypes = [];
       break;

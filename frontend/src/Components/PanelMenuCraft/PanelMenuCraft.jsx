@@ -247,7 +247,7 @@ const PanelMenuCraft = (props) => {
 
   if (userAuth.role == "admin") {
     items.push({
-      label: "Пользователи",
+      label: "Группы пользователей",
       icon: "pi pi-fw pi-users",
       items: [
         {
@@ -265,7 +265,7 @@ const PanelMenuCraft = (props) => {
                 }}
               >
                 <i className="pi pi-fw pi-user-edit mr-2"></i>
-                Редактировать
+                Пользователи
               </NavLink>
             );
           },
