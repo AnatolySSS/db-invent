@@ -36,6 +36,7 @@ export const ADController = {
 
       let { searchEntries } = await client.search("dc=sfurf,dc=office", opts);
 
+      //Изменяем пустые массивы на пустые строки
       searchEntries = searchEntries.map((entry) => {
         let obj = { ...entry };
         for (const key in obj)
@@ -43,6 +44,7 @@ export const ADController = {
         return obj;
       });
 
+      //Перекодировка значения objectSid (изначально приходит в бинарном формате)
       searchEntries = searchEntries.map((entry) => {
         return {
           ...entry,
@@ -53,7 +55,14 @@ export const ADController = {
       data.lib = JSON.parse(JSON.stringify(searchEntries));
       data.columns = await adUserColumns.findAll();
       data.name = "Сотрудники";
-      // for (const obj of searchEntries) await adUser.create(obj);
+
+      //Удаление всех значений
+      adUser.destroy({
+        where: {}, // условие для удаления всех записей
+        truncate: true, // необязательно, но рекомендуется для быстрого удаления всех записей
+      });
+      //Добавление новых значений
+      for (const obj of searchEntries) await adUser.create(obj);
 
       responce.json(data);
     } catch (error) {
