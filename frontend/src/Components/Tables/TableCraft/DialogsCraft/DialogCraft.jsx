@@ -117,7 +117,7 @@ export const DialogCraft = (props) => {
               </div>
             </TabPanel>
           )}
-          {item.logs !== undefined && (
+          {/* {item.logs !== undefined && (
             <TabPanel
               header="История изменений 1"
               leftIcon="pi pi-objects-column mr-2"
@@ -126,10 +126,10 @@ export const DialogCraft = (props) => {
                 <TablelHistoryCraft logs={item.logs} />
               </div>
             </TabPanel>
-          )}
+          )} */}
           {item.logs !== undefined && (
             <TabPanel
-              header="История изменений 2"
+              header="История изменений"
               leftIcon="pi pi-objects-column mr-2"
             >
               <div className={styles.tabContent}>
@@ -137,7 +137,7 @@ export const DialogCraft = (props) => {
               </div>
             </TabPanel>
           )}
-          {item.logs !== undefined && (
+          {/* {item.logs !== undefined && (
             <TabPanel
               header="История изменений 3"
               leftIcon="pi pi-objects-column mr-2"
@@ -146,7 +146,7 @@ export const DialogCraft = (props) => {
                 <TreeTablelHistoryCraft columns={columns} logs={item.logs} />
               </div>
             </TabPanel>
-          )}
+          )} */}
         </TabView>
       </div>
     </Dialog>

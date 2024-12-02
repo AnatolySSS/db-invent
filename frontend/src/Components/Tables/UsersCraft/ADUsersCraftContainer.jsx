@@ -1,7 +1,6 @@
 import { connect } from "react-redux";
 import { compose } from "redux";
 import ADUsersCraft from "./ADUsersCraft";
-import { requestData } from "../../../redux/reducers/ad-users-reducer";
 import { clearState } from "../../../redux/reducers/it-data-reducer";
 import { setVisible } from "../../../redux/reducers/side-bar-reducer";
 import { logout } from "../../../redux/reducers/auth-reducer";
@@ -23,7 +22,6 @@ let mapStateToProps = (state) => {
 };
 
 let mapDispatchToProps = {
-  requestData,
   setVisible,
   clearState,
   logout,

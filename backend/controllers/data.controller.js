@@ -2,6 +2,7 @@ import changeDateType from "./functions/changeDateType.js";
 import db from "../models/_index.js";
 import formatDate from "./functions/formatDate.js";
 import { getValues } from "./functions/getValues.js";
+import { changeUserSidToName } from "./functions/changeUserSidToName.js";
 
 export const DataController = {
   async getData(request, responce) {
@@ -143,6 +144,9 @@ export const DataController = {
         return libObg;
       });
 
+      //Замена objectSid на ФИО сотрудника
+      data.lib = await changeUserSidToName(data.lib);
+
       data.values = getValues(data.values);
       responce.json(data);
     } catch (error) {
@@ -216,6 +220,9 @@ export const DataController = {
   async updateData(request, responce) {
     try {
       let { type, rowData, userDivision } = request.body;
+
+      const { adUser } = db.GLOBAL;
+
       const {
         itLib,
         itLog,
@@ -227,6 +234,7 @@ export const DataController = {
         assetsLog,
       } = db.DIVISIONS[`D${userDivision}`];
       let table, tableLog;
+      let adUsers;
 
       switch (type) {
         case "it":
@@ -261,6 +269,27 @@ export const DataController = {
         }
       }
 
+      adUsers = await adUser.findAll({
+        // where: { division: userDivision },
+        attributes: {
+          exclude: ["createdAt"],
+        },
+      });
+      adUsers = JSON.parse(JSON.stringify(adUsers));
+
+      //Замена ФИО сотрудника на objectSid
+      for (const adUser of adUsers) {
+        if (rowData.owner === adUser.cn) {
+          rowData.owner = adUser.objectSid;
+        }
+        if (rowData.prev_owner === adUser.cn) {
+          rowData.prev_owner = adUser.objectSid;
+        }
+      }
+
+      console.log(rowData);
+      console.log(rowData);
+
       //Проверка на обновление значений
       const originalData = await table.findOne({
         where: { id: rowData.id },
@@ -293,7 +322,6 @@ export const DataController = {
               oldValue: originalData[key],
               newValue: rowData[key],
             };
-            // console.log(logRow);
 
             await tableLog.create(logRow);
           }
@@ -316,6 +344,9 @@ export const DataController = {
   async transferItem(request, responce) {
     try {
       let { type, items, transferData, userDivision } = request.body;
+
+      const { adUser } = db.GLOBAL;
+
       const {
         itLib,
         itLog,
@@ -331,6 +362,7 @@ export const DataController = {
         assetsTransfer,
       } = db.DIVISIONS[`D${userDivision}`];
       let table, tableLog, tableTransfer;
+      let adUsers;
 
       switch (type) {
         case "it":
@@ -355,6 +387,21 @@ export const DataController = {
           break;
         default:
           break;
+      }
+
+      adUsers = await adUser.findAll({
+        // where: { division: userDivision },
+        attributes: {
+          exclude: ["createdAt"],
+        },
+      });
+      adUsers = JSON.parse(JSON.stringify(adUsers));
+
+      //Замена ФИО сотрудника на objectSid
+      for (const adUser of adUsers) {
+        if (transferData.name === adUser.cn) {
+          transferData.name = adUser.objectSid;
+        }
       }
 
       for (const item of items) {

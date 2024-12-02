@@ -26,7 +26,6 @@ const ADUsersCraft = (props) => {
     data,
     columns,
     values,
-    requestData,
     addData,
     updateData,
     deleteData,
@@ -72,7 +71,6 @@ const ADUsersCraft = (props) => {
   values.department.push("");
 
   useEffect(() => {
-    requestData(userAuth.division);
     initFilters();
     creactLocale();
     locale("ru");
