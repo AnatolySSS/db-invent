@@ -55,7 +55,7 @@ const EmployersCraft = (props) => {
     ...new Set(
       data
         .map((element) => element.department)
-        ?.filter((element) => element.length !== 0)
+        ?.filter((element) => element?.length !== 0)
     ),
   ].sort((a, b) => a.localeCompare(b));
   values.department.unshift("");
@@ -64,7 +64,7 @@ const EmployersCraft = (props) => {
     ...new Set(
       data
         .map((element) => element.title)
-        ?.filter((element) => element.length !== 0)
+        .filter((element) => element?.length !== 0)
     ),
   ].sort((a, b) => a.localeCompare(b));
   values.title.unshift("");
