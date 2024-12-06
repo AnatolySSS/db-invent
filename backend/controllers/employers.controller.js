@@ -79,6 +79,8 @@ export const EmployersController = {
       //Добавление новых значений
       for (const obj of searchEntries) {
         // !currentEmployers.includes(obj.object_sid) &&
+        console.log(obj);
+
         (await employer.create(obj)) &&
           console.log(obj.full_name + " добавлен");
       }
