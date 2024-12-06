@@ -1,5 +1,4 @@
 import { Client } from "ldapts";
-import Filter from "ldapts";
 import db from "../models/_index.js";
 
 let config = {
