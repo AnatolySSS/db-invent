@@ -25,6 +25,8 @@ class App extends React.Component {
     window.onresize = function (event) {
       getTableHeight();
     };
+    console.log("sdfsdf");
+
     await EmployersAPI.downloadEmpoyers();
   }
   render() {
