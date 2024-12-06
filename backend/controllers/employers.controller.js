@@ -67,14 +67,14 @@ export const EmployersController = {
       data.columns = await employerColumns.findAll();
       data.name = "Сотрудники";
 
-      //Удаление всех значений
-      employer.destroy({
-        where: {}, // условие для удаления всех записей
-        // truncate: true,
-        // cascade: false,
+      const currentData = await employer.findAll({
+        attributes: "object_sid",
       });
+
       //Добавление новых значений
-      for (const obj of searchEntries) await employer.create(obj);
+      for (const obj of searchEntries) {
+        !currentData.includes(obj.object_sid) && (await employer.create(obj));
+      }
 
       responce.json(data);
     } catch (error) {
