@@ -94,7 +94,13 @@ for (const key in db.GLOBAL) {
 
 for (const division in db.DIVISIONS) {
   for (const model in db.DIVISIONS[division]) {
-    if (model !== "sequelize" && model !== "Sequelize") {
+    if (
+      model !== "sequelize" &&
+      model !== "Sequelize" &&
+      model !== "currentYearInventaryIt" &&
+      model !== "currentYearInventaryFurniture" &&
+      model !== "currentYearInventaryUnmarked"
+    ) {
       db.DIVISIONS[division][model].sync();
     }
   }
