@@ -68,7 +68,7 @@ export const EmployersController = {
       data.name = "Сотрудники";
 
       const currentData = await employer.findAll({
-        attributes: "object_sid",
+        attributes: ["object_sid"],
       });
 
       //Добавление новых значений
