@@ -21,7 +21,7 @@ export const EmployersController = {
       const opts = {
         sizeLimit: 1000,
         scope: "sub",
-        filter: "(&(objectClass=person)(title=*)(ou:dn:=User Accounts))",
+        filter: "(&(objectClass=person)(title=*)(dn=OU=User Accounts))",
         explicitBufferAttributes: ["objectSid"],
         // attributes: [
         //   "cn",
@@ -80,10 +80,13 @@ export const EmployersController = {
           (await employer.create(obj)) &&
           console.log(obj.full_name + " добавлен");
       }
+      //Отмечаем пользователей, которых уже нет в системе
       for (const currentEmployer of currentEmployers) {
         !newEmployers.includes(currentEmployer) &&
           console.log(currentEmployer + " is gone");
       }
+
+      console.log(data.lib[0]);
 
       responce.json(data);
     } catch (error) {
