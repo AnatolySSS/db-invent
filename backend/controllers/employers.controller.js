@@ -21,7 +21,7 @@ export const EmployersController = {
       const opts = {
         sizeLimit: 1000,
         scope: "sub",
-        filter: "(&(objectClass=person)(title=*))",
+        filter: "(&(objectClass=person)(title=*)(dn=User Accounts))",
         explicitBufferAttributes: ["objectSid"],
         // attributes: [
         //   "cn",
@@ -34,10 +34,7 @@ export const EmployersController = {
         // ],
       };
 
-      let { searchEntries } = await client.search(
-        "ou=User Accounts,dc=sfurf,dc=office",
-        opts
-      );
+      let { searchEntries } = await client.search("dc=sfurf,dc=office", opts);
 
       //Изменяем пустые массивы на пустые строки
       searchEntries = searchEntries.map((entry) => {
