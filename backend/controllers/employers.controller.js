@@ -76,7 +76,11 @@ export const EmployersController = {
 
       //Добавление новых значений
       for (const obj of searchEntries) {
-        !currentData.includes(obj.object_sid) && (await employer.create(obj));
+        if (!currentData.includes(obj.object_sid)) {
+          await employer.create(obj);
+        } else {
+          console.log(obj.full_name);
+        }
       }
 
       responce.json(data);
