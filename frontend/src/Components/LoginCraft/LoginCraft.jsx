@@ -149,8 +149,6 @@ const LoginCraft = (props) => {
   const { login, isAuth, message } = props;
 
   const submit = (values) => {
-    console.log(values);
-
     login(values.login, values.password);
   };
 
