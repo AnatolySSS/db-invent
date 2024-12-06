@@ -127,6 +127,8 @@ export const UsersAPI = {
 
 export const EmployersAPI = {
   async downloadEmpoyers() {
+    console.log("df");
+
     const responce = await instance.get(`downloadEmpoyers`);
     return responce.data;
   },
