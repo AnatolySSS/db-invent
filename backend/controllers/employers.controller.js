@@ -70,7 +70,7 @@ export const EmployersController = {
       //Удаление всех значений
       employer.destroy({
         // where: {}, // условие для удаления всех записей
-        truncate: true,
+        // truncate: true,
         cascade: false,
       });
       //Добавление новых значений
