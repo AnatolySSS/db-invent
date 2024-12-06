@@ -45,6 +45,8 @@ export const getAuthUserData = () => {
         await dispatch(
           setAuth(login, full_name, true, role, division, data.message)
         );
+        await dispatch(downloadEmployers());
+        await dispatch(requestData());
         break;
       case 1:
         dispatch(setMessage(data.message));
@@ -53,14 +55,10 @@ export const getAuthUserData = () => {
         dispatch(setMessage(data.message));
         break;
     }
-    await dispatch(downloadEmployers());
-    await dispatch(requestData());
   };
 };
 
 export const login = (login, password) => (dispatch) => {
-  console.log(login);
-
   AuthAPI.login(login, password).then((data) => {
     switch (data.resultCode) {
       case 0:
