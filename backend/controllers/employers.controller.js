@@ -76,6 +76,9 @@ export const EmployersController = {
       currentEmployers = currentEmployers.map((obj) => obj.object_sid);
       let newEmployers = data.lib.map((obj) => obj.object_sid);
 
+      console.log(searchEntries);
+      console.log(currentEmployers);
+
       //Добавление новых значений
       for (const obj of searchEntries) {
         // !currentEmployers.includes(obj.object_sid) &&
