@@ -67,10 +67,12 @@ export const EmployersController = {
       data.columns = await employerColumns.findAll();
       data.name = "Сотрудники";
 
-      const currentData = await employer.findAll({
-        attributes: ["object_sid"],
-        raw: true,
-      });
+      const currentData = await employer
+        .findAll({
+          attributes: ["object_sid"],
+          raw: true,
+        })
+        .map((obj) => obj.object_sid);
       console.log(currentData);
 
       //Добавление новых значений
