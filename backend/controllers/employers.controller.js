@@ -24,7 +24,7 @@ export const EmployersController = {
         filter: "(&(objectClass=person)(title=*))",
         explicitBufferAttributes: ["objectSid"],
         attributes: [
-          "cn",
+          ["cn", "full_name"],
           "telephoneNumber",
           "mail",
           "mailNickname",
