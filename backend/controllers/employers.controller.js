@@ -35,7 +35,7 @@ export const EmployersController = {
       };
 
       let { searchEntries } = await client.search(
-        "dc=sfurf,dc=office,ou=UserAccounts",
+        "ou=User Accounts,dc=sfurf,dc=office",
         opts
       );
 
