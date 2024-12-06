@@ -57,10 +57,10 @@ export const EmployersController = {
       data.name = "Сотрудники";
 
       //Удаление всех значений
-      employer.destroy({
-        where: {}, // условие для удаления всех записей
-        // truncate: trues, // необязательно, но рекомендуется для быстрого удаления всех записей
-      });
+      // employer.destroy({
+      //   where: {}, // условие для удаления всех записей
+      //   // truncate: trues, // необязательно, но рекомендуется для быстрого удаления всех записей
+      // });
       //Добавление новых значений
       for (const obj of searchEntries) await employer.create(obj);
 
