@@ -44,6 +44,17 @@ export const EmployersController = {
           for (const key in obj) {
             obj[key].length === 0 ? (obj[key] = "") : (obj[key] = obj[key]);
           }
+
+          if (obj.dn.includes("Саратов")) {
+            obj.division = 1;
+          } else if (obj.dn.includes("Санкт-Петербург")) {
+            obj.division = 2;
+          } else if (obj.dn.includes("Нижний Новгород")) {
+            obj.division = 3;
+          } else {
+            obj.division = 0;
+          }
+
           //Переименовываем наименования полей
           obj["object_sid"] = obj["objectSid"];
           obj["full_name"] = obj["cn"];
