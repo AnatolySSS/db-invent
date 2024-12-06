@@ -59,7 +59,7 @@ export const EmployersController = {
       searchEntries = searchEntries.map((entry) => {
         return {
           ...entry,
-          objectSid: sidToString(entry.objectSid),
+          object_sid: sidToString(entry.object_sid),
         };
       });
       let data = {};
