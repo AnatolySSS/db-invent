@@ -24,7 +24,7 @@ export const EmployersController = {
         filter: "(&(objectClass=person)(title=*))",
         explicitBufferAttributes: ["objectSid"],
         attributes: [
-          ["cn", "full_name"],
+          "cn",
           "telephoneNumber",
           "mail",
           "mailNickname",
@@ -39,8 +39,19 @@ export const EmployersController = {
       //Изменяем пустые массивы на пустые строки
       searchEntries = searchEntries.map((entry) => {
         let obj = { ...entry };
-        for (const key in obj)
+        for (const key in obj) {
           obj[key].length === 0 ? (obj[key] = "") : (obj[key] = obj[key]);
+        }
+        //Переименовываем наименования полей
+        obj["objectSid"] = obj["object_sid"];
+        obj["cn"] = obj["full_name"];
+        obj["telephoneNumber"] = obj["phone"];
+        obj["mailNickname"] = obj["login"];
+        delete obj["objectSid"];
+        delete obj["cn"];
+        delete obj["telephoneNumber"];
+        delete obj["mailNickname"];
+
         return obj;
       });
 
