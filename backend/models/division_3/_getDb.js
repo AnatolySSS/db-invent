@@ -26,7 +26,7 @@ const getDb = (sequelize, Sequelize) => {
   let modelObj = {};
 
   modelObj.itLib = itLibModel(sequelize, Sequelize);
-  // modelObj.itLib.sync();
+  // modelObj.itLib.sync();f
   modelObj.itLog = itLogModel(sequelize, Sequelize);
   // modelObj.itLog.sync();
   modelObj.itValues = itValuesModel(sequelize, Sequelize);
