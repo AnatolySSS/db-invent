@@ -69,9 +69,9 @@ export const EmployersController = {
 
       //Удаление всех значений
       employer.destroy({
-        // where: {}, // условие для удаления всех записей
+        where: {}, // условие для удаления всех записей
         // truncate: true,
-        cascade: false,
+        // cascade: false,
       });
       //Добавление новых значений
       for (const obj of searchEntries) await employer.create(obj);
