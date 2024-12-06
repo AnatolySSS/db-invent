@@ -21,7 +21,7 @@ export const EmployersController = {
       const opts = {
         sizeLimit: 1000,
         scope: "sub",
-        filter: "(&(objectClass=person)(title=*)(mailNickname=shilyaevan))",
+        filter: "(&(objectClass=person)(title=*))",
         explicitBufferAttributes: ["objectSid"],
         // attributes: [
         //   "cn",
@@ -37,23 +37,25 @@ export const EmployersController = {
       let { searchEntries } = await client.search("dc=sfurf,dc=office", opts);
 
       //Изменяем пустые массивы на пустые строки
-      searchEntries = searchEntries.map((entry) => {
-        let obj = { ...entry };
-        for (const key in obj) {
-          obj[key].length === 0 ? (obj[key] = "") : (obj[key] = obj[key]);
-        }
-        //Переименовываем наименования полей
-        obj["object_sid"] = obj["objectSid"];
-        obj["full_name"] = obj["cn"];
-        obj["phone"] = obj["telephoneNumber"];
-        obj["login"] = obj["mailNickname"];
-        delete obj["objectSid"];
-        delete obj["cn"];
-        delete obj["telephoneNumber"];
-        delete obj["mailNickname"];
+      searchEntries = searchEntries
+        .filter((entry) => entry.dn.includes("OU=User Accounts"))
+        .map((entry) => {
+          let obj = { ...entry };
+          for (const key in obj) {
+            obj[key].length === 0 ? (obj[key] = "") : (obj[key] = obj[key]);
+          }
+          //Переименовываем наименования полей
+          obj["object_sid"] = obj["objectSid"];
+          obj["full_name"] = obj["cn"];
+          obj["phone"] = obj["telephoneNumber"];
+          obj["login"] = obj["mailNickname"];
+          delete obj["objectSid"];
+          delete obj["cn"];
+          delete obj["telephoneNumber"];
+          delete obj["mailNickname"];
 
-        return obj;
-      });
+          return obj;
+        });
 
       //Перекодировка значения objectSid (изначально приходит в бинарном формате)
       searchEntries = searchEntries.map((entry) => {
