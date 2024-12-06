@@ -34,10 +34,7 @@ export const EmployersController = {
         // ],
       };
 
-      let { searchEntries } = await client.search(
-        "dc=sfurf,dc=office,ou=User,ou=Accounts",
-        opts
-      );
+      let { searchEntries } = await client.search("dc=sfurf,dc=office", opts);
 
       //Изменяем пустые массивы на пустые строки
       searchEntries = searchEntries.map((entry) => {
