@@ -69,7 +69,7 @@ export const EmployersController = {
       data.lib = JSON.parse(JSON.stringify(searchEntries));
       data.columns = await employerColumns.findAll();
       data.name = "Сотрудники";
-      console.log(data.lib);
+      console.log(data.lib[0]);
 
       //Удаление всех значений
       // employer.destroy({
