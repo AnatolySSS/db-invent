@@ -36,7 +36,7 @@ const EmployersCraft = (props) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const toast = useRef(null);
   let emptyItem = {};
-  let values = {};
+  let values = { department: [], title: [] };
   columns.map((obj) => {
     let dataType;
     switch (obj.dataType) {
