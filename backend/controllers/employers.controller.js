@@ -1,4 +1,5 @@
 import { Client } from "ldapts";
+import Filter from "ldapts";
 import db from "../models/_index.js";
 
 let config = {
@@ -35,7 +36,7 @@ export const EmployersController = {
       };
 
       let { searchEntries } = await client.search(
-        "dc=sfurf,dc=office,ou=User,ou=Accounts",
+        "dc=sfurf,dc=office,ou=UserAccounts",
         opts
       );
 
