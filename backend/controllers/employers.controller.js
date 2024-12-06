@@ -43,10 +43,10 @@ export const EmployersController = {
           obj[key].length === 0 ? (obj[key] = "") : (obj[key] = obj[key]);
         }
         //Переименовываем наименования полей
-        obj["objectSid"] = obj["object_sid"];
-        obj["cn"] = obj["full_name"];
-        obj["telephoneNumber"] = obj["phone"];
-        obj["mailNickname"] = obj["login"];
+        obj["object_sid"] = obj["objectSid"];
+        obj["full_name"] = obj["cn"];
+        obj["phone"] = obj["telephoneNumber"];
+        obj["login"] = obj["mailNickname"];
         delete obj["objectSid"];
         delete obj["cn"];
         delete obj["telephoneNumber"];
