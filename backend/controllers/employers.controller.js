@@ -23,18 +23,21 @@ export const EmployersController = {
         scope: "sub",
         filter: "(&(objectClass=person)(title=*))",
         explicitBufferAttributes: ["objectSid"],
-        attributes: [
-          "cn",
-          "telephoneNumber",
-          "mail",
-          "mailNickname",
-          "department",
-          "title",
-          "objectSid",
-        ],
+        // attributes: [
+        //   "cn",
+        //   "telephoneNumber",
+        //   "mail",
+        //   "mailNickname",
+        //   "department",
+        //   "title",
+        //   "objectSid",
+        // ],
       };
 
-      let { searchEntries } = await client.search("dc=sfurf,dc=office", opts);
+      let { searchEntries } = await client.search(
+        "dc=sfurf,dc=office,ou=User Accounts",
+        opts
+      );
 
       //Изменяем пустые массивы на пустые строки
       searchEntries = searchEntries.map((entry) => {
@@ -68,13 +71,13 @@ export const EmployersController = {
       data.name = "Сотрудники";
 
       //Удаление всех значений
-      // employer.destroy({
-      //   where: {}, // условие для удаления всех записей
-      //   // truncate: true,
-      //   // cascade: false,
-      // });
-      // //Добавление новых значений
-      // for (const obj of searchEntries) await employer.create(obj);
+      employer.destroy({
+        where: {}, // условие для удаления всех записей
+        // truncate: true,
+        // cascade: false,
+      });
+      //Добавление новых значений
+      for (const obj of searchEntries) await employer.create(obj);
 
       responce.json(data);
     } catch (error) {
