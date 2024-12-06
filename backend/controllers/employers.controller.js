@@ -88,8 +88,6 @@ export const EmployersController = {
           console.log(currentEmployer + " is gone");
       }
 
-      console.log(data.lib[0]);
-
       responce.json(data);
     } catch (error) {
       console.log("__________EmployersController__downloadEmpoyers___________");
