@@ -21,8 +21,7 @@ export const EmployersController = {
       const opts = {
         sizeLimit: 1000,
         scope: "sub",
-        filter:
-          "(&(objectClass=person)(title=*)(distinguishedName=*User Accounts*))",
+        filter: "(&(objectClass=person)(title=*)(dn=*Accounts*))",
         explicitBufferAttributes: ["objectSid"],
         // attributes: [
         //   "cn",
