@@ -113,7 +113,7 @@ export const EmployersController = {
       data.lib = JSON.parse(JSON.stringify(data.lib));
       data.columns = JSON.parse(JSON.stringify(data.columns));
 
-      //Изменение null на "null"
+      //Изменение null на "null" у значений типа boolean
       data.lib = data.lib.map((libObg) => {
         for (const libKey in libObg) {
           data.columns.forEach((columnObg) => {
