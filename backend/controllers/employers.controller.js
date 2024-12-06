@@ -68,13 +68,13 @@ export const EmployersController = {
       data.name = "Сотрудники";
 
       //Удаление всех значений
-      employer.destroy({
-        where: {}, // условие для удаления всех записей
-        // truncate: true,
-        // cascade: false,
-      });
-      //Добавление новых значений
-      for (const obj of searchEntries) await employer.create(obj);
+      // employer.destroy({
+      //   where: {}, // условие для удаления всех записей
+      //   // truncate: true,
+      //   // cascade: false,
+      // });
+      // //Добавление новых значений
+      // for (const obj of searchEntries) await employer.create(obj);
 
       responce.json(data);
     } catch (error) {
