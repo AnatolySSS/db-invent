@@ -69,7 +69,9 @@ export const EmployersController = {
 
       const currentData = await employer.findAll({
         attributes: ["object_sid"],
+        raw: true,
       });
+      console.log(currentData);
 
       //Добавление новых значений
       for (const obj of searchEntries) {
