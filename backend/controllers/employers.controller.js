@@ -79,8 +79,7 @@ export const EmployersController = {
       //Добавление новых значений
       // for (const obj of searchEntries) {
       //   !currentEmployers.includes(obj.object_sid) &&
-      //     (await employer.create(obj)) &&
-      //     console.log(obj.full_name + " добавлен");
+      (await employer.create(obj)) && console.log(obj.full_name + " добавлен");
       // }
       //Отмечаем пользователей, которых уже нет в системе
       for (const currentEmployer of currentEmployers) {
