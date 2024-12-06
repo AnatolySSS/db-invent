@@ -77,10 +77,11 @@ export const EmployersController = {
       let newEmployers = data.lib.map((obj) => obj.object_sid);
 
       //Добавление новых значений
-      // for (const obj of searchEntries) {
-      //   !currentEmployers.includes(obj.object_sid) &&
-      (await employer.create(obj)) && console.log(obj.full_name + " добавлен");
-      // }
+      for (const obj of searchEntries) {
+        // !currentEmployers.includes(obj.object_sid) &&
+        (await employer.create(obj)) &&
+          console.log(obj.full_name + " добавлен");
+      }
       //Отмечаем пользователей, которых уже нет в системе
       for (const currentEmployer of currentEmployers) {
         !newEmployers.includes(currentEmployer) &&
