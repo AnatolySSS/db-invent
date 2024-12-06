@@ -44,12 +44,12 @@ db.GLOBAL.user = userModel(sequelize.GLOBAL, Sequelize);
 
 db.GLOBAL.employer.hasOne(db.GLOBAL.user, {
   foreignKey: "object_sid",
-  // onDelete: "CASCADE",
+  onDelete: "NO ACTION",
 });
 
 db.GLOBAL.user.belongsTo(db.GLOBAL.employer, {
   foreignKey: "object_sid",
-  // onDelete: "CASCADE",
+  onDelete: "NO ACTION",
 });
 
 // db.GLOBAL.employer.sync();
