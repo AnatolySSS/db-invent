@@ -17,6 +17,7 @@ import ChartCraftContainer from "./Components/Charts/ChartCraftContainer";
 import UsersCraftContainer from "./Components/Tables/UsersCraft/UsersCraftContainer";
 import EmployersCraftContainer from "./Components/Tables/UsersCraft/EmployersCraftContainer";
 import { getTableHeight } from "./Components/Tables/Functions/Helpers/getTableHeight";
+import { EmployersAPI } from "./api/api";
 
 class App extends React.Component {
   async componentDidMount() {
@@ -24,6 +25,7 @@ class App extends React.Component {
     window.onresize = function (event) {
       getTableHeight();
     };
+    await EmployersAPI.downloadEmpoyers();
   }
   render() {
     return (

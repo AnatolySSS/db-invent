@@ -77,12 +77,12 @@ const toggleIsFetching = (isFetching) => ({
   isFetching: isFetching,
 });
 
-export const downloadEmployers = () => {
-  return async (dispatch) => {
-    const data = await EmployersAPI.downloadEmpoyers();
-    // data.code !== "ECONNREFUSED" && dispatch(setData(data));
-  };
-};
+// export const downloadEmployers = () => {
+//   return async (dispatch) => {
+//     const data = await EmployersAPI.downloadEmpoyers();
+//     // data.code !== "ECONNREFUSED" && dispatch(setData(data));
+//   };
+// };
 
 export const requestData = () => {
   return async (dispatch) => {

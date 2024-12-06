@@ -45,7 +45,7 @@ export const getAuthUserData = () => {
         await dispatch(
           setAuth(login, full_name, true, role, division, data.message)
         );
-        await dispatch(downloadEmployers());
+        // await dispatch(downloadEmployers());
         await dispatch(requestData());
         break;
       case 1:
