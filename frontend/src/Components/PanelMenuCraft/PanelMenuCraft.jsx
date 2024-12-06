@@ -274,7 +274,7 @@ const PanelMenuCraft = (props) => {
           template: (item, options) => {
             return (
               <NavLink
-                to="/adusers"
+                to="/employers"
                 className={classNames(
                   options.className,
                   "w-full p-link flex align-items-center"

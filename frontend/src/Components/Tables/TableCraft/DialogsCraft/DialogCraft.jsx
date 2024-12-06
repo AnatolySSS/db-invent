@@ -26,7 +26,7 @@ export const DialogCraft = (props) => {
     updateData,
     emptyItem,
     userAuth,
-    adUsersFullNames,
+    employersFullNames,
   } = props;
 
   const [disabled, setDisabled] = useState(true);
@@ -93,7 +93,7 @@ export const DialogCraft = (props) => {
                 emptyItem={emptyItem}
                 userAuth={userAuth}
                 disabled={disabled}
-                adUsersFullNames={adUsersFullNames}
+                employersFullNames={employersFullNames}
               />
             </div>
           </TabPanel>

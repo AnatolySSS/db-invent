@@ -14,7 +14,8 @@ export const getItemDialogFooter = (
   userAuth,
   disabled,
   setDisabled,
-  adUsers
+  employers,
+  dialogType
 ) => (
   <React.Fragment>
     <Button
@@ -24,7 +25,7 @@ export const getItemDialogFooter = (
       onClick={hideNew(setItemDialog, setDisabled)}
     />
     {userAuth.role == "admin" &&
-      (disabled ? (
+      (disabled && dialogType === "edit" ? (
         <Button
           type="submit"
           label="Изменить"
@@ -34,7 +35,7 @@ export const getItemDialogFooter = (
       ) : (
         <Button
           type="submit"
-          label="Сохранить"
+          label={dialogType === "edit" ? "Сохранить" : "Добавить"}
           icon="pi pi-check"
           onClick={saveItem(
             addData,
@@ -46,7 +47,7 @@ export const getItemDialogFooter = (
             emptyItem,
             userAuth,
             setDisabled,
-            adUsers
+            employers
           )}
         />
       ))}

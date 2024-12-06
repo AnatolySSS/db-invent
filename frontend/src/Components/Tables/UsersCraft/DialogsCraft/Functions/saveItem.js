@@ -1,6 +1,3 @@
-import { formatDate } from "../../../Functions/Helpers/formatDate";
-import changeDateType from "../../../../../function-helpers/changeDateType";
-
 export const saveItem =
   (
     addData,
@@ -12,36 +9,18 @@ export const saveItem =
     emptyItem,
     userAuth,
     setDisabled,
-    adUsers
+    employers
   ) =>
   () => {
-    adUsers.forEach((asUser) => {
-      if (asUser.cn === item.full_name) {
-        item.login = asUser.mailNickname;
-      }
-    });
-
     setDisabled(true);
     let _item = { ...item };
 
-    Object.keys(_item).forEach((element) => {
-      //Изменение пустой строки на null для избежания ошибки при сохранении в базе данных
-      if (_item[element] === "") {
-        _item[element] = null;
-      }
-      //Изменение формата времени с Date  на String для избежания изменения часового пояса
-      if (element != "createdAt" && element != "updatedAt") {
-        if (element.includes("date")) {
-          if (_item[element] !== null) {
-            _item[element] = formatDate(_item[element]);
-            _item[element] = changeDateType(_item[element]);
-          }
-        }
-      }
-    });
-    if (_item.id) {
+    if (_item.object_sid) {
       updateData(_item, userAuth.division);
     } else {
+      _item.object_sid = employers.filter(
+        (employer) => employer.full_name === _item.full_name
+      )[0].object_sid;
       addData(_item, userAuth.division);
     }
     setItemDialog(false);

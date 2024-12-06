@@ -1,8 +1,9 @@
-import { ADAPI } from "../../api/api";
+import { EmployersAPI } from "../../api/api";
 import { FilterMatchMode, FilterOperator } from "primereact/api";
 
-const SET_DATA = "sodfu-inventory/ad-reducer/SET_DATA";
-const TOGGLE_IS_FETCHING = "sodfu-inventory/ad-reducer/TOGGLE_IS_FETCHING";
+const SET_DATA = "sodfu-inventory/employers-reducer/SET_DATA";
+const TOGGLE_IS_FETCHING =
+  "sodfu-inventory/employers-reducer/TOGGLE_IS_FETCHING";
 
 let initialState = {
   columns: [],
@@ -22,12 +23,14 @@ let initialState = {
   values: [],
   filters: {
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    cn: {
+    full_name: {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
     },
     department: { value: null, matchMode: FilterMatchMode.IN },
-    dn: {
+    title: { value: null, matchMode: FilterMatchMode.IN },
+    division: { value: null, matchMode: FilterMatchMode.IN },
+    login: {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
     },
@@ -35,19 +38,11 @@ let initialState = {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
     },
-    mailNickname: {
+    phone: {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
     },
-    objectSid: {
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
-    },
-    telephoneNumber: {
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
-    },
-    title: {
+    dn: {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
     },
@@ -57,7 +52,7 @@ let initialState = {
   isFetching: false,
 };
 
-const adReducer = (state = initialState, action) => {
+const employersReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_DATA:
       return {
@@ -82,9 +77,9 @@ const toggleIsFetching = (isFetching) => ({
   isFetching: isFetching,
 });
 
-export const getDatafromAD = () => {
+export const downloadEmployers = () => {
   return async (dispatch) => {
-    const data = await ADAPI.getData();
+    const data = await EmployersAPI.downloadEmpoyers();
     // data.code !== "ECONNREFUSED" && dispatch(setData(data));
   };
 };
@@ -92,10 +87,10 @@ export const getDatafromAD = () => {
 export const requestData = () => {
   return async (dispatch) => {
     dispatch(toggleIsFetching(true));
-    const data = await ADAPI.getUsers();
+    const data = await EmployersAPI.getEmployers();
     dispatch(setData(data));
     dispatch(toggleIsFetching(false));
   };
 };
 
-export default adReducer;
+export default employersReducer;

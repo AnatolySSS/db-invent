@@ -45,7 +45,7 @@ const TableCraft = (props) => {
     requestCurrentInventory,
     hasCurrentInventory,
     clearState,
-    adUsers,
+    employers,
   } = props;
 
   const [visibleColumns, setVisibleColumns] = useState([]);
@@ -217,11 +217,11 @@ const TableCraft = (props) => {
 
   const [UserNames, setUserNames] = useState([]);
 
-  const adUsersFullNames = adUsers.map((user) => user.cn);
+  const employersFullNames = employers.map((user) => user.cn);
 
   const search = (event) => {
     setUserNames(
-      adUsersFullNames.filter((item) =>
+      employersFullNames.filter((item) =>
         item.toLowerCase().includes(event.query.toLowerCase())
       )
     );
@@ -268,7 +268,7 @@ const TableCraft = (props) => {
             requestCurrentInventory={requestCurrentInventory}
             clearState={clearState}
             userMenuType="main"
-            adUsers={adUsers}
+            employers={employers}
           />
         }
         paginator
@@ -353,7 +353,7 @@ const TableCraft = (props) => {
         updateData={updateData}
         emptyItem={emptyItem}
         userAuth={userAuth}
-        adUsersFullNames={adUsersFullNames}
+        employersFullNames={employersFullNames}
       />
 
       {/* Удаление элемента */}

@@ -1,3 +1,4 @@
+import { Sequelize } from "sequelize";
 import bcrypt from "bcryptjs";
 import generator from "generate-password";
 import nodemailer from "nodemailer";
@@ -9,28 +10,34 @@ export const UsersController = {
     try {
       let { userDivision } = request.body;
 
-      const { user, userValues, userColumns } = db.GLOBAL;
+      const { user, userValues, userColumns, employer } = db.GLOBAL;
       let data = {};
 
-      data.lib = await user.findAll({
-        where: { division: userDivision },
+      data.lib = await employer.findAll({
         attributes: {
-          exclude: [
-            "createdAt",
-            "is_auth",
-            "last_logon",
-            "password",
-            "division",
+          include: [
+            [Sequelize.col("user.role"), "role"],
+            [Sequelize.col("user.updatedAt"), "updatedAt"],
           ],
+          exclude: ["createdAt", "dn"],
         },
+        where: { division: userDivision },
+        include: [
+          {
+            model: user,
+            required: true,
+            attributes: [],
+          },
+        ],
+        raw: true,
       });
+
       data.columns = await userColumns.findAll();
       data.values = await userValues.findAll({
         attributes: { exclude: ["id", "createdAt", "updatedAt"] },
       });
       data.name = "Пользователи";
 
-      data.lib = JSON.parse(JSON.stringify(data.lib));
       data.columns = JSON.parse(JSON.stringify(data.columns));
       data.values = JSON.parse(JSON.stringify(data.values));
 
@@ -64,22 +71,19 @@ export const UsersController = {
 
   async addUser(request, responce) {
     try {
-      let { rowData, userDivision } = request.body;
+      let { userData } = request.body;
       const { user } = db.GLOBAL;
 
-      rowData.division = userDivision;
-      rowData.is_auth = false;
+      userData.is_auth = false;
 
       let passwordGen = generator.generate({
         length: 10,
         numbers: true,
-        // symbols: true,
       });
 
-      rowData.password = await bcrypt.hash(passwordGen, 10);
-      delete rowData.id;
+      userData.password = await bcrypt.hash(passwordGen, 10);
 
-      await user.create(rowData);
+      await user.create(userData);
 
       // let testEmailAccount = await nodemailer.createTestAccount();
 
@@ -120,12 +124,13 @@ export const UsersController = {
 
   async updateUser(request, responce) {
     try {
-      let { rowData } = request.body;
+      let { userData } = request.body;
       const { user } = db.GLOBAL;
 
-      let _id = rowData.id;
-      delete rowData.id;
-      await user.update(rowData, { where: { id: _id } });
+      await user.update(
+        { role: userData.role },
+        { where: { object_sid: userData.object_sid } }
+      );
       responce.json({});
     } catch (error) {
       console.log("__________UsersController__updateData___________");
@@ -136,11 +141,12 @@ export const UsersController = {
 
   async deleteUser(request, responce) {
     try {
-      let { rowId } = request.body;
+      let { userId } = request.body;
       const { user } = db.GLOBAL;
+      console.log(userId);
 
-      await user.destroy({ where: { id: rowId } });
-      responce.json({ message: `User ${rowId} has been deleted` });
+      await user.destroy({ where: { object_sid: userId } });
+      responce.json({ message: `User ${userId} has been deleted` });
     } catch (error) {
       console.log("__________UsersController__deleteUser___________");
       console.log(error);

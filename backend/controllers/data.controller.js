@@ -31,6 +31,7 @@ export const DataController = {
         assetsColumns,
         assetsTransfer,
       } = db.DIVISIONS[`D${userDivision}`];
+      const { employer } = db.GLOBAL;
       let data = {};
       let libTable, columnsTable, valuesTable, logTable, transferTable;
 
@@ -221,7 +222,7 @@ export const DataController = {
     try {
       let { type, rowData, userDivision } = request.body;
 
-      const { adUser } = db.GLOBAL;
+      const { employer } = db.GLOBAL;
 
       const {
         itLib,
@@ -234,7 +235,7 @@ export const DataController = {
         assetsLog,
       } = db.DIVISIONS[`D${userDivision}`];
       let table, tableLog;
-      let adUsers;
+      let employers;
 
       switch (type) {
         case "it":
@@ -269,21 +270,18 @@ export const DataController = {
         }
       }
 
-      adUsers = await adUser.findAll({
+      employers = await employer.findAll({
         // where: { division: userDivision },
         attributes: {
           exclude: ["createdAt"],
         },
       });
-      adUsers = JSON.parse(JSON.stringify(adUsers));
+      employers = JSON.parse(JSON.stringify(employers));
 
       //Замена ФИО сотрудника на objectSid
-      for (const adUser of adUsers) {
-        if (rowData.owner === adUser.cn) {
-          rowData.owner = adUser.objectSid;
-        }
-        if (rowData.prev_owner === adUser.cn) {
-          rowData.prev_owner = adUser.objectSid;
+      for (const employer of employers) {
+        if (rowData.owner === employer.full_name) {
+          rowData.owner = employer.object_sid;
         }
       }
 
@@ -345,7 +343,7 @@ export const DataController = {
     try {
       let { type, items, transferData, userDivision } = request.body;
 
-      const { adUser } = db.GLOBAL;
+      const { employer } = db.GLOBAL;
 
       const {
         itLib,
@@ -362,7 +360,7 @@ export const DataController = {
         assetsTransfer,
       } = db.DIVISIONS[`D${userDivision}`];
       let table, tableLog, tableTransfer;
-      let adUsers;
+      let employers;
 
       switch (type) {
         case "it":
@@ -389,18 +387,18 @@ export const DataController = {
           break;
       }
 
-      adUsers = await adUser.findAll({
+      employers = await employer.findAll({
         // where: { division: userDivision },
         attributes: {
           exclude: ["createdAt"],
         },
       });
-      adUsers = JSON.parse(JSON.stringify(adUsers));
+      employers = JSON.parse(JSON.stringify(employers));
 
       //Замена ФИО сотрудника на objectSid
-      for (const adUser of adUsers) {
-        if (transferData.name === adUser.cn) {
-          transferData.name = adUser.objectSid;
+      for (const employer of employers) {
+        if (transferData.name === employer.cn) {
+          transferData.name = employer.objectSid;
         }
       }
 
@@ -415,7 +413,6 @@ export const DataController = {
         await table.update(
           {
             owner: transferData.name,
-            prev_owner: item.owner,
             last_setup_date: transferData.date,
           },
           { where: { id: item.id } }

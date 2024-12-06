@@ -13,7 +13,8 @@ import { formatDate } from "../../../Functions/Helpers/formatDate";
 import { getImgBodyTemplate } from "../../../Functions/Body/getImgBodyTemplate3";
 
 export const DescriptionIt = (props) => {
-  const { columns, item, disabled, setItem, values, adUsersFullNames } = props;
+  const { columns, item, disabled, setItem, values, employersFullNames } =
+    props;
 
   const [UserNames, setUserNames] = useState([]);
 
@@ -23,7 +24,7 @@ export const DescriptionIt = (props) => {
 
   // const search = (event) => {
   //   setUserNames(
-  //     adUsersFullNames.filter((item) =>
+  //     employersFullNames.filter((item) =>
   //       item.toLowerCase().includes(event.query.toLowerCase())
   //     )
   //   );
@@ -130,7 +131,7 @@ export const DescriptionIt = (props) => {
           />
         </div>
       )}
-      {currentColumns.includes("prev_owner") && (
+      {/* {currentColumns.includes("prev_owner") && (
         <div className="col-6">
           <label htmlFor="prev_owner" className={styles.label}>
             ФИО предыдущего юзера
@@ -142,7 +143,7 @@ export const DescriptionIt = (props) => {
             disabled={true}
           />
         </div>
-      )}
+      )} */}
       {currentColumns.includes("type") && (
         <div className="col-6">
           <label htmlFor="type" className={styles.label}>

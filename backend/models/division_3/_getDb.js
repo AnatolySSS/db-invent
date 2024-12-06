@@ -26,37 +26,37 @@ const getDb = (sequelize, Sequelize) => {
   let modelObj = {};
 
   modelObj.itLib = itLibModel(sequelize, Sequelize);
-  modelObj.itLib.sync();
+  // modelObj.itLib.sync();
   modelObj.itLog = itLogModel(sequelize, Sequelize);
-  modelObj.itLog.sync();
+  // modelObj.itLog.sync();
   modelObj.itValues = itValuesModel(sequelize, Sequelize);
-  modelObj.itValues.sync();
+  // modelObj.itValues.sync();
   modelObj.itColumns = itColumnsModel(sequelize, Sequelize);
-  modelObj.itColumns.sync();
+  // modelObj.itColumns.sync();
   modelObj.itTransfer = itTransferModel(sequelize, Sequelize);
-  modelObj.itTransfer.sync();
+  // modelObj.itTransfer.sync();
 
   modelObj.furnitureLib = furnitureLibModel(sequelize, Sequelize);
-  modelObj.furnitureLib.sync();
+  // modelObj.furnitureLib.sync();
   modelObj.furnitureLog = furnitureLogModel(sequelize, Sequelize);
-  modelObj.furnitureLog.sync();
+  // modelObj.furnitureLog.sync();
   modelObj.furnitureValues = furnitureValuesModel(sequelize, Sequelize);
-  modelObj.furnitureValues.sync();
+  // modelObj.furnitureValues.sync();
   modelObj.furnitureColumns = furnitureColumnsModel(sequelize, Sequelize);
-  modelObj.furnitureColumns.sync();
+  // modelObj.furnitureColumns.sync();
   modelObj.furnitureTransfer = furnitureTransferModel(sequelize, Sequelize);
-  modelObj.furnitureTransfer.sync();
+  // modelObj.furnitureTransfer.sync();
 
   modelObj.unmarkedLib = unmarkedLibModel(sequelize, Sequelize);
-  modelObj.unmarkedLib.sync();
+  // modelObj.unmarkedLib.sync();
   modelObj.unmarkedLog = unmarkedLogModel(sequelize, Sequelize);
-  modelObj.unmarkedLog.sync();
+  // modelObj.unmarkedLog.sync();
   modelObj.unmarkedValues = unmarkedValuesModel(sequelize, Sequelize);
-  modelObj.unmarkedValues.sync();
+  // modelObj.unmarkedValues.sync();
   modelObj.unmarkedColumns = unmarkedColumnsModel(sequelize, Sequelize);
-  modelObj.unmarkedColumns.sync();
+  // modelObj.unmarkedColumns.sync();
   modelObj.unmarkedTransfer = unmarkedTransferModel(sequelize, Sequelize);
-  modelObj.unmarkedTransfer.sync();
+  // modelObj.unmarkedTransfer.sync();
 
   modelObj.currentYearInventaryIt = yearInventaryIt(
     sequelize,

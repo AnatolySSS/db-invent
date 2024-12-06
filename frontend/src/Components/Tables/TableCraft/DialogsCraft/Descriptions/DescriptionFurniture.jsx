@@ -13,7 +13,8 @@ import { formatDate } from "../../../Functions/Helpers/formatDate";
 import { getImgBodyTemplate } from "../../../Functions/Body/getImgBodyTemplate3";
 
 export const DescriptionFurniture = (props) => {
-  const { columns, item, disabled, setItem, values, adUsersFullNames } = props;
+  const { columns, item, disabled, setItem, values, employersFullNames } =
+    props;
 
   const [UserNames, setUserNames] = useState([]);
   //Переменная для массива наименований столбцов,
@@ -22,7 +23,7 @@ export const DescriptionFurniture = (props) => {
 
   // const search = (event) => {
   //   setUserNames(
-  //     adUsersFullNames.filter((item) =>
+  //     employersFullNames.filter((item) =>
   //       item.toLowerCase().includes(event.query.toLowerCase())
   //     )
   //   );

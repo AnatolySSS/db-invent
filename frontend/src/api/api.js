@@ -111,27 +111,27 @@ export const UsersAPI = {
     const responce = await instance.post(`getUsers`, { userDivision });
     return responce.data;
   },
-  async addUser(rowData, userDivision) {
-    const responce = await instance.post(`addUser`, { rowData, userDivision });
+  async addUser(userData) {
+    const responce = await instance.post(`addUser`, { userData });
     return responce.data;
   },
-  async updateUser(rowData) {
-    const responce = await instance.put(`updateUser`, { rowData });
+  async updateUser(userData) {
+    const responce = await instance.put(`updateUser`, { userData });
     return responce.data;
   },
-  async deleteUser(rowId) {
-    const responce = await instance.delete(`deleteUser`, { data: { rowId } });
+  async deleteUser(userId) {
+    const responce = await instance.delete(`deleteUser`, { data: { userId } });
     return responce.data;
   },
 };
 
-export const ADAPI = {
-  async getData() {
-    const responce = await instance.get(`getADData`);
+export const EmployersAPI = {
+  async downloadEmpoyers() {
+    const responce = await instance.get(`downloadEmpoyers`);
     return responce.data;
   },
-  async getUsers() {
-    const responce = await instance.get(`getADUsers`);
+  async getEmployers() {
+    const responce = await instance.get(`getEmployers`);
     return responce.data;
   },
 };

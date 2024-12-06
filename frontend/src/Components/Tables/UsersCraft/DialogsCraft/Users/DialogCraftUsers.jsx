@@ -21,17 +21,18 @@ export const DialogCraftUsers = (props) => {
     updateData,
     emptyItem,
     userAuth,
-    adUsers,
+    employers,
+    dialogType,
   } = props;
 
   const [disabled, setDisabled] = useState(true);
   const [UserNames, setUserNames] = useState([]);
 
-  const adUsersFullNames = adUsers.map((user) => user.cn);
+  const employersFullNames = employers.map((user) => user.full_name);
 
   const search = (event) => {
     setUserNames(
-      adUsersFullNames.filter((item) =>
+      employersFullNames.filter((item) =>
         item.toLowerCase().includes(event.query.toLowerCase())
       )
     );
@@ -60,7 +61,8 @@ export const DialogCraftUsers = (props) => {
         userAuth,
         disabled,
         setDisabled,
-        adUsers
+        employers,
+        dialogType
       )}
       onHide={hideNew(setItemDialog, setDisabled)}
     >
@@ -77,7 +79,7 @@ export const DialogCraftUsers = (props) => {
               completeMethod={search}
               onChange={(e) => setItem({ ...item, full_name: e.target.value })}
               forceSelection
-              disabled={disabled}
+              disabled={dialogType === "edit"}
             />
             {/* <InputText
               id="full_name"
@@ -112,7 +114,7 @@ export const DialogCraftUsers = (props) => {
               options={getDropdownOptions("role", values)}
               onChange={(e) => setItem({ ...item, role: e.target.value })}
               placeholder={item.role || ""}
-              disabled={disabled}
+              disabled={dialogType === "edit" && disabled}
             />
           </div>
         )}

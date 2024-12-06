@@ -3,6 +3,7 @@ import config from "../config/auth.config.js";
 
 const verifyToken = (req, res, next) => {
   let token = req.headers["x-access-token"];
+
   if (!token) {
     return res.send({
       tokenMessage: "No token provided!",
@@ -21,7 +22,7 @@ const verifyToken = (req, res, next) => {
 };
 
 const authJwt = {
-    verifyToken: verifyToken,
-  };
+  verifyToken: verifyToken,
+};
 
-  export default authJwt
+export default authJwt;

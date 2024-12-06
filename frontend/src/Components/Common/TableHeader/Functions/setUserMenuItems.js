@@ -25,9 +25,11 @@ export const setUserMenuItems = (
   emptyItem,
   setItem,
   setItemDialog,
-  adUsers
+  employers,
+  setDialogType
 ) => {
   const openNew = () => {
+    setDialogType("create");
     setItem(emptyItem);
     setItemDialog(true);
   };
@@ -50,7 +52,7 @@ export const setUserMenuItems = (
       }
     }
     if (check) {
-      return makeCommitment(selectedItems, adUsers, userAuth.fullName);
+      return makeCommitment(selectedItems, employers, userAuth.fullName);
     } else {
       userToast.current.show({
         severity: "info",
@@ -116,11 +118,11 @@ export const setUserMenuItems = (
           icon: "pi pi-file-word",
           command: makeCommitmentHelper,
         },
-        // {
-        //   label: "Сформировать QR-коды",
-        //   icon: "pi pi-qrcode",
-        //   command: makeQRCodeHelper,
-        // },
+        {
+          label: "Сформировать QR-коды",
+          icon: "pi pi-qrcode",
+          command: makeQRCodeHelper,
+        },
         // {
         //   label: "Загрузить пользователей",
         //   icon: "pi pi-users",
@@ -170,7 +172,7 @@ export const setUserMenuItems = (
 
       break;
     case "year":
-    case "adusers":
+    case "employers":
       addTypes = [
         {
           label: "Сформировать EXCEL",

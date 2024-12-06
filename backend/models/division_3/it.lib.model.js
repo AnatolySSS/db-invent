@@ -33,19 +33,16 @@ export default (sequelize, Sequelize) => {
         type: Sequelize.TEXT,
       },
       owner: {
-        type: Sequelize.TEXT,
-      },
-      prev_owner: {
-        type: Sequelize.TEXT,
+        type: Sequelize.STRING,
       },
       set_with: {
         type: Sequelize.TEXT,
       },
       workplace_type: {
-        type: Sequelize.TEXT,
+        type: Sequelize.STRING,
       },
       serviceable: {
-        type: Sequelize.TEXT,
+        type: Sequelize.STRING,
       },
       note: {
         type: Sequelize.TEXT,
@@ -54,7 +51,7 @@ export default (sequelize, Sequelize) => {
         type: Sequelize.BOOLEAN,
       },
       location: {
-        type: Sequelize.TEXT,
+        type: Sequelize.STRING,
       },
       was_deleted: {
         type: Sequelize.BOOLEAN,

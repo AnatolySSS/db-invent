@@ -7,13 +7,13 @@ let config = {
   password: "Pdfi#1khgg",
 };
 
-export const ADController = {
-  async getADData(request, responce) {
+export const EmployersController = {
+  async downloadEmpoyers(request, responce) {
     const client = new Client({
       url: config.url,
     });
     try {
-      const { adUser, adUserColumns } = db.GLOBAL;
+      const { employer, employerColumns } = db.GLOBAL;
 
       await client.bind(config.bindDN, config.password);
       console.log("Успешно подключились к LDAP-серверу");
@@ -53,20 +53,20 @@ export const ADController = {
       });
       let data = {};
       data.lib = JSON.parse(JSON.stringify(searchEntries));
-      data.columns = await adUserColumns.findAll();
+      data.columns = await employerColumns.findAll();
       data.name = "Сотрудники";
 
       //Удаление всех значений
-      adUser.destroy({
+      employer.destroy({
         where: {}, // условие для удаления всех записей
         truncate: true, // необязательно, но рекомендуется для быстрого удаления всех записей
       });
       //Добавление новых значений
-      for (const obj of searchEntries) await adUser.create(obj);
+      for (const obj of searchEntries) await employer.create(obj);
 
       responce.json(data);
     } catch (error) {
-      console.log("__________ADController__getADData___________");
+      console.log("__________EmployersController__downloadEmpoyers___________");
       console.log(error);
       responce.json(error);
     } finally {
@@ -75,30 +75,22 @@ export const ADController = {
     }
   },
 
-  async getADUsers(request, responce) {
+  async getEmployers(request, responce) {
     try {
-      // let { userDivision } = request.body;
-
-      const { adUser, adUserColumns } = db.GLOBAL;
+      const { employer, employerColumns } = db.GLOBAL;
       let data = {};
 
-      data.lib = await adUser.findAll({
+      data.lib = await employer.findAll({
         // where: { division: userDivision },
         attributes: {
           exclude: ["createdAt"],
         },
       });
-      data.columns = await adUserColumns.findAll();
-      // data.values = await userValues.findAll({
-      //   attributes: { exclude: ["id", "createdAt", "updatedAt"] },
-      // });
+      data.columns = await employerColumns.findAll();
       data.name = "Сотрудники";
 
       data.lib = JSON.parse(JSON.stringify(data.lib));
       data.columns = JSON.parse(JSON.stringify(data.columns));
-      // data.values = JSON.parse(JSON.stringify(data.values));
-
-      // data.values = getValues(data.values);
 
       //Изменение null на "null"
       data.lib = data.lib.map((libObg) => {
@@ -120,7 +112,7 @@ export const ADController = {
 
       responce.json(data);
     } catch (error) {
-      console.log("__________ADController__getUsers___________");
+      console.log("__________EmployersController__getEmployers___________");
       console.log(error);
       responce.json(error);
     }

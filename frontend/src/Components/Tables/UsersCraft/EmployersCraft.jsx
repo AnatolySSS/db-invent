@@ -4,8 +4,6 @@ import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Button } from "primereact/button";
-import { Dialog } from "primereact/dialog";
 import { Toast } from "primereact/toast";
 import Preloader from "../../Common/Preloader/Preloader";
 import { creactLocale } from "../../../function-helpers/addLocale";
@@ -17,31 +15,25 @@ import {
 import { getColumnBody } from "../Functions/Body/getColumnBody";
 import { getTableHeight } from "../Functions/Helpers/getTableHeight";
 import { TableHeader } from "../../Common/TableHeader/TableHeader";
-import { DialogCraftUsers } from "./DialogsCraft/Users/DialogCraftUsers";
 
-const ADUsersCraft = (props) => {
+const EmployersCraft = (props) => {
   let {
     type,
     name,
     data,
     columns,
     values,
-    addData,
-    updateData,
-    deleteData,
+    requestData,
     setVisible,
     logout,
     userAuth,
     isFetching,
     clearState,
-    adUsers,
   } = props;
 
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filters, setFilters] = useState(props.filters);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
-  const [ItemDialog, setItemDialog] = useState(false);
-  const [deleteItemDialog, setDeleteItemDialog] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
   const toast = useRef(null);
   let emptyItem = {};
@@ -59,8 +51,6 @@ const ADUsersCraft = (props) => {
     emptyItem[obj.field] = dataType;
   });
 
-  const [item, setItem] = useState(emptyItem);
-
   values.department = [
     ...new Set(
       data
@@ -68,9 +58,19 @@ const ADUsersCraft = (props) => {
         .filter((element) => element.length !== 0)
     ),
   ].sort((a, b) => a.localeCompare(b));
-  values.department.push("");
+  values.department.unshift("");
+
+  values.title = [
+    ...new Set(
+      data
+        .map((element) => element.title)
+        .filter((element) => element.length !== 0)
+    ),
+  ].sort((a, b) => a.localeCompare(b));
+  values.title.unshift("");
 
   useEffect(() => {
+    requestData();
     initFilters();
     creactLocale();
     locale("ru");
@@ -84,75 +84,9 @@ const ADUsersCraft = (props) => {
     setVisibleColumns(columns);
   }, [columns]);
 
-  const hideDeleteItemDialog = () => {
-    setDeleteItemDialog(false);
-  };
-
-  const editItem = (rowData) => {
-    setItem({ ...rowData });
-    setItemDialog(true);
-  };
-
-  const confirmDeleteItem = (rowData) => {
-    setItem(rowData);
-    setDeleteItemDialog(true);
-  };
-
-  const deleteItem = () => {
-    let _item = { ...item };
-    deleteData(_item.id, userAuth.division);
-
-    toast.current.show({
-      severity: "success",
-      summary: "Удалено",
-      detail: `${item.full_name} успешно удален`,
-      life: 3000,
-    });
-    setDeleteItemDialog(false);
-    setItem(emptyItem);
-  };
-
-  const deleteItemDialogFooter = (
-    <React.Fragment>
-      <Button
-        label="Нет"
-        icon="pi pi-times"
-        outlined
-        onClick={hideDeleteItemDialog}
-      />
-      <Button
-        label="Да"
-        icon="pi pi-check"
-        severity="danger"
-        onClick={deleteItem}
-      />
-    </React.Fragment>
-  );
-
   const initFilters = () => {
     setFilters(props.filters);
     setGlobalFilterValue(props.filters.global.value);
-  };
-
-  const editColumnBodyTemplate = (rowData) => {
-    return (
-      <React.Fragment>
-        <Button
-          icon={"pi pi-pencil"}
-          rounded
-          outlined
-          onClick={() => editItem(rowData)}
-        />
-        <Button
-          icon="pi pi-trash"
-          rounded
-          outlined
-          className="ml-2"
-          severity="danger"
-          onClick={() => confirmDeleteItem(rowData)}
-        />
-      </React.Fragment>
-    );
   };
 
   return isFetching ? (
@@ -170,7 +104,7 @@ const ADUsersCraft = (props) => {
         filters={filters}
         filterDisplay="menu"
         globalFilterFields={getglobalFilterColumns(visibleColumns)}
-        dataKey="objectSid"
+        dataKey="object_sid"
         header={
           <TableHeader
             type={type}
@@ -181,15 +115,13 @@ const ADUsersCraft = (props) => {
             emptyItem={emptyItem}
             setVisible={setVisible}
             setFilters={setFilters}
-            setItem={setItem}
-            setItemDialog={setItemDialog}
             setGlobalFilterValue={setGlobalFilterValue}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
             columns={columns}
             filters={filters}
             tableName={name}
-            userMenuType="adusers"
+            userMenuType="employers"
             globalFilterValue={globalFilterValue}
             clearState={clearState}
           />
@@ -240,55 +172,9 @@ const ADUsersCraft = (props) => {
             body={getColumnBody(col)}
           />
         ))}
-        {data.length != 0 && (
-          <Column
-            body={editColumnBodyTemplate}
-            header={"Редактирование"}
-            exportable={false}
-            alignFrozen="right"
-            frozen
-            headerStyle={{ minWidth: "8rem" }}
-            bodyStyle={{ textAlign: "center" }}
-          ></Column>
-        )}
       </DataTable>
-      <DialogCraftUsers
-        data={data}
-        columns={columns}
-        setItemDialog={setItemDialog}
-        ItemDialog={ItemDialog}
-        item={item}
-        setItem={setItem}
-        values={values}
-        addData={addData}
-        updateData={updateData}
-        emptyItem={emptyItem}
-        userAuth={userAuth}
-        adUsers={adUsers}
-      />
-      <Dialog
-        visible={deleteItemDialog}
-        style={{ width: "32rem" }}
-        breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-        header="Подтверждение"
-        modal
-        footer={deleteItemDialogFooter}
-        onHide={hideDeleteItemDialog}
-      >
-        <div className="confirmation-content">
-          <i
-            className="pi pi-exclamation-triangle mr-3"
-            style={{ fontSize: "2rem" }}
-          />
-          {item && (
-            <span>
-              Вы уверены, что хотите удалить <b>{item.full_name}</b>?
-            </span>
-          )}
-        </div>
-      </Dialog>
     </div>
   );
 };
 
-export default ADUsersCraft;
+export default EmployersCraft;

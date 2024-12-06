@@ -101,7 +101,6 @@ const PasswordInput = ({
   ...props
 }) => {
   const { passwordMt, setPasswordMt } = props;
-  // const [passwordMt, setPasswordMt] = useState("mt-2");
   return (
     <div className={classNames(passwordMt, "mb-2")}>
       <span
@@ -150,6 +149,8 @@ const LoginCraft = (props) => {
   const { login, isAuth, message } = props;
 
   const submit = (values) => {
+    console.log(values);
+
     login(values.login, values.password);
   };
 
@@ -202,7 +203,7 @@ const LoginCraft = (props) => {
               <Button
                 type="submit"
                 className="w-full justify-content-center"
-                onClick={submit}
+                // onClick={submit}
               >
                 Login
               </Button>

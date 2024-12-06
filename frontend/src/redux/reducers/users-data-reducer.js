@@ -15,11 +15,22 @@ let initialState = {
   values: [],
   filters: {
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    full_name: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+    },
+    department: { value: null, matchMode: FilterMatchMode.IN },
+    title: { value: null, matchMode: FilterMatchMode.IN },
+    division: { value: null, matchMode: FilterMatchMode.IN },
     login: {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
     },
-    full_name: {
+    mail: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+    },
+    phone: {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
     },
@@ -110,30 +121,30 @@ export const requestData = (userDivision) => {
   };
 };
 
-export const updateData = (rowData, userDivision) => {
+export const updateData = (userData, userDivision) => {
   return async (dispatch) => {
     dispatch(toggleIsFetching(true));
-    const message = await UsersAPI.updateUser(rowData);
+    const message = await UsersAPI.updateUser(userData);
     const data = await UsersAPI.getUsers(userDivision);
     dispatch(toggleIsFetching(false));
     dispatch(setData(changeDateFormat(data), message.message));
   };
 };
 
-export const deleteData = (rowId, userDivision) => {
+export const deleteData = (userId, userDivision) => {
   return async (dispatch) => {
     dispatch(toggleIsFetching(true));
-    const message = await UsersAPI.deleteUser(rowId);
+    const message = await UsersAPI.deleteUser(userId);
     const data = await UsersAPI.getUsers(userDivision);
     dispatch(toggleIsFetching(false));
     dispatch(setData(changeDateFormat(data), message.message));
   };
 };
 
-export const addData = (rowData, userDivision) => {
+export const addData = (userData, userDivision) => {
   return async (dispatch) => {
     dispatch(toggleIsFetching(true));
-    await UsersAPI.addUser(rowData, userDivision);
+    await UsersAPI.addUser(userData);
     const data = await UsersAPI.getUsers(userDivision);
     dispatch(toggleIsFetching(false));
     dispatch(setData(changeDateFormat(data)));

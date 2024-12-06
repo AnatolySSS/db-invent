@@ -35,7 +35,7 @@ const UsersCraft = (props) => {
     userAuth,
     isFetching,
     clearState,
-    adUsers,
+    employers,
   } = props;
 
   const [visibleColumns, setVisibleColumns] = useState(columns);
@@ -44,21 +44,27 @@ const UsersCraft = (props) => {
   const [ItemDialog, setItemDialog] = useState(false);
   const [deleteItemDialog, setDeleteItemDialog] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
+  const [dialogType, setDialogType] = useState("");
   const toast = useRef(null);
-  let emptyItem = {};
+  let emptyItem = { full_name: "", role: "" };
 
-  columns.map((obj) => {
-    let dataType;
-    switch (obj.dataType) {
-      case "numeric":
-        dataType = 0;
-        break;
-      default:
-        dataType = null;
-        break;
-    }
-    emptyItem[obj.field] = dataType;
-  });
+  values.department = [
+    ...new Set(
+      data
+        .map((element) => element.department)
+        .filter((element) => element.length !== 0)
+    ),
+  ].sort((a, b) => a.localeCompare(b));
+  values.department.unshift("");
+
+  values.title = [
+    ...new Set(
+      data
+        .map((element) => element.title)
+        .filter((element) => element.length !== 0)
+    ),
+  ].sort((a, b) => a.localeCompare(b));
+  values.title.unshift("");
 
   const [item, setItem] = useState(emptyItem);
 
@@ -82,6 +88,7 @@ const UsersCraft = (props) => {
   };
 
   const editItem = (rowData) => {
+    setDialogType("edit");
     setItem({ ...rowData });
     setItemDialog(true);
   };
@@ -93,7 +100,7 @@ const UsersCraft = (props) => {
 
   const deleteItem = () => {
     let _item = { ...item };
-    deleteData(_item.id, userAuth.division);
+    deleteData(_item.object_sid, userAuth.division);
 
     toast.current.show({
       severity: "success",
@@ -163,7 +170,7 @@ const UsersCraft = (props) => {
         filters={filters}
         filterDisplay="menu"
         globalFilterFields={getglobalFilterColumns(visibleColumns)}
-        dataKey="id"
+        dataKey="object_sid"
         header={
           <TableHeader
             type={type}
@@ -185,6 +192,7 @@ const UsersCraft = (props) => {
             userMenuType="users"
             globalFilterValue={globalFilterValue}
             clearState={clearState}
+            setDialogType={setDialogType}
           />
         }
         paginator
@@ -257,7 +265,8 @@ const UsersCraft = (props) => {
         updateData={updateData}
         emptyItem={emptyItem}
         userAuth={userAuth}
-        adUsers={adUsers}
+        employers={employers}
+        dialogType={dialogType}
       />
       <Dialog
         visible={deleteItemDialog}

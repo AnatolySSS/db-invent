@@ -18,7 +18,7 @@ export const Description = (props) => {
     emptyItem,
     userAuth,
     disabled,
-    adUsersFullNames,
+    employersFullNames,
   } = props;
 
   switch (name) {
@@ -37,7 +37,7 @@ export const Description = (props) => {
           emptyItem={emptyItem}
           userAuth={userAuth}
           disabled={disabled}
-          adUsersFullNames={adUsersFullNames}
+          employersFullNames={employersFullNames}
         />
       );
     case "Мебель":
@@ -55,7 +55,7 @@ export const Description = (props) => {
           emptyItem={emptyItem}
           userAuth={userAuth}
           disabled={disabled}
-          adUsersFullNames={adUsersFullNames}
+          employersFullNames={employersFullNames}
         />
       );
     case "Прочее":
@@ -73,7 +73,7 @@ export const Description = (props) => {
           emptyItem={emptyItem}
           userAuth={userAuth}
           disabled={disabled}
-          adUsersFullNames={adUsersFullNames}
+          employersFullNames={employersFullNames}
         />
       );
     case "Основные средства":
@@ -91,7 +91,7 @@ export const Description = (props) => {
           emptyItem={emptyItem}
           userAuth={userAuth}
           disabled={disabled}
-          adUsersFullNames={adUsersFullNames}
+          employersFullNames={employersFullNames}
         />
       );
     default:

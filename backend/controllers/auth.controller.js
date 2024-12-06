@@ -1,14 +1,33 @@
+import { Sequelize } from "sequelize";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs"
+import bcrypt from "bcryptjs";
 import db from "../models/_index.js";
-const User = db.GLOBAL.user
+const User = db.GLOBAL.user;
+const Employer = db.GLOBAL.employer;
 import authConfig from "../config/auth.config.js";
 
 export const AuthController = {
   async login(request, responce) {
     try {
       let { login, password } = request.body;
-      const user = await User.findOne({ where: { login: login }, raw: true });
+
+      const user = await Employer.findOne({
+        attributes: {
+          include: [
+            [Sequelize.col("user.password"), "password"],
+            [Sequelize.col("user.role"), "role"],
+          ],
+          exclude: ["createdAt", "updatedAt"],
+        },
+        where: { login: login },
+        include: [
+          {
+            model: User,
+            attributes: [],
+          },
+        ],
+        raw: true,
+      });
 
       if (!user) {
         return responce.json({
@@ -18,6 +37,7 @@ export const AuthController = {
       }
 
       let passwordIsValid = bcrypt.compareSync(password, user.password);
+
       if (!passwordIsValid) {
         return responce.json({
           resultCode: 1,
@@ -26,37 +46,56 @@ export const AuthController = {
         });
       }
 
-      await User.update({ is_auth: 1, last_logon: new Date() }, { where: { login: login } });
+      await User.update(
+        { is_auth: 1, last_logon: new Date() },
+        { where: { object_sid: user.object_sid } }
+      );
 
       const accessToken = jwt.sign(
         { login: user.login, role: user.role },
         authConfig.secret
       );
 
-      user.last_logon = new Date();
-
       responce.json({
         resultCode: 0,
         accessToken: accessToken,
         message: "Аутентификация прошла успешно",
-        user,
       });
     } catch (error) {
+      console.log("__________AuthController__login___________");
+      console.log(error);
       responce.json(error);
     }
-
   },
 
   async logout(request, responce) {
     try {
       let { login } = request.body;
-      await User.update({ is_auth: 0 }, { where: {login: login} });
+      const user = await Employer.findOne({
+        attributes: ["object_sid"],
+        where: { login: login },
+        include: [
+          {
+            model: User,
+            attributes: [],
+          },
+        ],
+        raw: true,
+      });
+
+      await User.update(
+        { is_auth: 0 },
+        { where: { object_sid: user.object_sid } }
+      );
+
       responce.json({
         resultCode: 0,
         accessToken: null,
         message: "Сессия завершена",
       });
     } catch (error) {
+      console.log("__________AuthController__logout___________");
+      console.log(error);
       responce.json(error);
     }
   },
@@ -64,7 +103,25 @@ export const AuthController = {
   async auth(request, responce) {
     try {
       let { login } = request.body;
-      const user = await User.findOne({ where: { login: login }, raw: true });
+
+      const user = await Employer.findOne({
+        attributes: {
+          include: [
+            [Sequelize.col("user.last_logon"), "last_logon"],
+            [Sequelize.col("user.is_auth"), "is_auth"],
+            [Sequelize.col("user.role"), "role"],
+          ],
+          exclude: ["createdAt", "updatedAt"],
+        },
+        where: { login: login },
+        include: [
+          {
+            model: User,
+            attributes: [],
+          },
+        ],
+        raw: true,
+      });
 
       if (!user) return;
 
@@ -83,8 +140,9 @@ export const AuthController = {
           user,
         });
       }
-
     } catch (error) {
+      console.log("__________AuthController__auth___________");
+      console.log(error);
       responce.json(error);
     }
   },

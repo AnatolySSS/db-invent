@@ -1,5 +1,5 @@
 import { AuthAPI } from "../../api/api";
-import { getDatafromAD, requestData } from "./ad-users-reducer";
+import { downloadEmployers, requestData } from "./employers-reducer";
 const SET_AUTH = "sodfu-inventory/authReducer/IS_AUTH";
 const SET_MESSAGE = "sodfu-inventory/authReducer/SET_MESSAGE";
 
@@ -45,7 +45,7 @@ export const getAuthUserData = () => {
         await dispatch(
           setAuth(login, full_name, true, role, division, data.message)
         );
-        await dispatch(getDatafromAD());
+        await dispatch(downloadEmployers());
         await dispatch(requestData());
         break;
       case 1:
@@ -59,6 +59,8 @@ export const getAuthUserData = () => {
 };
 
 export const login = (login, password) => (dispatch) => {
+  console.log(login);
+
   AuthAPI.login(login, password).then((data) => {
     switch (data.resultCode) {
       case 0:

@@ -35,9 +35,6 @@ export default (sequelize, Sequelize) => {
       owner: {
         type: Sequelize.TEXT,
       },
-      prev_owner: {
-        type: Sequelize.TEXT,
-      },
       set_with: {
         type: Sequelize.TEXT,
       },

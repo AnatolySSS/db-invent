@@ -1,16 +1,12 @@
 export default (sequelize, Sequelize) => {
   const User = sequelize.define("users", {
-    login: {
-      type: Sequelize.STRING,
+    object_sid: {
+      type: Sequelize.STRING(50),
+      unique: true,
+      primaryKey: true,
     },
     password: {
       type: Sequelize.STRING,
-    },
-    full_name: {
-      type: Sequelize.STRING,
-    },
-    last_logon: {
-      type: Sequelize.DATE,
     },
     is_auth: {
       type: Sequelize.BOOLEAN,
@@ -18,8 +14,8 @@ export default (sequelize, Sequelize) => {
     role: {
       type: Sequelize.STRING,
     },
-    division: {
-      type: Sequelize.INTEGER,
+    last_logon: {
+      type: Sequelize.DATE,
     },
   });
 
