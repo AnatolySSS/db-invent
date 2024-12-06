@@ -13,8 +13,6 @@ export const EmployersController = {
       url: config.url,
     });
     try {
-      console.log("sdfsdf");
-
       const { employer, employerColumns } = db.GLOBAL;
 
       await client.bind(config.bindDN, config.password);
