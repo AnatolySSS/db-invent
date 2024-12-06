@@ -67,20 +67,21 @@ export const EmployersController = {
       data.columns = await employerColumns.findAll();
       data.name = "Сотрудники";
 
-      let currentData = await employer.findAll({
+      let currentEmployers = await employer.findAll({
         attributes: ["object_sid"],
         raw: true,
       });
-      currentData = currentData.map((obj) => obj.object_sid);
-      console.log(currentData);
+      currentEmployers = currentEmployers.map((obj) => obj.object_sid);
+      let newEmployers = data.lib.map((obj) => obj.object_sid);
 
       //Добавление новых значений
       for (const obj of searchEntries) {
-        if (!currentData.includes(obj.object_sid)) {
-          await employer.create(obj);
-        } else {
-          console.log(obj.full_name);
-        }
+        !currentEmployers.includes(obj.object_sid) &&
+          (await employer.create(obj));
+      }
+      for (const currentEmployer of currentEmployers) {
+        !newEmployers.includes(currentEmployer) &&
+          console.log(currentEmployer + " is gone");
       }
 
       responce.json(data);
