@@ -34,25 +34,37 @@ export async function makeQRCode(selectedItems) {
 
   const addImagetoPDF = (img) => {
     let x;
-    switch (totalCounter % 4) {
+    switch (totalCounter % 8) {
       case 1:
         x = 10;
         break;
       case 2:
-        x = 60;
+        x = 35;
         break;
       case 3:
+        x = 60;
+        break;
+      case 4:
+        x = 85;
+        break;
+      case 5:
         x = 110;
         break;
+      case 6:
+        x = 135;
+        break;
+      case 7:
+        x = 200;
+        break;
       case 0:
-        x = 160;
+        x = 230;
         break;
       default:
         break;
     }
 
-    pdf.addImage(img, "png", x, y, 40, 40, "", "MEDIUM");
-    pdf.text(selectedItems[totalCounter - 1].qr_code, x + 10, y + 45);
+    pdf.addImage(img, "png", x, y, 20, 20, "", "MEDIUM");
+    pdf.text(selectedItems[totalCounter - 1].qr_code, x + 1, y + 25);
   };
 
   for (const container of canvasContainers) {
@@ -61,7 +73,7 @@ export async function makeQRCode(selectedItems) {
     let img = container.children[0].toDataURL("image/png");
     addImagetoPDF(img);
 
-    totalCounter % 4 === 0 ? (y += 48) : (y = y);
+    totalCounter % 8 === 0 ? (y += 28) : (y = y);
 
     if (totalCounter % 24 === 0) {
       pdf.addPage();
