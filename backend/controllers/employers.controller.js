@@ -154,10 +154,11 @@ export const EmployersController = {
             ) {
               libObg[libKey] =
                 libObg[libKey] === null
-                  ? libObg[libKey] === "null"
+                  ? (libObg[libKey] = "null")
                   : libObg[libKey];
             }
           });
+          libObg[libKey] === null ? (libObg[libKey] = "") : libObg[libKey];
         }
         return libObg;
       });

@@ -60,7 +60,7 @@ export const UsersController = {
             ) {
               libObg[libKey] =
                 libObg[libKey] === null
-                  ? libObg[libKey] === "null"
+                  ? (libObg[libKey] = "null")
                   : libObg[libKey];
             }
           });
