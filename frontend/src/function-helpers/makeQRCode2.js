@@ -4,7 +4,7 @@ import { createRoot } from "react-dom/client";
 
 export async function makeQRCode(selectedItems) {
   let pdf = new jsPDF();
-  let y = 8;
+  let y = 5;
   let currentPage = 1;
   let totalCounter = 0;
   let canvasContainers = [];
@@ -54,10 +54,10 @@ export async function makeQRCode(selectedItems) {
         x = 135;
         break;
       case 7:
-        x = 200;
+        x = 160;
         break;
       case 0:
-        x = 230;
+        x = 185;
         break;
       default:
         break;
@@ -75,7 +75,7 @@ export async function makeQRCode(selectedItems) {
 
     totalCounter % 8 === 0 ? (y += 28) : (y = y);
 
-    if (totalCounter % 24 === 0) {
+    if (totalCounter % 80 === 0) {
       pdf.addPage();
       currentPage++;
       pdf.setPage(currentPage);
