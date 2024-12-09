@@ -81,7 +81,7 @@ const toggleIsFetching = (isFetching) => ({
 export const downloadEmployers = () => {
   return async (dispatch) => {
     const data = await EmployersAPI.downloadEmpoyers();
-    console.log(data);
+    // console.log(data);
     // data.code !== "ECONNREFUSED" && dispatch(setData(data));
   };
 };
