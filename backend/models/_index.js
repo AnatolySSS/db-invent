@@ -4,6 +4,7 @@ import userValuesModel from "./global/users/user.values.model.js";
 import userColumnsModel from "./common/columns/user.columns.model.js";
 import employerModel from "./global/employers/employer.model.js";
 import employerColumnsModel from "./common/columns/employer.columns.model.js";
+import citiesModel from "./common/cities/cities.model.js";
 import { getDbConfig } from "../config/getDbConfig.js";
 import getDb_D0 from "./division_0/_getDb.js";
 import getDb_D1 from "./division_1/_getDb.js";
@@ -39,17 +40,22 @@ sequelize.GLOBAL = new Sequelize(
   }
 );
 
+db.GLOBAL.city = citiesModel(sequelize.GLOBAL, Sequelize);
 db.GLOBAL.employer = employerModel(sequelize.GLOBAL, Sequelize);
 db.GLOBAL.user = userModel(sequelize.GLOBAL, Sequelize);
 
-db.GLOBAL.employer.hasOne(db.GLOBAL.user, {
-  foreignKey: "object_sid",
-  onDelete: "RESTRICT",
+db.GLOBAL.city.hasMany(db.GLOBAL.employer, {
+  foreignKey: "division",
+});
+db.GLOBAL.employer.belongsTo(db.GLOBAL.city, {
+  foreignKey: "division",
 });
 
+db.GLOBAL.employer.hasOne(db.GLOBAL.user, {
+  foreignKey: "object_sid",
+});
 db.GLOBAL.user.belongsTo(db.GLOBAL.employer, {
   foreignKey: "object_sid",
-  onDelete: "RESTRICT",
 });
 
 // db.GLOBAL.employer.sync();

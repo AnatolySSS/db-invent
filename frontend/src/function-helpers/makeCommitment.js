@@ -23,15 +23,22 @@ import { saveAs } from "file-saver";
 
 export function makeCommitment(selectedItems, employers, fullName) {
   const department = employers.filter(
-    (user) => user.cn == selectedItems[0].owner
+    (employer) => employer.full_name == selectedItems[0].owner
   )[0]?.department;
 
-  const title = employers.filter((user) => user.cn == selectedItems[0].owner)[0]
-    ?.title;
+  console.log(employers);
+
+  const title = employers.filter(
+    (employer) => employer.full_name == selectedItems[0].owner
+  )[0]?.title;
 
   const telephoneNumber = employers.filter(
-    (user) => user.cn == selectedItems[0].owner
-  )[0]?.telephoneNumber;
+    (employer) => employer.full_name == selectedItems[0].owner
+  )[0]?.phone;
+
+  const cityName = employers.filter(
+    (employer) => employer.full_name == selectedItems[0].owner
+  )[0]?.city_name;
 
   let owners = [];
   let names = [];
@@ -456,7 +463,11 @@ export function makeCommitment(selectedItems, employers, fullName) {
                     children: [
                       new Paragraph({
                         style: "myCustomStyle",
-                        children: [],
+                        children: [
+                          new TextRun({
+                            text: cityName,
+                          }),
+                        ],
                         alignment: AlignmentType.CENTER,
                       }),
                     ],

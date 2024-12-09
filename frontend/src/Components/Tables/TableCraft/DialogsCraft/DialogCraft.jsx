@@ -27,6 +27,8 @@ export const DialogCraft = (props) => {
     emptyItem,
     userAuth,
     employersFullNames,
+    dialogType,
+    employers,
   } = props;
 
   const [disabled, setDisabled] = useState(true);
@@ -61,7 +63,9 @@ export const DialogCraft = (props) => {
         disabled,
         setDisabled,
         activeTabIndex,
-        setActiveTabIndex
+        setActiveTabIndex,
+        dialogType,
+        employers
       )}
       onHide={hideNew(setItemDialog, setDisabled)}
     >
@@ -94,6 +98,7 @@ export const DialogCraft = (props) => {
                 userAuth={userAuth}
                 disabled={disabled}
                 employersFullNames={employersFullNames}
+                dialogType={dialogType}
               />
             </div>
           </TabPanel>

@@ -1,5 +1,7 @@
+import { Sequelize } from "sequelize";
 import { Client } from "ldapts";
 import db from "../models/_index.js";
+import { getValues } from "./functions/getValues.js";
 
 let config = {
   url: "ldap://10.205.0.11:389",
@@ -112,20 +114,35 @@ export const EmployersController = {
 
   async getEmployers(request, responce) {
     try {
-      const { employer, employerColumns } = db.GLOBAL;
+      const { employer, employerColumns, userValues, city } = db.GLOBAL;
       let data = {};
 
       data.lib = await employer.findAll({
-        // where: { division: userDivision },
+        // where: { division: 3 },
         attributes: {
+          include: [[Sequelize.col("city.name"), "city_name"]],
           exclude: ["createdAt"],
         },
+        include: [
+          {
+            model: city,
+            attributes: [],
+          },
+        ],
+        raw: true,
       });
+
       data.columns = await employerColumns.findAll();
       data.name = "Сотрудники";
 
-      data.lib = JSON.parse(JSON.stringify(data.lib));
+      // data.lib = JSON.parse(JSON.stringify(data.lib));
+      data.values = await userValues.findAll({
+        attributes: { exclude: ["id", "createdAt", "updatedAt"] },
+      });
       data.columns = JSON.parse(JSON.stringify(data.columns));
+      data.values = JSON.parse(JSON.stringify(data.values));
+
+      data.values = getValues(data.values);
 
       //Изменение null на "null" у значений типа boolean
       data.lib = data.lib.map((libObg) => {

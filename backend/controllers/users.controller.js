@@ -10,7 +10,7 @@ export const UsersController = {
     try {
       let { userDivision } = request.body;
 
-      const { user, userValues, userColumns, employer } = db.GLOBAL;
+      const { user, userValues, userColumns, employer, city } = db.GLOBAL;
       let data = {};
 
       data.lib = await employer.findAll({
@@ -18,6 +18,7 @@ export const UsersController = {
           include: [
             [Sequelize.col("user.role"), "role"],
             [Sequelize.col("user.updatedAt"), "updatedAt"],
+            [Sequelize.col("city.name"), "city_name"],
           ],
           exclude: ["createdAt", "dn"],
         },
@@ -25,12 +26,18 @@ export const UsersController = {
         include: [
           {
             model: user,
+            attributes: [],
             required: true,
+          },
+          {
+            model: city,
             attributes: [],
           },
         ],
         raw: true,
       });
+
+      console.log(data.lib);
 
       data.columns = await userColumns.findAll();
       data.values = await userValues.findAll({

@@ -56,6 +56,9 @@ export const TablelHistoryCraft2 = (props) => {
         removableSort
         scrollable
         scrollHeight="calc(90vh - 0.4rem - 1.5rem - 0.5rem - 1.5rem - 2px - 1rem - 2.5rem - 1rem - 1rem)"
+        // paginator
+        // rows={10}
+        // rowsPerPageOptions={[5, 10, 25, 50]}
         value={logs}
         style={{ height: "100%", width: "100%" }}
       >

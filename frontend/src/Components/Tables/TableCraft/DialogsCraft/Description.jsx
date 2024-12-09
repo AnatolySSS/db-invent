@@ -19,6 +19,7 @@ export const Description = (props) => {
     userAuth,
     disabled,
     employersFullNames,
+    dialogType,
   } = props;
 
   switch (name) {
@@ -38,6 +39,7 @@ export const Description = (props) => {
           userAuth={userAuth}
           disabled={disabled}
           employersFullNames={employersFullNames}
+          dialogType={dialogType}
         />
       );
     case "Мебель":
@@ -56,6 +58,7 @@ export const Description = (props) => {
           userAuth={userAuth}
           disabled={disabled}
           employersFullNames={employersFullNames}
+          dialogType={dialogType}
         />
       );
     case "Прочее":
@@ -74,6 +77,7 @@ export const Description = (props) => {
           userAuth={userAuth}
           disabled={disabled}
           employersFullNames={employersFullNames}
+          dialogType={dialogType}
         />
       );
     case "Основные средства":
@@ -92,6 +96,7 @@ export const Description = (props) => {
           userAuth={userAuth}
           disabled={disabled}
           employersFullNames={employersFullNames}
+          dialogType={dialogType}
         />
       );
     default:

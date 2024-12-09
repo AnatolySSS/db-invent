@@ -12,7 +12,8 @@ export const saveItem =
     setItem,
     emptyItem,
     userAuth,
-    setDisabled
+    setDisabled,
+    employers
   ) =>
   () => {
     setDisabled(true);
@@ -35,11 +36,17 @@ export const saveItem =
       }
     });
 
+    //Изменение ФИО пользователя на object_sid
+    _item.owner = employers.filter(
+      (employer) => employer.full_name === _item.owner
+    )[0].object_sid;
+
     if (_item.id) {
       _item.userName = userAuth.fullName;
       updateData(_item, userAuth.division);
     } else {
       _item.id = createId(data);
+      _item.userName = userAuth.fullName;
       addData(_item, userAuth.division);
     }
     setItemDialog(false);

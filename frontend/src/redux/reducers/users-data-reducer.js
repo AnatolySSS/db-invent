@@ -21,7 +21,7 @@ let initialState = {
     },
     department: { value: null, matchMode: FilterMatchMode.IN },
     title: { value: null, matchMode: FilterMatchMode.IN },
-    division: { value: null, matchMode: FilterMatchMode.IN },
+    city_name: { value: null, matchMode: FilterMatchMode.IN },
     login: {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],

@@ -284,7 +284,7 @@ const PanelMenuCraft = (props) => {
                   color: "#495057",
                 }}
               >
-                <i className="pi pi-fw pi-user-edit mr-2"></i>
+                <i className="pi pi-fw pi-user mr-2"></i>
                 Сотрудники
               </NavLink>
             );

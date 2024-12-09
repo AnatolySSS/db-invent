@@ -9,14 +9,14 @@ let initialState = {
   columns: [],
   data: [
     {
-      cn: "Шиляев Анатолий Николаевич",
+      full_name: "Шиляев Анатолий Николаевич",
       department:
         "Отдел перспективного развития и новых технологий Управления информатизации",
       dn: "",
       mail: "anatoly_shilyaev@mail.ru",
-      mailNickname: "anatoly_shilyaev",
-      objectSid: "S-1-5-21-838275612-48375617-1548374914-4837",
-      telephoneNumber: "9200124721",
+      login: "anatoly_shilyaev",
+      object_sid: "S-1-5-21-838275612-48375617-1548374914-4837",
+      phone: "9200124721",
       title: "Главный эксперт",
     },
   ],
@@ -29,7 +29,7 @@ let initialState = {
     },
     department: { value: null, matchMode: FilterMatchMode.IN },
     title: { value: null, matchMode: FilterMatchMode.IN },
-    division: { value: null, matchMode: FilterMatchMode.IN },
+    city_name: { value: null, matchMode: FilterMatchMode.IN },
     login: {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
@@ -57,8 +57,9 @@ const employersReducer = (state = initialState, action) => {
     case SET_DATA:
       return {
         ...state,
-        columns: action.data.columns,
         data: action.data.lib,
+        columns: action.data.columns,
+        values: action.data.values,
         name: action.data.name,
       };
     case TOGGLE_IS_FETCHING:

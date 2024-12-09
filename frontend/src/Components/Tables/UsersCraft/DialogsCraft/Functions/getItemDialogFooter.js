@@ -18,12 +18,6 @@ export const getItemDialogFooter = (
   dialogType
 ) => (
   <React.Fragment>
-    <Button
-      label="Выйти"
-      icon="pi pi-times"
-      outlined
-      onClick={hideNew(setItemDialog, setDisabled)}
-    />
     {userAuth.role == "admin" &&
       (disabled && dialogType === "edit" ? (
         <Button
@@ -51,5 +45,11 @@ export const getItemDialogFooter = (
           )}
         />
       ))}
+    <Button
+      label="Выйти"
+      icon="pi pi-times"
+      outlined
+      onClick={hideNew(setItemDialog, setDisabled)}
+    />
   </React.Fragment>
 );

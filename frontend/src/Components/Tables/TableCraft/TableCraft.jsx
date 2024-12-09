@@ -55,6 +55,7 @@ const TableCraft = (props) => {
   const [deleteItemDialog, setDeleteItemDialog] = useState(false);
   const [transferDialog, setTransferDialog] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
+  const [dialogType, setDialogType] = useState("");
   const toast = useRef(null);
   let emptyItem = {};
   let emptyTransferItem = {
@@ -123,6 +124,7 @@ const TableCraft = (props) => {
   };
 
   const editItem = (rowData) => {
+    setDialogType("edit");
     setItem({ ...rowData });
     setItemDialog(true);
   };
@@ -217,7 +219,7 @@ const TableCraft = (props) => {
 
   const [UserNames, setUserNames] = useState([]);
 
-  const employersFullNames = employers.map((user) => user.cn);
+  const employersFullNames = employers.map((user) => user.full_name);
 
   const search = (event) => {
     setUserNames(
@@ -269,6 +271,7 @@ const TableCraft = (props) => {
             clearState={clearState}
             userMenuType="main"
             employers={employers}
+            setDialogType={setDialogType}
           />
         }
         paginator
@@ -354,6 +357,8 @@ const TableCraft = (props) => {
         emptyItem={emptyItem}
         userAuth={userAuth}
         employersFullNames={employersFullNames}
+        dialogType={dialogType}
+        employers={employers}
       />
 
       {/* Удаление элемента */}

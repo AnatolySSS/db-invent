@@ -5,7 +5,6 @@ import { Avatar } from "primereact/avatar";
 import { classNames } from "primereact/utils";
 import { getTableHeight } from "../../../Tables/Functions/Helpers/getTableHeight";
 import { MdOutlineInventory } from "react-icons/md";
-import { getUsers } from "./getUsers";
 
 export const setUserMenuItems = (
   type,

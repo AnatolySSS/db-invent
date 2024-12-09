@@ -15,13 +15,15 @@ export const getItemDialogFooter = (
   disabled,
   setDisabled,
   activeTabIndex,
-  setActiveTabIndex
+  setActiveTabIndex,
+  dialogType,
+  employers
 ) => (
   <React.Fragment>
     <div className="mt-2">
       {userAuth.role == "admin" &&
         activeTabIndex === 0 &&
-        (disabled ? (
+        (disabled && dialogType === "edit" ? (
           <Button
             type="submit"
             label="Изменить"
@@ -42,7 +44,8 @@ export const getItemDialogFooter = (
               setItem,
               emptyItem,
               userAuth,
-              setDisabled
+              setDisabled,
+              employers
             )}
           />
         ))}
