@@ -24,7 +24,7 @@ export async function makeQRCode(selectedItems) {
         size={500}
         level="H"
         bgColor={"#ffffff"}
-        fgColor="#008b7c"
+        fgColor="#008675"
         imageSettings={{
           src: require("./../img/logo-big.png"),
           height: 100,
@@ -52,7 +52,7 @@ export async function makeQRCode(selectedItems) {
       1,
       1
     );
-    pdf.setFillColor(2, 139, 124);
+    pdf.setFillColor(0, 134, 117);
     pdf.roundedRect(
       x - rectQrcodeOffset,
       y - rectQrcodeOffset,
