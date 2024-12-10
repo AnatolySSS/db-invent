@@ -278,7 +278,7 @@ const TableCraft = (props) => {
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
         currentPageReportTemplate="Показаны с {first} по {last} из {totalRecords} объектов"
         rows={10}
-        rowsPerPageOptions={[3, 5, 10, 25, 50]}
+        rowsPerPageOptions={[3, 5, 10, 25, 50, 100]}
         tableStyle={{ minWidth: "25rem" }}
         stripedRows
         removableSort

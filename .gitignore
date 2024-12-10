@@ -8,7 +8,9 @@ backend/.env
 .env
 
 # testing
-/coverage
+coverage
+frontend/coverage
+backend/coverage
 
 # misc
 .DS_Store

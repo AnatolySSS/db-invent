@@ -1,14 +1,21 @@
-import { jsPDF } from "jspdf";
+import jsPDF from "jspdf";
 import { QRCodeCanvas } from "qrcode.react";
 import { createRoot } from "react-dom/client";
-
 export async function makeQRCode(selectedItems) {
   let pdf = new jsPDF();
-  let y = 5;
+  let y = 8;
   let currentPage = 1;
   let totalCounter = 0;
   let canvasContainers = [];
+  let rectWigth = 25;
+  let rectHeight = 30;
+  let qrCodeWidth = 20;
+  let qrCodeHeight = 20;
+  let rectQrcodeOffset = (rectWigth - qrCodeWidth) / 2;
 
+  pdf.setTextColor(255, 255, 255);
+  pdf.setFontSize(10);
+  // pdf.setLineWidth(1);
   await selectedItems.forEach((item, index) => {
     const qrCode = (
       <QRCodeCanvas
@@ -33,38 +40,37 @@ export async function makeQRCode(selectedItems) {
   });
 
   const addImagetoPDF = (img) => {
-    let x;
-    switch (totalCounter % 8) {
-      case 1:
-        x = 10;
-        break;
-      case 2:
-        x = 35;
-        break;
-      case 3:
-        x = 60;
-        break;
-      case 4:
-        x = 85;
-        break;
-      case 5:
-        x = 110;
-        break;
-      case 6:
-        x = 135;
-        break;
-      case 7:
-        x = 160;
-        break;
-      case 0:
-        x = 185;
-        break;
-      default:
-        break;
-    }
+    let x_start = 8; // отступ слева
+    let x_step = rectWigth; // расстояние от левого края одного qr-code до следующего = ширине прямоугольника
+    let x = x_start + x_step * ((totalCounter - 1) % 8);
 
-    pdf.addImage(img, "png", x, y, 20, 20, "", "MEDIUM");
-    pdf.text(selectedItems[totalCounter - 1].qr_code, x + 1, y + 25);
+    pdf.rect(x - rectQrcodeOffset, y - rectQrcodeOffset, rectWigth, rectHeight);
+    pdf.setFillColor(2, 139, 124);
+    pdf.roundedRect(
+      x - rectQrcodeOffset,
+      y - rectQrcodeOffset,
+      rectWigth,
+      rectHeight,
+      1,
+      1,
+      "F"
+    );
+    pdf.setFillColor(255, 255, 255);
+    pdf.roundedRect(
+      x - rectQrcodeOffset + 1,
+      y - rectQrcodeOffset + 1,
+      rectWigth - 2,
+      rectWigth - 2,
+      1,
+      1,
+      "F"
+    );
+    pdf.addImage(img, "png", x, y, qrCodeWidth, qrCodeHeight, "", "MEDIUM");
+    pdf.text(
+      "00" + selectedItems[totalCounter - 1].qr_code,
+      x + 2,
+      y + rectHeight - 4
+    );
   };
 
   for (const container of canvasContainers) {
@@ -73,14 +79,15 @@ export async function makeQRCode(selectedItems) {
     let img = container.children[0].toDataURL("image/png");
     addImagetoPDF(img);
 
-    totalCounter % 8 === 0 ? (y += 28) : (y = y);
+    totalCounter % 8 === 0 ? (y += rectHeight) : (y = y);
 
-    if (totalCounter % 80 === 0) {
+    if (totalCounter % 72 === 0) {
       pdf.addPage();
       currentPage++;
       pdf.setPage(currentPage);
       y = 8;
     }
   }
+
   pdf.save("canvas.pdf");
 }
