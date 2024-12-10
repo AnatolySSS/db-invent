@@ -44,7 +44,14 @@ export async function makeQRCode(selectedItems) {
     let x_step = rectWigth; // расстояние от левого края одного qr-code до следующего = ширине прямоугольника
     let x = x_start + x_step * ((totalCounter - 1) % 8);
 
-    pdf.rect(x - rectQrcodeOffset, y - rectQrcodeOffset, rectWigth, rectHeight);
+    pdf.roundedRect(
+      x - rectQrcodeOffset,
+      y - rectQrcodeOffset,
+      rectWigth,
+      rectHeight,
+      1,
+      1
+    );
     pdf.setFillColor(2, 139, 124);
     pdf.roundedRect(
       x - rectQrcodeOffset,
