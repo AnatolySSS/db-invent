@@ -1,6 +1,10 @@
 import jsPDF from "jspdf";
 import { QRCodeCanvas } from "qrcode.react";
 import { createRoot } from "react-dom/client";
+// import { Geometria } from "../assets/fonts/Geometria";
+// import { Geometria } from "../assets/fonts/Geometria-Medium";
+import { Geometria } from "../assets/fonts/Geometria-Bold";
+
 export async function makeQRCode(selectedItems) {
   let pdf = new jsPDF();
   let y = 8;
@@ -14,8 +18,11 @@ export async function makeQRCode(selectedItems) {
   let rectQrcodeOffset = (rectWigth - qrCodeWidth) / 2;
 
   pdf.setTextColor(255, 255, 255);
-  pdf.setFontSize(10);
-  // pdf.setLineWidth(1);
+  pdf.setFontSize(11);
+  pdf.addFileToVFS("Geometria.ttf", Geometria);
+  pdf.addFont("Geometria.ttf", "Geometria", "bold");
+  pdf.setFont("Geometria", "bold");
+
   await selectedItems.forEach((item, index) => {
     const qrCode = (
       <QRCodeCanvas
@@ -75,7 +82,7 @@ export async function makeQRCode(selectedItems) {
     pdf.addImage(img, "png", x, y, qrCodeWidth, qrCodeHeight, "", "MEDIUM");
     pdf.text(
       "00" + selectedItems[totalCounter - 1].qr_code,
-      x + 2,
+      x - 0.5,
       y + rectHeight - 4
     );
   };
@@ -96,5 +103,5 @@ export async function makeQRCode(selectedItems) {
     }
   }
 
-  pdf.save("canvas.pdf");
+  pdf.save("qr_codes.pdf");
 }
