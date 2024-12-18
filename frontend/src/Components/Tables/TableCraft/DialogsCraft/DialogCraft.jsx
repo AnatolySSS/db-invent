@@ -14,6 +14,7 @@ import { TreeTablelHistoryCraft } from "./TabViewCraft/TreeTableHistoryCraft";
 
 export const DialogCraft = (props) => {
   const {
+    type,
     name,
     data,
     columns,
@@ -26,9 +27,9 @@ export const DialogCraft = (props) => {
     updateData,
     emptyItem,
     userAuth,
-    employersFullNames,
+    employeesFullNames,
     dialogType,
-    employers,
+    employees,
   } = props;
 
   const [disabled, setDisabled] = useState(true);
@@ -52,6 +53,7 @@ export const DialogCraft = (props) => {
       modal
       className="p-fluid"
       footer={getItemDialogFooter(
+        type,
         addData,
         updateData,
         data,
@@ -65,7 +67,7 @@ export const DialogCraft = (props) => {
         activeTabIndex,
         setActiveTabIndex,
         dialogType,
-        employers
+        employees
       )}
       onHide={hideNew(setItemDialog, setDisabled)}
     >
@@ -97,7 +99,7 @@ export const DialogCraft = (props) => {
                 emptyItem={emptyItem}
                 userAuth={userAuth}
                 disabled={disabled}
-                employersFullNames={employersFullNames}
+                employeesFullNames={employeesFullNames}
                 dialogType={dialogType}
               />
             </div>
@@ -118,7 +120,7 @@ export const DialogCraft = (props) => {
               leftIcon="pi pi-objects-column mr-2"
             >
               <div className={styles.tabContent}>
-                <TimelinelTransferCraft transfers={item.transfers} />
+                <TimelinelTransferCraft trans={item.trans} />
               </div>
             </TabPanel>
           )}

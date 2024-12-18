@@ -1,13 +1,15 @@
 import { AuthAPI } from "../../api/api";
-import { downloadEmployers, requestData } from "./employers-reducer";
+import { downloadEmployees, requestData } from "./employees-reducer";
 const SET_AUTH = "sodfu-inventory/authReducer/IS_AUTH";
 const SET_MESSAGE = "sodfu-inventory/authReducer/SET_MESSAGE";
 
 let initialState = {
+  employee_id: "",
   login: "",
   fullName: "",
   isAuth: false,
   role: "",
+  access_type: "",
   division: null,
   message: "",
 };
@@ -29,9 +31,9 @@ const authReducer = (state = initialState, action) => {
   }
 };
 
-const setAuth = (login, fullName, isAuth, role, division, message) => ({
+const setAuth = (employee_id, login, fullName, isAuth, role, access_type, division, message) => ({
   type: SET_AUTH,
-  data: { login, fullName, isAuth, role, division, message },
+  data: { employee_id, login, fullName, isAuth, role, access_type, division, message },
 });
 
 const setMessage = (message) => ({ type: SET_MESSAGE, data: { message } });
@@ -41,11 +43,9 @@ export const getAuthUserData = () => {
     const data = await AuthAPI.me();
     switch (data.resultCode) {
       case 0:
-        let { login, full_name, role, division } = data.user;
-        await dispatch(
-          setAuth(login, full_name, true, role, division, data.message)
-        );
-        await dispatch(downloadEmployers());
+        let { employee_id, login, full_name, role, access_type, division_id } = data.currentUser;
+        await dispatch(setAuth(employee_id, login, full_name, true, role, access_type, division_id, data.message));
+        await dispatch(downloadEmployees());
         await dispatch(requestData());
         break;
       case 1:

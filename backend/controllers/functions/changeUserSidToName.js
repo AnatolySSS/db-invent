@@ -1,25 +1,26 @@
 import db from "../../models/_index.js";
 
-const { employer } = db.GLOBAL;
+const { employee } = db.GLOBAL;
 
-let employers = await employer.findAll({
-  // where: { division: userDivision },
+let employees = await employee.findAll({
   attributes: {
     exclude: ["createdAt"],
   },
 });
 
-employers = JSON.parse(JSON.stringify(employers));
+employees = JSON.parse(JSON.stringify(employees));
 
 export const changeUserSidToName = async (lib) => {
+  // console.log(lib);
+
   for (const item of lib) {
     for (const key in item) {
       if (Array.isArray(item[key])) {
         changeUserSidToName(item[key]);
       } else {
-        for (const employer of employers) {
-          if (item[key] === employer.object_sid) {
-            item[key] = employer.full_name;
+        for (const employee of employees) {
+          if (item[key] === employee.employee_id) {
+            item[key] = employee.full_name;
           }
         }
       }

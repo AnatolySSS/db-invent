@@ -1,103 +1,115 @@
+import { Sequelize } from "sequelize";
 import changeDateType from "./functions/changeDateType.js";
 import db from "../models/_index.js";
 import formatDate from "./functions/formatDate.js";
 import { getValues } from "./functions/getValues.js";
-import { changeUserSidToName } from "./functions/changeUserSidToName.js";
 
 export const DataController = {
   async getData(request, responce) {
     try {
-      let { type, userDivision } = request.body;
+      let { type, userAuth } = request.body;
+      const { division, lib, log, trans, vals, itCols, furnitureCols, unmarkedCols, assetsCols, employee } = db.GLOBAL;
+      console.log(userAuth);
 
-      const {
-        itLib,
-        itLog,
-        itValues,
-        itColumns,
-        itTransfer,
-        furnitureLib,
-        furnitureLog,
-        furnitureValues,
-        furnitureColumns,
-        furnitureTransfer,
-        unmarkedLib,
-        unmarkedLog,
-        unmarkedValues,
-        unmarkedColumns,
-        unmarkedTransfer,
-        assetsLib,
-        assetsLog,
-        assetsValues,
-        assetsColumns,
-        assetsTransfer,
-      } = db.DIVISIONS[`D${userDivision}`];
-      const { employer } = db.GLOBAL;
       let data = {};
-      let libTable, columnsTable, valuesTable, logTable, transferTable;
+      let columns;
 
       switch (type) {
         case "it":
-          libTable = itLib;
-          columnsTable = itColumns;
-          valuesTable = itValues;
-          logTable = itLog;
-          transferTable = itTransfer;
-          data.name = "Оборудование";
+          columns = itCols;
           break;
-
         case "furniture":
-          libTable = furnitureLib;
-          columnsTable = furnitureColumns;
-          valuesTable = furnitureValues;
-          logTable = furnitureLog;
-          transferTable = furnitureTransfer;
-          data.name = "Мебель";
+          columns = furnitureCols;
           break;
-
         case "unmarked":
-          libTable = unmarkedLib;
-          columnsTable = unmarkedColumns;
-          valuesTable = unmarkedValues;
-          logTable = unmarkedLog;
-          transferTable = unmarkedTransfer;
-          data.name = "Прочее";
+          columns = unmarkedCols;
           break;
-
         case "assets":
-          libTable = assetsLib;
-          columnsTable = assetsColumns;
-          valuesTable = assetsValues;
-          logTable = assetsLog;
-          transferTable = assetsTransfer;
-          data.name = "Основные средства";
+          columns = assetsCols;
           break;
-
         default:
           break;
       }
+      const whereObj = userAuth.access_type === "limited" ? { division_id: userAuth.division, class_type: type } : { class_type: type };
 
-      data.lib = await libTable.findAll({ raw: true });
-      data.columns = await columnsTable.findAll();
-      data.values = await valuesTable.findAll({
-        attributes: { exclude: ["id", "createdAt", "updatedAt"] },
+      data.lib = await lib.findAll({
+        attributes: {
+          include: [
+            [Sequelize.col("employee.full_name"), "employee"],
+            [Sequelize.col("financially_responsible_person.full_name"), "financially_responsible_person"],
+            [Sequelize.col("division.name"), "city_name"],
+          ],
+          exclude: ["createdAt"],
+        },
+        where: whereObj,
+        include: [
+          {
+            model: employee,
+            as: "employee",
+            attributes: [],
+          },
+          {
+            model: employee,
+            as: "financially_responsible_person",
+            attributes: [],
+          },
+          {
+            model: division,
+            attributes: [],
+          },
+        ],
+        raw: true,
       });
 
-      // data.lib = JSON.parse(JSON.stringify(data.lib));
-      data.columns = JSON.parse(JSON.stringify(data.columns));
-      data.values = JSON.parse(JSON.stringify(data.values));
+      data.columns = await columns.findAll({
+        attributes: {
+          exclude: ["createdAt", "updatedAt", "division_0", "division_1", "division_2", "division_3"],
+        },
+        where: { [`division_${userAuth.division}`]: true },
+        raw: true,
+      });
+
+      data.values = await vals.findAll({
+        attributes: [[`locations_${userAuth.division}`, "location"], [`${type}_type`, "type"], "workplace_type", "serviceable", "office", "measurement"],
+        raw: true,
+      });
+
+      data.values = getValues(data.values);
+
+      let employees = await employee.findAll({
+        attributes: ["employee_id", "full_name"],
+      });
 
       //Получение логов
       for (const lib of data.lib) {
-        let logs = await logTable.findAll({
+        let logs = await log.findAll({
+          attributes: {
+            include: [[Sequelize.col("employee.full_name"), "changedEmployeeName"]],
+            exclude: ["createdAt"],
+          },
           where: { itemId: lib.id },
+          include: [
+            {
+              model: employee,
+              attributes: [],
+            },
+          ],
           raw: true,
         });
         //Изменение наименование столбца "changedFiled"
-        let logData = logs
+        lib.logs = logs
           .map((log) => {
             for (const column of data.columns) {
               if (log.changedFiled === column.field) {
                 log.changedFiled = column.header;
+              }
+            }
+            for (const employee of employees) {
+              if (log.oldValue === employee.employee_id) {
+                log.oldValue = employee.full_name;
+              }
+              if (log.newValue === employee.employee_id) {
+                log.newValue = employee.full_name;
               }
             }
             return log;
@@ -109,23 +121,28 @@ export const DataController = {
 
             return dateB - dateA;
           });
-        lib.logs = logData;
 
-        let transfersData = await transferTable.findAll({
+        lib.trans = await trans.findAll({
+          attributes: {
+            include: [[Sequelize.col("employee.full_name"), "employee_name"]],
+            exclude: ["createdAt"],
+          },
           where: { itemId: lib.id },
+          include: [
+            {
+              model: employee,
+              attributes: [],
+            },
+          ],
           raw: true,
         });
-        lib.transfers = transfersData;
       }
 
       //Изменение null на "null"
       data.lib = data.lib.map((libObg) => {
         for (const libKey in libObg) {
           data.columns.forEach((columnObg) => {
-            if (
-              columnObg.dbFieldType == "boolean" &&
-              columnObg.field == libKey
-            ) {
+            if (columnObg.dbFieldType == "boolean" && columnObg.field == libKey) {
               switch (libObg[libKey]) {
                 case null:
                   libObg[libKey] = "null";
@@ -145,10 +162,6 @@ export const DataController = {
         return libObg;
       });
 
-      //Замена objectSid на ФИО сотрудника
-      data.lib = await changeUserSidToName(data.lib);
-
-      data.values = getValues(data.values);
       responce.json(data);
     } catch (error) {
       console.log("__________DataController__getData___________");
@@ -159,52 +172,13 @@ export const DataController = {
 
   async addData(request, responce) {
     label: try {
-      let { type, rowData, userDivision } = request.body;
-      const {
-        itLib,
-        itLog,
-        itTransfer,
-        furnitureLib,
-        furnitureLog,
-        furnitureTransfer,
-        unmarkedLib,
-        unmarkedLog,
-        unmarkedTransfer,
-        assetsLib,
-        assetsLog,
-        assetsTransfer,
-      } = db.DIVISIONS[`D${userDivision}`];
-      let table, tableLog, tableTransfer;
+      let { rowData } = request.body;
+
+      const { lib, log } = db.GLOBAL;
       let data = {
         qr_code: false,
         inventary_number: false,
       };
-      let transferData = {};
-
-      switch (type) {
-        case "it":
-          table = itLib;
-          tableLog = itLog;
-          tableTransfer = itTransfer;
-          break;
-        case "furniture":
-          table = furnitureLib;
-          tableLog = furnitureLog;
-          tableTransfer = furnitureTransfer;
-          break;
-        case "unmarked":
-          table = unmarkedLib;
-          tableLog = unmarkedLog;
-          tableTransfer = unmarkedTransfer;
-          break;
-        case "assets":
-          table = assetsLib;
-          tableLog = assetsLog;
-          tableTransfer = assetsTransfer;
-          break;
-        default:
-          break;
-      }
 
       for (const key in rowData) {
         if (rowData[key] === "null") {
@@ -218,68 +192,47 @@ export const DataController = {
         }
       }
 
-      if (type != "unmarked") {
-        let qr_code = await table.findOne({
-          where: { qr_code: rowData.qr_code },
-          raw: true,
-        });
+      // if (type != "unmarked") {
+      //   let qr_code = await table.findOne({
+      //     where: { qr_code: rowData.qr_code },
+      //     raw: true,
+      //   });
 
-        if (qr_code != null) {
-          data.qr_code = true;
-          responce.json(data);
-          break label;
-        }
+      //   if (qr_code != null) {
+      //     data.qr_code = true;
+      //     responce.json(data);
+      //     break label;
+      //   }
 
-        let inventary_number = await table.findOne({
-          where: { inventary_number: rowData.inventary_number },
-          raw: true,
-        });
+      //   let inventary_number = await table.findOne({
+      //     where: { inventary_number: rowData.inventary_number },
+      //     raw: true,
+      //   });
 
-        if (inventary_number != null) {
-          data.inventary_number = true;
-          responce.json(data);
-          break label;
-        }
-      }
+      //   if (inventary_number != null) {
+      //     data.inventary_number = true;
+      //     responce.json(data);
+      //     break label;
+      //   }
+      // }
 
-      await table.create(rowData);
-
-      //Добавление данных в таблицу перемещений
-      transferData.itemId = rowData.id;
-      transferData.name = rowData.owner;
-      transferData.date = rowData.last_setup_date;
-      transferData.note = "Выдача нового оборудования";
-      await tableTransfer.create(transferData);
-
-      const nonCheckedValues = [
-        "createdAt",
-        "updatedAt",
-        "changedDateTime",
-        "userName",
-        "logs",
-        "transfers",
-      ];
-      console.log(rowData);
+      const id = (await lib.create(rowData)).dataValues.id;
 
       //Запись логов при обновлении значений checkedValues (цикл for...of асинхронный)
       for (const key in rowData) {
         if (!nonCheckedValues.includes(key)) {
           rowData[key] = rowData[key] === true ? 1 : rowData[key];
           rowData[key] = rowData[key] === false ? 0 : rowData[key];
-          if (
-            rowData[key] !== null &&
-            rowData[key] !== 0 &&
-            rowData[key] !== ""
-          ) {
+          if (rowData[key] !== null && rowData[key] !== 0 && rowData[key] !== "") {
             let logRow = {
-              itemId: rowData.id,
+              itemId: id,
               changedDateTime: new Date(rowData.changedDateTime),
-              changedEmployeeName: rowData.userName,
+              changedUserId: rowData.changedUserId,
               changedFiled: key,
               oldValue: "Создание новой записи",
               newValue: rowData[key],
             };
-            await tableLog.create(logRow);
+            await log.create(logRow);
           }
         }
       }
@@ -294,43 +247,11 @@ export const DataController = {
 
   async updateData(request, responce) {
     try {
-      let { type, rowData, userDivision } = request.body;
+      let { rowData } = request.body;
+      console.log("rowData");
+      console.log(rowData);
 
-      // const { employer } = db.GLOBAL;
-
-      const {
-        itLib,
-        itLog,
-        furnitureLib,
-        furnitureLog,
-        unmarkedLib,
-        unmarkedLog,
-        assetsLib,
-        assetsLog,
-      } = db.DIVISIONS[`D${userDivision}`];
-      let table, tableLog;
-      let employers;
-
-      switch (type) {
-        case "it":
-          table = itLib;
-          tableLog = itLog;
-          break;
-        case "furniture":
-          table = furnitureLib;
-          tableLog = furnitureLog;
-          break;
-        case "unmarked":
-          table = unmarkedLib;
-          tableLog = unmarkedLog;
-          break;
-        case "assets":
-          table = assetsLib;
-          tableLog = assetsLog;
-          break;
-        default:
-          break;
-      }
+      const { lib, log } = db.GLOBAL;
 
       for (const key in rowData) {
         if (rowData[key] === "null") {
@@ -344,37 +265,12 @@ export const DataController = {
         }
       }
 
-      console.log(rowData);
-
-      // employers = await employer.findAll({
-      //   // where: { division: userDivision },
-      //   attributes: {
-      //     exclude: ["createdAt"],
-      //   },
-      // });
-      // employers = JSON.parse(JSON.stringify(employers));
-
-      // //Замена ФИО сотрудника на objectSid
-      // for (const employer of employers) {
-      //   if (rowData.owner === employer.full_name) {
-      //     rowData.owner = employer.object_sid;
-      //   }
-      // }
-
       //Проверка на обновление значений
-      const originalData = await table.findOne({
+      const originalData = await lib.findOne({
+        attributes: { exclude: ["createdAt"] },
         where: { id: rowData.id },
         raw: true,
       });
-
-      const nonCheckedValues = [
-        "createdAt",
-        "updatedAt",
-        "changedDateTime",
-        "userName",
-        "logs",
-        "transfers",
-      ];
 
       //Запись логов при обновлении значений checkedValues (цикл for...of асинхронный)
       for (const key in rowData) {
@@ -388,13 +284,13 @@ export const DataController = {
             let logRow = {
               itemId: rowData.id,
               changedDateTime: new Date(rowData.changedDateTime),
-              changedEmployeeName: rowData.userName,
+              changedUserId: rowData.changedUserId,
               changedFiled: key,
               oldValue: originalData[key],
               newValue: rowData[key],
             };
 
-            await tableLog.create(logRow);
+            await log.create(logRow);
           }
         }
       }
@@ -402,7 +298,7 @@ export const DataController = {
       //Обновление данных
       let _id = rowData.id;
       delete rowData.id;
-      await table.update(rowData, { where: { id: _id } });
+      await lib.update(rowData, { where: { id: _id } });
 
       responce.json({});
     } catch (error) {
@@ -414,98 +310,41 @@ export const DataController = {
 
   async transferItem(request, responce) {
     try {
-      let { type, items, transferData, userDivision } = request.body;
+      let { items, transferData } = request.body;
 
-      const { employer } = db.GLOBAL;
-
-      const {
-        itLib,
-        itLog,
-        itTransfer,
-        furnitureLib,
-        furnitureLog,
-        furnitureTransfer,
-        unmarkedLib,
-        unmarkedLog,
-        unmarkedTransfer,
-        assetsLib,
-        assetsLog,
-        assetsTransfer,
-      } = db.DIVISIONS[`D${userDivision}`];
-      let table, tableLog, tableTransfer;
-      let employers;
-
-      switch (type) {
-        case "it":
-          table = itLib;
-          tableLog = itLog;
-          tableTransfer = itTransfer;
-          break;
-        case "furniture":
-          table = furnitureLib;
-          tableLog = furnitureLog;
-          tableTransfer = furnitureTransfer;
-          break;
-        case "unmarked":
-          table = unmarkedLib;
-          tableLog = unmarkedLog;
-          tableTransfer = unmarkedTransfer;
-          break;
-        case "assets":
-          table = assetsLib;
-          tableLog = assetsLog;
-          tableTransfer = assetsTransfer;
-          break;
-        default:
-          break;
-      }
-
-      employers = await employer.findAll({
-        // where: { division: userDivision },
-        attributes: {
-          exclude: ["createdAt"],
-        },
-      });
-      employers = JSON.parse(JSON.stringify(employers));
-
-      //Замена ФИО сотрудника на objectSid
-      for (const employer of employers) {
-        if (transferData.name === employer.full_name) {
-          transferData.name = employer.object_sid;
-        }
-      }
+      const { lib, log, trans } = db.GLOBAL;
 
       for (const item of items) {
         //Проверка на обновление значений
-        const originalData = await table.findOne({
+        const originalData = await lib.findOne({
           where: { id: item.id },
           raw: true,
         });
 
         //Обновление данных в основной таблице
-        await table.update(
+        await lib.update(
           {
-            owner: transferData.name,
-            last_setup_date: transferData.date,
+            employee_id: transferData.employee_id,
+            employee_setup_date: transferData.date,
           },
           { where: { id: item.id } }
         );
 
         //Добавление данных в таблицу перемещений
         transferData.itemId = item.id;
-        await tableTransfer.create(transferData);
+        await trans.create(transferData);
 
         //Запись логов о смене пользователя
         let logRow = {
           itemId: item.id,
           changedDateTime: new Date(),
-          changedEmployeeName: transferData.userName,
-          changedFiled: "owner",
-          oldValue: originalData.owner,
-          newValue: transferData.name,
+          changedUserId: transferData.changedUserId,
+          changedFiled: "employee_id",
+          oldValue: originalData.employee_id,
+          newValue: transferData.employee_id,
         };
 
-        await tableLog.create(logRow);
+        await log.create(logRow);
       }
 
       responce.json({});
@@ -518,53 +357,12 @@ export const DataController = {
 
   async deleteData(request, responce) {
     try {
-      let { type, rowId, userDivision } = request.body;
-      const {
-        itLib,
-        itLog,
-        itTransfer,
-        furnitureLib,
-        furnitureLog,
-        furnitureTransfer,
-        unmarkedLib,
-        unmarkedLog,
-        unmarkedTransfer,
-        assetsLib,
-        assetsLog,
-        assetsTransfer,
-      } = db.DIVISIONS[`D${userDivision}`];
-      let table, tableLog, tableTransfer;
+      let { rowId } = request.body;
+      const { lib } = db.GLOBAL;
 
-      switch (type) {
-        case "it":
-          table = itLib;
-          tableLog = itLog;
-          tableTransfer = itTransfer;
-          break;
-        case "furniture":
-          table = furnitureLib;
-          tableLog = furnitureLog;
-          tableTransfer = furnitureTransfer;
-          break;
-        case "unmarked":
-          table = unmarkedLib;
-          tableLog = unmarkedLog;
-          tableTransfer = unmarkedTransfer;
-          break;
-        case "assets":
-          table = assetsLib;
-          tableLog = assetsLog;
-          tableTransfer = assetsTransfer;
-          break;
-        default:
-          break;
-      }
+      await lib.destroy({ where: { id: rowId } });
 
-      await table.destroy({ where: { id: rowId } });
-      await tableLog.destroy({ where: { itemId: rowId } });
-      await tableTransfer.destroy({ where: { itemId: rowId } });
-
-      responce.json({ message: `Row ${rowId} was deleted from Table ${type}` });
+      responce.json({ message: `Row ${rowId} was deleted from Table` });
     } catch (error) {
       console.log(error);
       responce.json(error);
@@ -573,54 +371,34 @@ export const DataController = {
 
   async uploadData(request, responce) {
     try {
-      let { type, data, userDivision } = request.body;
-      const {
-        itLib,
-        itValues,
-        itColumns,
-        furnitureLib,
-        furnitureValues,
-        furnitureColumns,
-        unmarkedLib,
-        unmarkedValues,
-        unmarkedColumns,
-        assetsLib,
-        assetsValues,
-        assetsColumns,
-      } = db.DIVISIONS[`D${userDivision}`];
+      let { data } = request.body;
 
-      switch (type) {
-        case "it":
-          for (const obj of data.lib) await itLib.create(obj);
-          for (const obj of data.values) await itValues.create(obj);
-          for (const obj of data.columns) await itColumns.create(obj);
-          break;
+      const { lib } = db.GLOBAL;
 
-        case "furniture":
-          for (const obj of data.lib) await furnitureLib.create(obj);
-          for (const obj of data.values) await furnitureValues.create(obj);
-          for (const obj of data.columns) await furnitureColumns.create(obj);
-          break;
+      for (const obj of data.lib) await lib.create(obj);
 
-        case "unmarked":
-          for (const obj of data.lib) await unmarkedLib.create(obj);
-          for (const obj of data.values) await unmarkedValues.create(obj);
-          for (const obj of data.columns) await unmarkedColumns.create(obj);
-          break;
-
-        case "assets":
-          for (const obj of data.lib) await assetsLib.create(obj);
-          for (const obj of data.values) await assetsValues.create(obj);
-          for (const obj of data.columns) await assetsColumns.create(obj);
-          break;
-
-        default:
-          break;
-      }
-      responce.json(data);
+      responce.json({
+        message: `Данные загружены в количестве ${data.length} единиц`,
+      });
     } catch (error) {
       console.log(error);
       responce.json(error);
     }
   },
 };
+
+const nonCheckedValues = [
+  "id",
+  "createdAt",
+  "updatedAt",
+  "changedDateTime",
+  "changedUserId",
+  "logs",
+  "trans",
+  "qr_code",
+  "class_type",
+  "city_name",
+  "employee",
+  "financially_responsible_person",
+  "division_id",
+];

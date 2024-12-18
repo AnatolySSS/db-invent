@@ -1,10 +1,15 @@
 import { Sequelize } from "sequelize";
-import userModel from "./global/users/user.model.js";
-import userValuesModel from "./global/users/user.values.model.js";
-import userColumnsModel from "./common/columns/user.columns.model.js";
-import employerModel from "./global/employers/employer.model.js";
-import employerColumnsModel from "./common/columns/employer.columns.model.js";
-import citiesModel from "./common/cities/cities.model.js";
+
+import division from "./global/division.model.js";
+import user from "./global/user.model.js";
+import employee from "./global/employee.model.js";
+
+import lib from "./global/lib.model.js";
+import log from "./global/log.model.js";
+import trans from "./global/trans.model.js";
+import vals from "./global/val.model.js";
+import { Columns } from "./global/columns.model.js";
+
 import { getDbConfig } from "../config/getDbConfig.js";
 import getDb_D0 from "./division_0/_getDb.js";
 import getDb_D1 from "./division_1/_getDb.js";
@@ -23,13 +28,110 @@ const db = {
   DIVISIONS: {},
 };
 
-sequelize.GLOBAL = new Sequelize(
-  config.GLOBAL.DB,
-  config.GLOBAL.USER,
-  config.GLOBAL.PASSWORD,
-  {
-    host: config.GLOBAL.HOST,
-    dialect: config.GLOBAL.dialect,
+sequelize.GLOBAL = new Sequelize(config.GLOBAL.DB, config.GLOBAL.USER, config.GLOBAL.PASSWORD, {
+  host: config.GLOBAL.HOST,
+  dialect: config.GLOBAL.dialect,
+  operatorsAliases: 0,
+  pool: {
+    max: 5,
+    min: 0,
+    idle: 10000,
+  },
+  logging: false,
+});
+
+db.GLOBAL.division = division(sequelize.GLOBAL, Sequelize);
+db.GLOBAL.employee = employee(sequelize.GLOBAL, Sequelize);
+db.GLOBAL.user = user(sequelize.GLOBAL, Sequelize);
+
+db.GLOBAL.lib = lib(sequelize.GLOBAL, Sequelize);
+db.GLOBAL.log = log(sequelize.GLOBAL, Sequelize);
+db.GLOBAL.trans = trans(sequelize.GLOBAL, Sequelize);
+db.GLOBAL.vals = vals(sequelize.GLOBAL, Sequelize);
+
+for (const key in Columns) {
+  db.GLOBAL[`${key}Cols`] = Columns[key](sequelize.GLOBAL, Sequelize);
+}
+
+//division > employee
+db.GLOBAL.division.hasMany(db.GLOBAL.employee, {
+  foreignKey: "division_id",
+});
+db.GLOBAL.employee.belongsTo(db.GLOBAL.division, {
+  foreignKey: "division_id",
+});
+
+//division > lib
+db.GLOBAL.division.hasMany(db.GLOBAL.lib, {
+  foreignKey: "division_id",
+});
+db.GLOBAL.lib.belongsTo(db.GLOBAL.division, {
+  foreignKey: "division_id",
+});
+
+//employee - user
+db.GLOBAL.employee.hasOne(db.GLOBAL.user, {
+  foreignKey: "user_id",
+});
+db.GLOBAL.user.belongsTo(db.GLOBAL.employee, {
+  foreignKey: "user_id",
+});
+
+//employee > lib
+db.GLOBAL.employee.hasMany(db.GLOBAL.lib, {
+  as: "employee",
+  foreignKey: "employee_id",
+});
+db.GLOBAL.lib.belongsTo(db.GLOBAL.employee, {
+  as: "employee",
+  foreignKey: "employee_id",
+});
+
+//employee > lib
+db.GLOBAL.employee.hasMany(db.GLOBAL.lib, {
+  as: "financially_responsible_person",
+  foreignKey: "financially_responsible_person_id",
+});
+db.GLOBAL.lib.belongsTo(db.GLOBAL.employee, {
+  as: "financially_responsible_person",
+  foreignKey: "financially_responsible_person_id",
+});
+
+//employee > log
+db.GLOBAL.employee.hasMany(db.GLOBAL.log, {
+  foreignKey: "changedUserId",
+});
+db.GLOBAL.log.belongsTo(db.GLOBAL.employee, {
+  foreignKey: "changedUserId",
+});
+
+//employee > trans
+db.GLOBAL.employee.hasMany(db.GLOBAL.trans, {
+  foreignKey: "employee_id",
+});
+db.GLOBAL.trans.belongsTo(db.GLOBAL.employee, {
+  foreignKey: "employee_id",
+});
+
+//lib > log
+db.GLOBAL.lib.hasMany(db.GLOBAL.log, {
+  foreignKey: "itemId",
+});
+db.GLOBAL.log.belongsTo(db.GLOBAL.lib, {
+  foreignKey: "itemId",
+});
+//lib > trans
+db.GLOBAL.lib.hasMany(db.GLOBAL.trans, {
+  foreignKey: "itemId",
+});
+db.GLOBAL.trans.belongsTo(db.GLOBAL.lib, {
+  foreignKey: "itemId",
+});
+
+for (const DIVISION in config.DIVISIONS) {
+  sequelize.DIVISIONS[DIVISION] = new Sequelize(config.DIVISIONS[DIVISION].DB, config.DIVISIONS[DIVISION].USER, config.DIVISIONS[DIVISION].PASSWORD, {
+    host: config.DIVISIONS[DIVISION].HOST,
+    dialect: config.DIVISIONS[DIVISION].dialect,
     operatorsAliases: 0,
     pool: {
       max: 5,
@@ -37,55 +139,7 @@ sequelize.GLOBAL = new Sequelize(
       idle: 10000,
     },
     logging: false,
-  }
-);
-
-db.GLOBAL.city = citiesModel(sequelize.GLOBAL, Sequelize);
-db.GLOBAL.employer = employerModel(sequelize.GLOBAL, Sequelize);
-db.GLOBAL.user = userModel(sequelize.GLOBAL, Sequelize);
-
-db.GLOBAL.city.hasMany(db.GLOBAL.employer, {
-  foreignKey: "division",
-});
-db.GLOBAL.employer.belongsTo(db.GLOBAL.city, {
-  foreignKey: "division",
-});
-
-db.GLOBAL.employer.hasOne(db.GLOBAL.user, {
-  foreignKey: "object_sid",
-});
-db.GLOBAL.user.belongsTo(db.GLOBAL.employer, {
-  foreignKey: "object_sid",
-});
-
-// db.GLOBAL.employer.sync();
-// db.GLOBAL.user.sync();
-
-db.GLOBAL.employerColumns = employerColumnsModel(sequelize.GLOBAL, Sequelize);
-// db.GLOBAL.employerColumns.sync();
-
-db.GLOBAL.userValues = userValuesModel(sequelize.GLOBAL, Sequelize);
-// db.GLOBAL.userValues.sync();
-db.GLOBAL.userColumns = userColumnsModel(sequelize.GLOBAL, Sequelize);
-// db.GLOBAL.userColumns.sync();
-
-for (const DIVISION in config.DIVISIONS) {
-  sequelize.DIVISIONS[DIVISION] = new Sequelize(
-    config.DIVISIONS[DIVISION].DB,
-    config.DIVISIONS[DIVISION].USER,
-    config.DIVISIONS[DIVISION].PASSWORD,
-    {
-      host: config.DIVISIONS[DIVISION].HOST,
-      dialect: config.DIVISIONS[DIVISION].dialect,
-      operatorsAliases: 0,
-      pool: {
-        max: 5,
-        min: 0,
-        idle: 10000,
-      },
-      logging: false,
-    }
-  );
+  });
 }
 
 db.DIVISIONS.D0 = getDb_D0(sequelize.DIVISIONS.D0, Sequelize);
@@ -98,18 +152,18 @@ for (const key in db.GLOBAL) {
   db.GLOBAL[key].sync();
 }
 
-for (const division in db.DIVISIONS) {
-  for (const model in db.DIVISIONS[division]) {
-    if (
-      model !== "sequelize" &&
-      model !== "Sequelize" &&
-      model !== "currentYearInventaryIt" &&
-      model !== "currentYearInventaryFurniture" &&
-      model !== "currentYearInventaryUnmarked"
-    ) {
-      db.DIVISIONS[division][model].sync();
-    }
-  }
-}
+// for (const division in db.DIVISIONS) {
+//   for (const model in db.DIVISIONS[division]) {
+//     if (
+//       model !== "sequelize" &&
+//       model !== "Sequelize" &&
+//       model !== "currentYearInventaryIt" &&
+//       model !== "currentYearInventaryFurniture" &&
+//       model !== "currentYearInventaryUnmarked"
+//     ) {
+//       db.DIVISIONS[division][model].sync();
+//     }
+//   }
+// }
 
 export default db;

@@ -5,7 +5,7 @@ import { InventaryController } from "./controllers/inventary.controller.js";
 import { InventaryYearsController } from "./controllers/inventary.years.controller.js";
 import { UsersController } from "./controllers/users.controller.js";
 import authJwt from "./middleware/authJwt.js";
-import { EmployersController } from "./controllers/employers.controller.js";
+import { EmployeesController } from "./controllers/employees.controller.js";
 
 const router = new Router();
 
@@ -53,7 +53,7 @@ router.post("/checkStatusType", InventaryController.checkStatusType);
 router.post("/checkStatusLocations", InventaryController.checkStatusLocations);
 router.post("/getLocations", InventaryController.getLocations);
 
-router.get("/downloadEmpoyers", EmployersController.downloadEmpoyers);
-router.get("/getEmployers", EmployersController.getEmployers);
+router.get("/downloadEmployees", EmployeesController.downloadEmployees);
+router.get("/getEmployees", EmployeesController.getEmployees);
 
 export default router;

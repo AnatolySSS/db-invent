@@ -24,7 +24,6 @@ export const setUserMenuItems = (
   emptyItem,
   setItem,
   setItemDialog,
-  employers,
   setDialogType
 ) => {
   const openNew = () => {
@@ -41,17 +40,17 @@ export const setUserMenuItems = (
 
   const makeCommitmentHelper = () => {
     //Получение массива текущих пользователей
-    const owners = selectedItems.map((item) => item.owner);
+    const employees = selectedItems.map((item) => item.employee);
     //Проверка на совпадение пользователя (пользователь должен быть один и тот же)
     let check = true;
-    for (let i = 1; i < owners.length; i++) {
-      if (owners[0] !== owners[i]) {
+    for (let i = 1; i < employees.length; i++) {
+      if (employees[0] !== employees[i]) {
         check = false;
         break;
       }
     }
     if (check) {
-      return makeCommitment(selectedItems, employers, userAuth.fullName);
+      return makeCommitment(selectedItems, employees, userAuth.fullName);
     } else {
       userToast.current.show({
         severity: "info",
@@ -171,7 +170,7 @@ export const setUserMenuItems = (
 
       break;
     case "year":
-    case "employers":
+    case "employees":
       addTypes = [
         {
           label: "Сформировать EXCEL",

@@ -5,7 +5,6 @@ import { InputNumber } from "primereact/inputnumber";
 import { Dropdown } from "primereact/dropdown";
 import { Calendar } from "primereact/calendar";
 import { AutoComplete } from "primereact/autocomplete";
-import { Divider } from "primereact/divider";
 import { MultiStateCheckbox } from "primereact/multistatecheckbox";
 import styles from "./DescriptionCraft.module.css";
 import { multiStateCheckboxOptions } from "../../../Functions/Filters/getColumnFilterElement";
@@ -20,7 +19,7 @@ export const DescriptionIt = (props) => {
     disabled,
     setItem,
     values,
-    employersFullNames,
+    employeesFullNames,
     dialogType,
   } = props;
 
@@ -28,7 +27,7 @@ export const DescriptionIt = (props) => {
 
   const search = (event) => {
     setUserNames(
-      employersFullNames.filter((item) =>
+      employeesFullNames.filter((item) =>
         item.toLowerCase().includes(event.query.toLowerCase())
       )
     );
@@ -75,15 +74,17 @@ export const DescriptionIt = (props) => {
               />
             </div>
           )}
-          {currentColumns.includes("qr_code") && (
+          {currentColumns.includes("type") && (
             <div className="col-6">
-              <label htmlFor="qr_code" className={styles.label}>
-                QRCODE
+              <label htmlFor="type" className={styles.label}>
+                Тип
               </label>
-              <InputText
-                id="qr_code"
-                value={item.qr_code || ""}
-                onChange={(e) => setItem({ ...item, qr_code: e.target.value })}
+              <Dropdown
+                id="type"
+                value={item.type || ""}
+                options={getDropdownOptions("type", values)}
+                onChange={(e) => setItem({ ...item, type: e.target.value })}
+                placeholder={item.type || ""}
                 disabled={dialogType === "edit" && disabled}
               />
             </div>
@@ -108,6 +109,19 @@ export const DescriptionIt = (props) => {
             />
           </div>
         )}
+        {currentColumns.includes("qr_code") && dialogType === "edit" && (
+          <div className="col-6">
+            <label htmlFor="qr_code" className={styles.label}>
+              QRCODE
+            </label>
+            <InputText
+              id="qr_code"
+              value={item.qr_code || ""}
+              onChange={(e) => setItem({ ...item, qr_code: e.target.value })}
+              disabled={dialogType === "edit"}
+            />
+          </div>
+        )}
         {currentColumns.includes("ad_name") && (
           <div className="col-6">
             <label htmlFor="ad_name" className={styles.label}>
@@ -121,56 +135,41 @@ export const DescriptionIt = (props) => {
             />
           </div>
         )}
-        {currentColumns.includes("owner") && (
+        {currentColumns.includes("employee") && dialogType === "edit" && (
           <div className="col-6">
-            <label htmlFor="owner" className={styles.label}>
-              ФИО юзера
+            <label htmlFor="employee" className={styles.label}>
+              Пользователь
             </label>
             <AutoComplete
-              id="owner"
-              value={item.owner || ""}
+              id="employee"
+              value={item.employee || ""}
               suggestions={UserNames}
               completeMethod={search}
-              onChange={(e) => setItem({ ...item, owner: e.target.value })}
+              onChange={(e) => setItem({ ...item, employee: e.target.value })}
               forceSelection
-              disabled={dialogType === "edit"}
+              disabled={true}
             />
             {/* <InputText
-              id="owner"
-              value={item.owner || ""}
-              onChange={(e) => setItem({ ...item, owner: e.target.value })}
+              id="employee"
+              value={item.employee || ""}
+              onChange={(e) => setItem({ ...item, employee: e.target.value })}
               disabled={dialogType === "edit" && disabled}
             /> */}
           </div>
         )}
-        {/* {currentColumns.includes("prev_owner") && (
+        {/* {currentColumns.includes("prev_employee") && (
           <div className="col-6">
-            <label htmlFor="prev_owner" className={styles.label}>
+            <label htmlFor="prev_employee" className={styles.label}>
               ФИО предыдущего юзера
             </label>
             <InputText
-              id="prev_owner"
-              value={item.prev_owner || ""}
-              onChange={(e) => setItem({ ...item, prev_owner: e.target.value })}
+              id="prev_employee"
+              value={item.prev_employee || ""}
+              onChange={(e) => setItem({ ...item, prev_employee: e.target.value })}
               disabled={true}
             />
           </div>
         )} */}
-        {currentColumns.includes("type") && (
-          <div className="col-6">
-            <label htmlFor="type" className={styles.label}>
-              Тип
-            </label>
-            <Dropdown
-              id="type"
-              value={item.type || ""}
-              options={getDropdownOptions("type", values)}
-              onChange={(e) => setItem({ ...item, type: e.target.value })}
-              placeholder={item.type || ""}
-              disabled={dialogType === "edit" && disabled}
-            />
-          </div>
-        )}
         {currentColumns.includes("location") && (
           <div className="col-6">
             <label htmlFor="location" className={styles.label}>
@@ -309,24 +308,25 @@ export const DescriptionIt = (props) => {
             />
           </div>
         )}
-        {currentColumns.includes("last_setup_date") && (
-          <div className="col-6">
-            <label htmlFor="last_setup_date" className={styles.label}>
-              Дата установки пользователю
-            </label>
-            <Calendar
-              id="last_setup_date"
-              value={item.last_setup_date || null}
-              onChange={(e) =>
-                setItem({ ...item, last_setup_date: e.target.value })
-              }
-              dateFormat="dd.mm.yy"
-              placeholder={formatDate(item.last_setup_date || null)}
-              disabled={dialogType === "edit"}
-              // mask="99.99.9999"
-            />
-          </div>
-        )}
+        {currentColumns.includes("employee_setup_date") &&
+          dialogType === "edit" && (
+            <div className="col-6">
+              <label htmlFor="employee_setup_date" className={styles.label}>
+                Дата установки пользователю
+              </label>
+              <Calendar
+                id="employee_setup_date"
+                value={item.employee_setup_date || null}
+                onChange={(e) =>
+                  setItem({ ...item, employee_setup_date: e.target.value })
+                }
+                dateFormat="dd.mm.yy"
+                placeholder={formatDate(item.employee_setup_date || null)}
+                disabled={true}
+                // mask="99.99.9999"
+              />
+            </div>
+          )}
       </div>
       <div className="grid col-12">
         <div className="col-12">

@@ -35,7 +35,6 @@ export const TableHeader = (props) => {
     beginInventory,
     requestCurrentInventory,
     clearState,
-    employers,
     setDialogType,
   } = props;
 
@@ -87,7 +86,6 @@ export const TableHeader = (props) => {
     emptyItem,
     setItem,
     setItemDialog,
-    employers,
     setDialogType
   );
 

@@ -14,7 +14,7 @@ export const getItemDialogFooter = (
   userAuth,
   disabled,
   setDisabled,
-  employers,
+  employees,
   dialogType
 ) => (
   <React.Fragment>
@@ -41,7 +41,7 @@ export const getItemDialogFooter = (
             emptyItem,
             userAuth,
             setDisabled,
-            employers
+            employees
           )}
         />
       ))}

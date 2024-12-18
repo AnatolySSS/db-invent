@@ -82,15 +82,15 @@ export const DescriptionAssets = (props) => {
           />
         </div>
       )}
-      {currentColumns.includes("owner") && (
+      {currentColumns.includes("employee") && (
         <div className="col-6">
-          <label htmlFor="owner" className={styles.label}>
+          <label htmlFor="employee" className={styles.label}>
             ФИО юзера
           </label>
           <InputText
-            id="owner"
-            value={item.owner || ""}
-            onChange={(e) => setItem({ ...item, owner: e.target.value })}
+            id="employee"
+            value={item.employee || ""}
+            onChange={(e) => setItem({ ...item, employee: e.target.value })}
             disabled={disabled}
           />
         </div>

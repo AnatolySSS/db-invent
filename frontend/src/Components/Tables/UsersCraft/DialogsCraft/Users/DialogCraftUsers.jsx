@@ -21,18 +21,18 @@ export const DialogCraftUsers = (props) => {
     updateData,
     emptyItem,
     userAuth,
-    employers,
+    employees,
     dialogType,
   } = props;
 
   const [disabled, setDisabled] = useState(true);
   const [UserNames, setUserNames] = useState([]);
 
-  const employersFullNames = employers.map((user) => user.full_name);
+  const employeesFullNames = employees.map((user) => user.full_name);
 
   const search = (event) => {
     setUserNames(
-      employersFullNames.filter((item) =>
+      employeesFullNames.filter((item) =>
         item.toLowerCase().includes(event.query.toLowerCase())
       )
     );
@@ -61,7 +61,7 @@ export const DialogCraftUsers = (props) => {
         userAuth,
         disabled,
         setDisabled,
-        employers,
+        employees,
         dialogType
       )}
       onHide={hideNew(setItemDialog, setDisabled)}

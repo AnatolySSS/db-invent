@@ -21,29 +21,27 @@ import {
 import { inclineFirstname, inclineMiddlename, inclineLastname } from "lvovich";
 import { saveAs } from "file-saver";
 
-export function makeCommitment(selectedItems, employers, fullName) {
-  const department = employers.filter(
-    (employer) => employer.full_name == selectedItems[0].owner
+export function makeCommitment(selectedItems, employees, fullName) {
+  const department = employees.filter(
+    (employee) => employee.full_name == selectedItems[0].employee
   )[0]?.department;
 
-  console.log(employers);
-
-  const title = employers.filter(
-    (employer) => employer.full_name == selectedItems[0].owner
+  const title = employees.filter(
+    (employee) => employee.full_name == selectedItems[0].employee
   )[0]?.title;
 
-  const telephoneNumber = employers.filter(
-    (employer) => employer.full_name == selectedItems[0].owner
+  const telephoneNumber = employees.filter(
+    (employee) => employee.full_name == selectedItems[0].employee
   )[0]?.phone;
 
-  const cityName = employers.filter(
-    (employer) => employer.full_name == selectedItems[0].owner
+  const cityName = employees.filter(
+    (employee) => employee.full_name == selectedItems[0].employee
   )[0]?.city_name;
 
   let owners = [];
   let names = [];
   selectedItems.forEach((item) => {
-    owners.push(item.owner);
+    owners.push(item.employee);
     names.push(item.name);
   });
 

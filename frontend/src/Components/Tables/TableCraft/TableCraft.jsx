@@ -10,10 +10,7 @@ import { Toast } from "primereact/toast";
 import Preloader from "../../Common/Preloader/Preloader";
 import { creactLocale } from "../../../function-helpers/addLocale";
 import { locale } from "primereact/api";
-import {
-  getColumnFilterElement,
-  getglobalFilterColumns,
-} from "../Functions/Filters/getColumnFilterElement";
+import { getColumnFilterElement, getglobalFilterColumns } from "../Functions/Filters/getColumnFilterElement";
 import { getColumnBody } from "../Functions/Body/getColumnBody";
 import { getImgBodyTemplate } from "../Functions/Body/getImgBodyTemplate3";
 import { getTableHeight } from "../Functions/Helpers/getTableHeight";
@@ -45,7 +42,7 @@ const TableCraft = (props) => {
     requestCurrentInventory,
     hasCurrentInventory,
     clearState,
-    employers,
+    employees,
   } = props;
 
   const [visibleColumns, setVisibleColumns] = useState([]);
@@ -58,11 +55,14 @@ const TableCraft = (props) => {
   const [dialogType, setDialogType] = useState("");
   const toast = useRef(null);
   let emptyItem = {};
-  let emptyTransferItem = {
-    name: "",
+  let emptyTransferedItem = {
+    employee_name: "",
+    employee_id: "",
     date: "",
     note: "",
   };
+
+  values.city_name = ["Москва", "Саратов", "Санкт-Петербург", "Нижний Новгород"];
 
   columns.map((obj) => {
     let dataType;
@@ -78,10 +78,10 @@ const TableCraft = (props) => {
   });
 
   const [item, setItem] = useState(emptyItem);
-  const [transferedItem, setTransferItem] = useState(emptyTransferItem);
+  const [transferedItem, setTransferItem] = useState(emptyTransferedItem);
 
   useEffect(() => {
-    requestData(userAuth.division);
+    requestData(userAuth);
     requestCurrentInventory(type, userAuth.division);
     initFilters();
     creactLocale();
@@ -119,7 +119,7 @@ const TableCraft = (props) => {
   };
 
   const hideTransferDialog = () => {
-    setTransferItem(emptyTransferItem);
+    setTransferItem(emptyTransferedItem);
     setTransferDialog(false);
   };
 
@@ -150,41 +150,27 @@ const TableCraft = (props) => {
 
   const deleteItemDialogFooter = (
     <React.Fragment>
-      <Button
-        label="Нет"
-        icon="pi pi-times"
-        outlined
-        onClick={hideDeleteItemDialog}
-      />
-      <Button
-        label="Да"
-        icon="pi pi-check"
-        severity="danger"
-        onClick={deleteItem}
-      />
+      <Button label="Нет" icon="pi pi-times" outlined onClick={hideDeleteItemDialog} />
+      <Button label="Да" icon="pi pi-check" severity="danger" onClick={deleteItem} />
     </React.Fragment>
   );
 
   const handletransferItem = () => {
-    transferedItem.userName = userAuth.fullName;
+    transferedItem.changedUserId = userAuth.employee_id;
+    transferedItem.employee_id = filteredEmployees[0].employee_id;
+
+    console.log(selectedItems);
+    console.log(transferedItem);
+
     transferItem(selectedItems, transferedItem, userAuth.division);
-    setTransferItem(emptyTransferItem);
+    setTransferItem(emptyTransferedItem);
     setTransferDialog(false);
   };
 
   const transferDialogFooter = (
     <React.Fragment>
-      <Button
-        label="Переместить"
-        icon="pi pi-check"
-        onClick={handletransferItem}
-      />
-      <Button
-        label="Выйти"
-        icon="pi pi-times"
-        outlined
-        onClick={hideTransferDialog}
-      />
+      <Button label="Переместить" icon="pi pi-check" onClick={handletransferItem} />
+      <Button label="Выйти" icon="pi pi-times" outlined onClick={hideTransferDialog} />
     </React.Fragment>
   );
 
@@ -204,30 +190,25 @@ const TableCraft = (props) => {
           onClick={() => editItem(rowData)}
         />
         {userAuth.role === "admin" && (
-          <Button
-            icon="pi pi-trash"
-            rounded
-            outlined
-            className="ml-2"
-            severity="danger"
-            onClick={() => confirmDeleteItem(rowData)}
-          />
+          <Button icon="pi pi-trash" rounded outlined className="ml-2" severity="danger" onClick={() => confirmDeleteItem(rowData)} />
         )}
       </React.Fragment>
     );
   };
 
-  const [UserNames, setUserNames] = useState([]);
+  // const [employeeNames, setEmployeeNames] = useState([]);
+  // const [employeeIds, setEmployeeIds] = useState([]);
+  const [filteredEmployees, setFilteredEmployees] = useState([]);
 
-  const employersFullNames = employers.map((user) => user.full_name);
+  const employeesFullNames = employees.map((user) => user.full_name);
 
-  const search = (event) => {
-    setUserNames(
-      employersFullNames.filter((item) =>
-        item.toLowerCase().includes(event.query.toLowerCase())
-      )
-    );
+  const searchEmployees = (event) => {
+    // setEmployeeNames(employeesFullNames.filter((item) => item.toLowerCase().includes(event.query.toLowerCase())));
+    setFilteredEmployees(employees.filter((item) => item.full_name.toLowerCase().includes(event.query.toLowerCase())));
   };
+  // useEffect(() => {
+  //   console.log(filteredEmployees);
+  // }, [filteredEmployees]);
 
   return isFetching ? (
     <div className="h-screen flex align-items-center justify-content-center">
@@ -270,7 +251,6 @@ const TableCraft = (props) => {
             requestCurrentInventory={requestCurrentInventory}
             clearState={clearState}
             userMenuType="main"
-            employers={employers}
             setDialogType={setDialogType}
           />
         }
@@ -299,12 +279,7 @@ const TableCraft = (props) => {
         // }
         style={{ maxWidth: "100vw" }}
       >
-        <Column
-          selectionMode="multiple"
-          headerStyle={{ width: "3rem" }}
-          frozen
-          alignFrozen="left"
-        />
+        <Column selectionMode="multiple" headerStyle={{ width: "3rem" }} frozen alignFrozen="left" />
         {visibleColumns.map((col, i) => (
           <Column
             key={col.field}
@@ -344,6 +319,7 @@ const TableCraft = (props) => {
         )}
       </DataTable>
       <DialogCraft
+        type={type}
         name={name}
         data={data}
         columns={columns}
@@ -356,9 +332,9 @@ const TableCraft = (props) => {
         updateData={updateData}
         emptyItem={emptyItem}
         userAuth={userAuth}
-        employersFullNames={employersFullNames}
+        employeesFullNames={employeesFullNames}
         dialogType={dialogType}
-        employers={employers}
+        employees={employees}
       />
 
       {/* Удаление элемента */}
@@ -372,10 +348,7 @@ const TableCraft = (props) => {
         onHide={hideDeleteItemDialog}
       >
         <div className="confirmation-content">
-          <i
-            className="pi pi-exclamation-triangle mr-3"
-            style={{ fontSize: "2rem" }}
-          />
+          <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: "2rem" }} />
           {item && (
             <span>
               Вы уверены, что хотите удалить <b>{item.name}</b>?
@@ -401,20 +374,19 @@ const TableCraft = (props) => {
             <label htmlFor="name">ФИО</label>
             <AutoComplete
               id="name"
-              value={transferedItem.name || ""}
-              suggestions={UserNames}
-              completeMethod={search}
-              onChange={(e) =>
-                setTransferItem({ ...transferedItem, name: e.target.value })
-              }
+              value={transferedItem.employee_name || ""}
+              suggestions={[...filteredEmployees.map((e) => e.full_name)]}
+              completeMethod={searchEmployees}
+              onChange={(e) => setTransferItem({ ...transferedItem, employee_name: e.target.value })}
+              onSelect={(e) => setFilteredEmployees(employees.filter((item) => item.full_name.toLowerCase().includes(e.value.toLowerCase())))}
               forceSelection
               autoFocus={true}
             />
             {/* <InputText
               id="name"
-              value={transferedItem.name || ""}
+              value={transferedItem.employee_name || ""}
               onChange={(e) =>
-                setTransferItem({ ...transferedItem, name: e.target.value })
+                setTransferItem({ ...transferedItem, employee_name: e.target.value })
               }
               autoFocus={true}
             /> */}
@@ -440,9 +412,7 @@ const TableCraft = (props) => {
               id="note"
               aria-describedby="name"
               value={transferedItem.note || ""}
-              onChange={(e) =>
-                setTransferItem({ ...transferedItem, note: e.target.value })
-              }
+              onChange={(e) => setTransferItem({ ...transferedItem, note: e.target.value })}
               autoResize
               rows={3}
               cols={20}

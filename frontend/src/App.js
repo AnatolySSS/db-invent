@@ -15,7 +15,7 @@ import LoginCraftContainer from "./Components/LoginCraft/LoginCraftContainer";
 import YearInventoryContainer from "./Components/Tables/YearInventory/YearInventoryContainer";
 import ChartCraftContainer from "./Components/Charts/ChartCraftContainer";
 import UsersCraftContainer from "./Components/Tables/UsersCraft/UsersCraftContainer";
-import EmployersCraftContainer from "./Components/Tables/UsersCraft/EmployersCraftContainer";
+import EmployeesCraftContainer from "./Components/Tables/UsersCraft/EmployeesCraftContainer";
 import { getTableHeight } from "./Components/Tables/Functions/Helpers/getTableHeight";
 
 class App extends React.Component {
@@ -47,7 +47,7 @@ class App extends React.Component {
               <Route path="/upload" element={<UploadCraftContainer />} />
               <Route path="/charts" element={<ChartCraftContainer />} />
               <Route path="/users" element={<UsersCraftContainer />} />
-              <Route path="/employers" element={<EmployersCraftContainer />} />
+              <Route path="/employees" element={<EmployeesCraftContainer />} />
               <Route
                 path={`/it/:year`}
                 element={<YearInventoryContainer tableName="it" />}

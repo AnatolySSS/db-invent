@@ -4,6 +4,7 @@ import { createId } from "./createId";
 
 export const saveItem =
   (
+    type,
     addData,
     updateData,
     data,
@@ -12,8 +13,7 @@ export const saveItem =
     setItem,
     emptyItem,
     userAuth,
-    setDisabled,
-    employers
+    setDisabled
   ) =>
   () => {
     setDisabled(true);
@@ -36,17 +36,16 @@ export const saveItem =
       }
     });
 
-    //Изменение ФИО пользователя на object_sid
-    _item.owner = employers.filter(
-      (employer) => employer.full_name === _item.owner
-    )[0].object_sid;
-
     if (_item.id) {
-      _item.userName = userAuth.fullName;
+      _item.changedUserId = userAuth.employee_id;
       updateData(_item, userAuth.division);
     } else {
-      _item.id = createId(data);
-      _item.userName = userAuth.fullName;
+      // _item.id = createId(data);
+      _item.changedUserId = userAuth.employee_id;
+      _item.division_id = userAuth.division;
+      _item.class_type = type;
+      console.log(_item);
+
       addData(_item, userAuth.division);
     }
     setItemDialog(false);

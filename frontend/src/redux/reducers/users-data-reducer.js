@@ -4,10 +4,8 @@ import changeDateType from "../../function-helpers/changeDateType";
 
 const SET_DATA = "sodfu-inventory/users-data-reducer/SET_DATA";
 // const RESET_STATE = "sodfu-inventory/users-data-reducer/RESET_STATE";
-const SET_UPLOAD_STATUS =
-  "sodfu-inventory/users-data-reducer/SET_UPLOAD_STATUS";
-const TOGGLE_IS_FETCHING =
-  "sodfu-inventory/users-data-reducer/TOGGLE_IS_FETCHING";
+const SET_UPLOAD_STATUS = "sodfu-inventory/users-data-reducer/SET_UPLOAD_STATUS";
+const TOGGLE_IS_FETCHING = "sodfu-inventory/users-data-reducer/TOGGLE_IS_FETCHING";
 
 let initialState = {
   columns: [],
@@ -35,6 +33,7 @@ let initialState = {
       constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
     },
     role: { value: null, matchMode: FilterMatchMode.IN },
+    access_type: { value: null, matchMode: FilterMatchMode.IN },
     updatedAt: {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],

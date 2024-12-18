@@ -9,7 +9,7 @@ export const saveItem =
     emptyItem,
     userAuth,
     setDisabled,
-    employers
+    employees
   ) =>
   () => {
     setDisabled(true);
@@ -18,8 +18,8 @@ export const saveItem =
     if (_item.object_sid) {
       updateData(_item, userAuth.division);
     } else {
-      _item.object_sid = employers.filter(
-        (employer) => employer.full_name === _item.full_name
+      _item.object_sid = employees.filter(
+        (employee) => employee.full_name === _item.full_name
       )[0].object_sid;
       addData(_item, userAuth.division);
     }

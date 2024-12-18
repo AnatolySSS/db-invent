@@ -23,7 +23,7 @@ let mapStateToProps = (state) => {
     message: state.usersData.message,
     userAuth: state.auth,
     isFetching: state.usersData.isFetching,
-    employers: state.employers.data,
+    employees: state.employees.data,
   };
 };
 

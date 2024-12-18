@@ -4,6 +4,7 @@ import { hideNew } from "./hideNew";
 import { saveItem } from "./saveItem";
 
 export const getItemDialogFooter = (
+  type,
   addData,
   updateData,
   data,
@@ -16,8 +17,7 @@ export const getItemDialogFooter = (
   setDisabled,
   activeTabIndex,
   setActiveTabIndex,
-  dialogType,
-  employers
+  dialogType
 ) => (
   <React.Fragment>
     <div className="mt-2">
@@ -36,6 +36,7 @@ export const getItemDialogFooter = (
             label="Сохранить"
             icon="pi pi-check"
             onClick={saveItem(
+              type,
               addData,
               updateData,
               data,
@@ -44,8 +45,7 @@ export const getItemDialogFooter = (
               setItem,
               emptyItem,
               userAuth,
-              setDisabled,
-              employers
+              setDisabled
             )}
           />
         ))}

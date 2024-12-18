@@ -32,7 +32,7 @@ export default (sequelize, Sequelize, year) => {
       ad_name: {
         type: Sequelize.TEXT,
       },
-      owner: {
+      employee: {
         type: Sequelize.TEXT,
       },
       set_with: {

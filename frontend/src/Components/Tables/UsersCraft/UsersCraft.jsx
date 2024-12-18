@@ -10,33 +10,15 @@ import { Toast } from "primereact/toast";
 import Preloader from "../../Common/Preloader/Preloader";
 import { creactLocale } from "../../../function-helpers/addLocale";
 import { locale } from "primereact/api";
-import {
-  getColumnFilterElement,
-  getglobalFilterColumns,
-} from "../Functions/Filters/getColumnFilterElement";
+import { getColumnFilterElement, getglobalFilterColumns } from "../Functions/Filters/getColumnFilterElement";
 import { getColumnBody } from "../Functions/Body/getColumnBody";
 import { getTableHeight } from "../Functions/Helpers/getTableHeight";
 import { TableHeader } from "../../Common/TableHeader/TableHeader";
 import { DialogCraftUsers } from "./DialogsCraft/Users/DialogCraftUsers";
 
 const UsersCraft = (props) => {
-  let {
-    type,
-    name,
-    data,
-    columns,
-    values,
-    requestData,
-    addData,
-    updateData,
-    deleteData,
-    setVisible,
-    logout,
-    userAuth,
-    isFetching,
-    clearState,
-    employers,
-  } = props;
+  let { type, name, data, columns, values, requestData, addData, updateData, deleteData, setVisible, logout, userAuth, isFetching, clearState, employees } =
+    props;
 
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filters, setFilters] = useState(props.filters);
@@ -48,22 +30,10 @@ const UsersCraft = (props) => {
   const toast = useRef(null);
   let emptyItem = { full_name: "", role: "" };
 
-  values.department = [
-    ...new Set(
-      data
-        .map((element) => element.department)
-        .filter((element) => element.length !== 0)
-    ),
-  ].sort((a, b) => a.localeCompare(b));
+  values.department = [...new Set(data.map((element) => element.department).filter((element) => element.length !== 0))].sort((a, b) => a.localeCompare(b));
   values.department.unshift("");
 
-  values.title = [
-    ...new Set(
-      data
-        .map((element) => element.title)
-        .filter((element) => element.length !== 0)
-    ),
-  ].sort((a, b) => a.localeCompare(b));
+  values.title = [...new Set(data.map((element) => element.title).filter((element) => element.length !== 0))].sort((a, b) => a.localeCompare(b));
   values.title.unshift("");
 
   const [item, setItem] = useState(emptyItem);
@@ -100,7 +70,7 @@ const UsersCraft = (props) => {
 
   const deleteItem = () => {
     let _item = { ...item };
-    deleteData(_item.object_sid, userAuth.division);
+    deleteData(_item.user_id, userAuth.division);
 
     toast.current.show({
       severity: "success",
@@ -114,18 +84,8 @@ const UsersCraft = (props) => {
 
   const deleteItemDialogFooter = (
     <React.Fragment>
-      <Button
-        label="Нет"
-        icon="pi pi-times"
-        outlined
-        onClick={hideDeleteItemDialog}
-      />
-      <Button
-        label="Да"
-        icon="pi pi-check"
-        severity="danger"
-        onClick={deleteItem}
-      />
+      <Button label="Нет" icon="pi pi-times" outlined onClick={hideDeleteItemDialog} />
+      <Button label="Да" icon="pi pi-check" severity="danger" onClick={deleteItem} />
     </React.Fragment>
   );
 
@@ -137,20 +97,8 @@ const UsersCraft = (props) => {
   const editColumnBodyTemplate = (rowData) => {
     return (
       <React.Fragment>
-        <Button
-          icon={"pi pi-pencil"}
-          rounded
-          outlined
-          onClick={() => editItem(rowData)}
-        />
-        <Button
-          icon="pi pi-trash"
-          rounded
-          outlined
-          className="ml-2"
-          severity="danger"
-          onClick={() => confirmDeleteItem(rowData)}
-        />
+        <Button icon={"pi pi-pencil"} rounded outlined onClick={() => editItem(rowData)} />
+        <Button icon="pi pi-trash" rounded outlined className="ml-2" severity="danger" onClick={() => confirmDeleteItem(rowData)} />
       </React.Fragment>
     );
   };
@@ -170,7 +118,7 @@ const UsersCraft = (props) => {
         filters={filters}
         filterDisplay="menu"
         globalFilterFields={getglobalFilterColumns(visibleColumns)}
-        dataKey="object_sid"
+        dataKey="employee_id"
         header={
           <TableHeader
             type={type}
@@ -220,12 +168,7 @@ const UsersCraft = (props) => {
         // }
         style={{ maxWidth: "100vw" }}
       >
-        <Column
-          selectionMode="multiple"
-          headerStyle={{ width: "3rem" }}
-          frozen
-          alignFrozen="left"
-        />
+        <Column selectionMode="multiple" headerStyle={{ width: "3rem" }} frozen alignFrozen="left" />
         {visibleColumns.map((col, i) => (
           <Column
             key={col.field}
@@ -265,7 +208,7 @@ const UsersCraft = (props) => {
         updateData={updateData}
         emptyItem={emptyItem}
         userAuth={userAuth}
-        employers={employers}
+        employees={employees}
         dialogType={dialogType}
       />
       <Dialog
@@ -278,10 +221,7 @@ const UsersCraft = (props) => {
         onHide={hideDeleteItemDialog}
       >
         <div className="confirmation-content">
-          <i
-            className="pi pi-exclamation-triangle mr-3"
-            style={{ fontSize: "2rem" }}
-          />
+          <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: "2rem" }} />
           {item && (
             <span>
               Вы уверены, что хотите удалить <b>{item.full_name}</b>?

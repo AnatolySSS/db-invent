@@ -3,53 +3,31 @@ import axios from "axios";
 const instance = axios.create({
   withCredentials: true,
   baseURL: "/",
-  // headers: {
-  //   "x-access-token": 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6ImNodXBsaWdpbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY4NTM2NjU5N30.9ydObqTVMPPKX6PhKBi8PYra1sUcy39TvJJvwaeLeaA',
-  // }
 });
 
 export const DataAPI = {
-  async getData(type, userDivision) {
-    const responce = await instance.post(`getData`, { type, userDivision });
+  async getData(type, userAuth) {
+    const responce = await instance.post(`getData`, { type, userAuth });
     return responce.data;
   },
-  async addData(type, rowData, userDivision) {
-    const responce = await instance.post(`addData`, {
-      type,
-      rowData,
-      userDivision,
-    });
+  async addData(rowData) {
+    const responce = await instance.post(`addData`, { rowData });
     return responce.data;
   },
-  async updateData(type, rowData, userDivision) {
-    const responce = await instance.put(`updateData`, {
-      type,
-      rowData,
-      userDivision,
-    });
+  async updateData(rowData) {
+    const responce = await instance.put(`updateData`, { rowData });
     return responce.data;
   },
-  async transferItem(type, items, transferData, userDivision) {
-    const responce = await instance.put(`transferItem`, {
-      type,
-      items,
-      transferData,
-      userDivision,
-    });
+  async transferItem(items, transferData) {
+    const responce = await instance.put(`transferItem`, { items, transferData });
     return responce.data;
   },
-  async deleteData(type, rowId, userDivision) {
-    const responce = await instance.delete(`deleteData`, {
-      data: { type, rowId, userDivision },
-    });
+  async deleteData(rowId) {
+    const responce = await instance.delete(`deleteData`, { data: { rowId } });
     return responce.data;
   },
-  async uploadData(type, data, userDivision) {
-    const responce = await instance.post(`uploadData`, {
-      type,
-      data,
-      userDivision,
-    });
+  async uploadData(data) {
+    const responce = await instance.post(`uploadData`, { data });
     return responce.data;
   },
 };
@@ -125,13 +103,13 @@ export const UsersAPI = {
   },
 };
 
-export const EmployersAPI = {
+export const EmployeesAPI = {
   async downloadEmpoyers() {
-    const responce = await instance.get(`downloadEmpoyers`);
+    const responce = await instance.get(`downloadEmployees`);
     return responce.data;
   },
-  async getEmployers() {
-    const responce = await instance.get(`getEmployers`);
+  async getEmployees() {
+    const responce = await instance.get(`getEmployees`);
     return responce.data;
   },
 };
