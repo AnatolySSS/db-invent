@@ -2,16 +2,15 @@ import { Sequelize } from "sequelize";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import db from "../models/_index.js";
-const User = db.GLOBAL.user;
-const Employer = db.GLOBAL.employer;
 import authConfig from "../config/auth.config.js";
 
 export const AuthController = {
   async login(request, responce) {
     try {
       let { login, password } = request.body;
+      const { user, employee } = db.GLOBAL;
 
-      const user = await Employer.findOne({
+      const currentUser = await employee.findOne({
         attributes: {
           include: [
             [Sequelize.col("user.password"), "password"],
@@ -22,21 +21,22 @@ export const AuthController = {
         where: { login: login },
         include: [
           {
-            model: User,
+            model: user,
             attributes: [],
+            required: true,
           },
         ],
         raw: true,
       });
 
-      if (!user) {
+      if (!currentUser) {
         return responce.json({
           resultCode: 2,
           message: "Пользователя с данным логином не имеется в БД",
         });
       }
 
-      let passwordIsValid = bcrypt.compareSync(password, user.password);
+      let passwordIsValid = bcrypt.compareSync(password, currentUser.password);
 
       if (!passwordIsValid) {
         return responce.json({
@@ -46,15 +46,9 @@ export const AuthController = {
         });
       }
 
-      await User.update(
-        { is_auth: 1, last_logon: new Date() },
-        { where: { object_sid: user.object_sid } }
-      );
+      await user.update({ is_auth: 1, last_logon: new Date() }, { where: { user_id: currentUser.employee_id } });
 
-      const accessToken = jwt.sign(
-        { login: user.login, role: user.role },
-        authConfig.secret
-      );
+      const accessToken = jwt.sign({ login: currentUser.login, role: currentUser.role }, authConfig.secret);
 
       responce.json({
         resultCode: 0,
@@ -71,22 +65,20 @@ export const AuthController = {
   async logout(request, responce) {
     try {
       let { login } = request.body;
-      const user = await Employer.findOne({
-        attributes: ["object_sid"],
+      const { user, employee } = db.GLOBAL;
+      const currentUser = await employee.findOne({
+        attributes: ["employee_id"],
         where: { login: login },
         include: [
           {
-            model: User,
+            model: user,
             attributes: [],
           },
         ],
         raw: true,
       });
 
-      await User.update(
-        { is_auth: 0 },
-        { where: { object_sid: user.object_sid } }
-      );
+      await user.update({ is_auth: 0 }, { where: { user_id: currentUser.employee_id } });
 
       responce.json({
         resultCode: 0,
@@ -103,41 +95,43 @@ export const AuthController = {
   async auth(request, responce) {
     try {
       let { login } = request.body;
+      const { user, employee } = db.GLOBAL;
 
-      const user = await Employer.findOne({
+      const currentUser = await employee.findOne({
         attributes: {
           include: [
             [Sequelize.col("user.last_logon"), "last_logon"],
             [Sequelize.col("user.is_auth"), "is_auth"],
             [Sequelize.col("user.role"), "role"],
+            [Sequelize.col("user.access_type"), "access_type"],
           ],
           exclude: ["createdAt", "updatedAt"],
         },
         where: { login: login },
         include: [
           {
-            model: User,
+            model: user,
             attributes: [],
           },
         ],
         raw: true,
       });
 
-      if (!user) return;
+      if (!currentUser) return;
 
-      if (user.is_auth == 1) {
-        user.is_auth = true;
+      if (currentUser.is_auth == 1) {
+        currentUser.is_auth = true;
         responce.json({
           resultCode: 0,
           message: "Авторизация прошла успешно",
-          user,
+          currentUser,
         });
       } else {
         user.is_auth = false;
         responce.json({
           resultCode: 1,
           message: "Пользователь не авторизован",
-          user,
+          currentUser,
         });
       }
     } catch (error) {

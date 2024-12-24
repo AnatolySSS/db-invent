@@ -17,14 +17,13 @@ export const setUserMenuItems = (
   clearFilter,
   setTransferDialog,
   clearState,
-  userMenuType,
+  tableType,
   hasCurrentInventory,
   beginInventory,
   requestCurrentInventory,
   emptyItem,
   setItem,
   setItemDialog,
-  employers,
   setDialogType
 ) => {
   const openNew = () => {
@@ -41,29 +40,28 @@ export const setUserMenuItems = (
 
   const makeCommitmentHelper = () => {
     //Получение массива текущих пользователей
-    const owners = selectedItems.map((item) => item.owner);
+    const employees = selectedItems.map((item) => item.employee);
     //Проверка на совпадение пользователя (пользователь должен быть один и тот же)
     let check = true;
-    for (let i = 1; i < owners.length; i++) {
-      if (owners[0] !== owners[i]) {
+    for (let i = 1; i < employees.length; i++) {
+      if (employees[0] !== employees[i]) {
         check = false;
         break;
       }
     }
     if (check) {
-      return makeCommitment(selectedItems, employers, userAuth.fullName);
+      return makeCommitment(selectedItems, employees, userAuth.fullName);
     } else {
       userToast.current.show({
         severity: "info",
         summary: "Предупреждение",
-        detail:
-          "Выбранные единицы оборудования закреплены за разными сотрудниками",
+        detail: "Выбранные единицы оборудования закреплены за разными сотрудниками",
         life: 3000,
       });
     }
   };
 
-  const makeQRCodeHelper = () => makeQRCode(selectedItems, userAuth.division);
+  const makeQRCodeHelper = () => makeQRCode(selectedItems);
 
   const handleTransfer = () => {
     if (selectedItems.length !== 0) {
@@ -94,22 +92,18 @@ export const setUserMenuItems = (
   const saveAsExcelFile = (buffer, fileName) => {
     import("file-saver").then((module) => {
       if (module && module.default) {
-        let EXCEL_TYPE =
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+        let EXCEL_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
         let EXCEL_EXTENSION = ".xlsx";
         const data = new Blob([buffer], {
           type: EXCEL_TYPE,
         });
 
-        module.default.saveAs(
-          data,
-          fileName + "_export_" + new Date().getTime() + EXCEL_EXTENSION
-        );
+        module.default.saveAs(data, fileName + "_export_" + new Date().getTime() + EXCEL_EXTENSION);
       }
     });
   };
   let addTypes;
-  switch (userMenuType) {
+  switch (tableType) {
     case "main":
       addTypes = [
         {
@@ -156,8 +150,8 @@ export const setUserMenuItems = (
             </i>
           ),
           command: async () => {
-            await beginInventory(type, userAuth.division);
-            await requestCurrentInventory(type, userAuth.division);
+            await beginInventory(type, userAuth.division_id);
+            await requestCurrentInventory(type, userAuth.division_id);
             getTableHeight();
             userToast.current.show({
               severity: "success",
@@ -171,7 +165,7 @@ export const setUserMenuItems = (
 
       break;
     case "year":
-    case "employers":
+    case "employees":
       addTypes = [
         {
           label: "Сформировать EXCEL",
@@ -198,25 +192,12 @@ export const setUserMenuItems = (
     {
       template: (item, options) => {
         return (
-          <button
-            onClick={(e) => options.onClick(e)}
-            className={classNames(
-              options.className,
-              "w-full p-link flex align-items-center"
-            )}
-          >
-            <Avatar
-              image={getUserLogo(userAuth.isAuth, userAuth.login)}
-              className="mr-2"
-              icon="pi pi-user"
-              shape="circle"
-            />
+          <button onClick={(e) => options.onClick(e)} className={classNames(options.className, "w-full p-link flex align-items-center")}>
+            <Avatar image={getUserLogo(userAuth.isAuth, userAuth.login)} className="mr-2" icon="pi pi-user" shape="circle" />
             <div className="flex flex-column align">
-              <span className="font-bold">{`${
-                userAuth.fullName.split(" ")[0]
-              } ${Array.from(userAuth.fullName.split(" ")[1])[0]}.${
+              <span className="font-bold">{`${userAuth.fullName.split(" ")[0]} ${Array.from(userAuth.fullName.split(" ")[1])[0]}.${
                 Array.from(userAuth.fullName.split(" ")[2])[0]
-              }. (филиал №${userAuth.division}) `}</span>
+              }. (филиал №${userAuth.division_id}) `}</span>
             </div>
           </button>
         );

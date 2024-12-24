@@ -9,10 +9,7 @@ import { Button } from "primereact/button";
 import Preloader from "../../Common/Preloader/Preloader";
 import { creactLocale } from "../../../function-helpers/addLocale";
 import { locale } from "primereact/api";
-import {
-  getColumnFilterElement,
-  getglobalFilterColumns,
-} from "../Functions/Filters/getColumnFilterElement";
+import { getColumnFilterElement, getglobalFilterColumns } from "../Functions/Filters/getColumnFilterElement";
 import { getColumnBody } from "../Functions/Body/getColumnBody";
 import { getTableHeight } from "../Functions/Helpers/getTableHeight";
 import { TableHeader } from "../../Common/TableHeader/TableHeader";
@@ -30,8 +27,11 @@ const YearInventoryCraft = (props) => {
     logout,
     userAuth,
     isFetching,
-    tableName,
-    clearState,
+    type,
+    clearItState,
+    clearYearState,
+    hasCurrentInventory,
+    requestCurrentInventory,
   } = props;
 
   const [visibleColumns, setVisibleColumns] = useState(columns);
@@ -57,9 +57,11 @@ const YearInventoryCraft = (props) => {
   }, []);
 
   useEffect(() => {
-    requestData(tableName, year, userAuth.division);
+    clearYearState();
+    requestData(type, year, userAuth);
+    requestCurrentInventory(type, userAuth.division_id);
     initFilters();
-  }, [tableName, year]);
+  }, [type, year]);
 
   useEffect(() => {
     getTableHeight();
@@ -75,13 +77,7 @@ const YearInventoryCraft = (props) => {
   };
 
   const filterApplyTemplate = (options) => {
-    return (
-      <Button
-        label="Принять"
-        size="small"
-        onClick={options.filterApplyCallback}
-      ></Button>
-    );
+    return <Button label="Принять" size="small" onClick={options.filterApplyCallback}></Button>;
   };
 
   return isFetching ? (
@@ -111,9 +107,10 @@ const YearInventoryCraft = (props) => {
             columns={columns}
             filters={filters}
             tableName={`${name}  (${year})`}
-            userMenuType="year"
+            tableType="year"
             globalFilterValue={globalFilterValue}
-            clearState={clearState}
+            hasCurrentInventory={hasCurrentInventory}
+            clearState={clearItState}
           />
         }
         paginator
@@ -162,7 +159,7 @@ const YearInventoryCraft = (props) => {
             header={"QRCODE IMG"}
             dataType={"text"}
             style={{ minWidth: "10rem", padding: "0.5rem" }}
-            body={getImgBodyTemplate(userAuth.division)}
+            body={getImgBodyTemplate(userAuth.division_id)}
             bodyClassName="text-center"
           />
         )}

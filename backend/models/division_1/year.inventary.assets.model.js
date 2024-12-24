@@ -20,7 +20,7 @@ export default (sequelize, Sequelize, year) => {
       purchase_date: {
         type: Sequelize.DATE,
       },
-      owner: {
+      employee: {
         type: Sequelize.TEXT,
       },
       purchase_price: {

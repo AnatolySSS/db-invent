@@ -8,21 +8,24 @@ import { getValues } from "./functions/getValues.js";
 export const UsersController = {
   async getUsers(request, responce) {
     try {
-      let { userDivision } = request.body;
-
-      const { user, userValues, userColumns, employer, city } = db.GLOBAL;
+      let { userAuth } = request.body;
+      const { user, vals, userCols, employee, division } = db.GLOBAL;
       let data = {};
 
-      data.lib = await employer.findAll({
+      const whereObj = userAuth.access_type === "limited" ? { division_id: userAuth.division_id } : {};
+
+      data.lib = await employee.findAll({
         attributes: {
           include: [
             [Sequelize.col("user.role"), "role"],
+            [Sequelize.col("user.access_type"), "access_type"],
             [Sequelize.col("user.updatedAt"), "updatedAt"],
-            [Sequelize.col("city.name"), "city_name"],
+            [Sequelize.col("division.name"), "city_name"],
+            ["employee_id", "user_id"],
           ],
-          exclude: ["createdAt", "dn"],
+          exclude: ["createdAt", "dn", "employee_id"],
         },
-        where: { division: userDivision },
+        where: whereObj,
         include: [
           {
             model: user,
@@ -30,23 +33,18 @@ export const UsersController = {
             required: true,
           },
           {
-            model: city,
+            model: division,
             attributes: [],
           },
         ],
         raw: true,
       });
 
-      console.log(data.lib);
-
-      data.columns = await userColumns.findAll();
-      data.values = await userValues.findAll({
+      data.columns = await userCols.findAll({ raw: true });
+      data.values = await vals.findAll({
         attributes: { exclude: ["id", "createdAt", "updatedAt"] },
+        raw: true,
       });
-      data.name = "Пользователи";
-
-      data.columns = JSON.parse(JSON.stringify(data.columns));
-      data.values = JSON.parse(JSON.stringify(data.values));
 
       data.values = getValues(data.values);
 
@@ -54,14 +52,8 @@ export const UsersController = {
       data.lib = data.lib.map((libObg) => {
         for (const libKey in libObg) {
           data.columns.forEach((columnObg) => {
-            if (
-              columnObg.dbFieldType == "boolean" &&
-              columnObg.field == libKey
-            ) {
-              libObg[libKey] =
-                libObg[libKey] === null
-                  ? (libObg[libKey] = "null")
-                  : libObg[libKey];
+            if (columnObg.dbFieldType == "boolean" && columnObg.field == libKey) {
+              libObg[libKey] = libObg[libKey] === null ? (libObg[libKey] = "null") : libObg[libKey];
             }
           });
         }
@@ -70,7 +62,7 @@ export const UsersController = {
 
       responce.json(data);
     } catch (error) {
-      console.log("__________UsersController__getData___________");
+      console.log("__________UsersController__getUsers___________");
       console.log(error);
       responce.json(error);
     }
@@ -80,6 +72,7 @@ export const UsersController = {
     try {
       let { userData } = request.body;
       const { user } = db.GLOBAL;
+      console.log(userData);
 
       userData.is_auth = false;
 
@@ -104,26 +97,26 @@ export const UsersController = {
       //     },
       // });
 
-      // let transporter = nodemailer.createTransport({
-      //   service: 'gmail',
-      //   auth: {
-      //       user: 'anatoly.shilyaev@gmail.com',
-      //       pass: 'sqot kogx iijd fuyr',
-      //   },
-      // });
+      let transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: "anatoly.shilyaev@gmail.com",
+          pass: "sqot kogx iijd fuyr",
+        },
+      });
 
-      // let result = await transporter.sendMail({
-      //     from: '"Inventory" <anatoly.shilyaev@gmail.com>',
-      //     to: `${rowData.login}@finombudsman.ru`,
-      //     subject: 'Инвентаризация (логин & пароль)',
-      //     html:`Учетные данные для входа в систему инвентаризации:<br><br>
-      //           <strong>Логин:</strong> ${rowData.login}<br>
-      //           <strong>Пароль:</strong> ${passwordGen}`,
-      // });
+      let result = await transporter.sendMail({
+        from: '"Inventory" <anatoly.shilyaev@gmail.com>',
+        to: `anatoly_shilyaev@mail.ru`,
+        subject: "Инвентаризация (логин & пароль)",
+        html: `Учетные данные для входа в систему инвентаризации:<br><br>
+                <strong>Логин:</strong> ${userData.login}<br>
+                <strong>Пароль:</strong> ${passwordGen}`,
+      });
 
       responce.json();
     } catch (error) {
-      console.log("__________UsersController__addData___________");
+      console.log("__________UsersController__addUser___________");
       console.log(error);
       responce.json(error);
     }
@@ -134,13 +127,10 @@ export const UsersController = {
       let { userData } = request.body;
       const { user } = db.GLOBAL;
 
-      await user.update(
-        { role: userData.role },
-        { where: { object_sid: userData.object_sid } }
-      );
+      await user.update(userData, { where: { user_id: userData.user_id } });
       responce.json({});
     } catch (error) {
-      console.log("__________UsersController__updateData___________");
+      console.log("__________UsersController__updateUser___________");
       console.log(error);
       responce.json(error);
     }
@@ -150,9 +140,8 @@ export const UsersController = {
     try {
       let { userId } = request.body;
       const { user } = db.GLOBAL;
-      console.log(userId);
 
-      await user.destroy({ where: { object_sid: userId } });
+      await user.destroy({ where: { user_id: userId } });
       responce.json({ message: `User ${userId} has been deleted` });
     } catch (error) {
       console.log("__________UsersController__deleteUser___________");

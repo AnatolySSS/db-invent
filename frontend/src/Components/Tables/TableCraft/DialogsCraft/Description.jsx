@@ -18,7 +18,7 @@ export const Description = (props) => {
     emptyItem,
     userAuth,
     disabled,
-    employersFullNames,
+    employeesFullNames,
     dialogType,
   } = props;
 
@@ -38,7 +38,7 @@ export const Description = (props) => {
           emptyItem={emptyItem}
           userAuth={userAuth}
           disabled={disabled}
-          employersFullNames={employersFullNames}
+          employeesFullNames={employeesFullNames}
           dialogType={dialogType}
         />
       );
@@ -57,7 +57,7 @@ export const Description = (props) => {
           emptyItem={emptyItem}
           userAuth={userAuth}
           disabled={disabled}
-          employersFullNames={employersFullNames}
+          employeesFullNames={employeesFullNames}
           dialogType={dialogType}
         />
       );
@@ -76,7 +76,7 @@ export const Description = (props) => {
           emptyItem={emptyItem}
           userAuth={userAuth}
           disabled={disabled}
-          employersFullNames={employersFullNames}
+          employeesFullNames={employeesFullNames}
           dialogType={dialogType}
         />
       );
@@ -95,7 +95,7 @@ export const Description = (props) => {
           emptyItem={emptyItem}
           userAuth={userAuth}
           disabled={disabled}
-          employersFullNames={employersFullNames}
+          employeesFullNames={employeesFullNames}
           dialogType={dialogType}
         />
       );

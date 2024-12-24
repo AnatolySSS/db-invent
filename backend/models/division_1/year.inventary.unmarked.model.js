@@ -8,7 +8,7 @@ export default (sequelize, Sequelize, year) => {
       name: {
         type: Sequelize.TEXT,
       },
-      owner: {
+      employee: {
         type: Sequelize.TEXT,
       },
       purchase_price: {

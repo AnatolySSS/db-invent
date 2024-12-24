@@ -23,7 +23,7 @@ export default (sequelize, Sequelize, year) => {
       last_setup_date: {
         type: Sequelize.DATE,
       },
-      owner: {
+      employee: {
         type: Sequelize.TEXT,
       },
       serviceable: {

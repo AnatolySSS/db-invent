@@ -2,6 +2,7 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 import UploadCraft from "./UploadCraft";
 import { uploadData as uploadItData } from "../../redux/reducers/it-data-reducer";
+import { uploadData } from "../../redux/reducers/it-data-reducer";
 import { uploadData as uploadFurnitureData } from "../../redux/reducers/furniture-data-reducer";
 import { uploadData as uploadUnmarkedData } from "../../redux/reducers/unmarked-data-reducer";
 import { uploadData as uploadAssetsData } from "../../redux/reducers/assets-data-reducer";
@@ -19,6 +20,7 @@ let mapStateToProps = (state) => {
 };
 
 let mapDispatchToProps = {
+  uploadData,
   uploadItData,
   uploadFurnitureData,
   uploadUnmarkedData,
