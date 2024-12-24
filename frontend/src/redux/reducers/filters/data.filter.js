@@ -86,4 +86,13 @@ export const DataFilters = {
     constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
   },
   measurement: { value: null, matchMode: FilterMatchMode.IN },
+  checked: { value: null, matchMode: FilterMatchMode.EQUALS },
+  scan_date: {
+    operator: FilterOperator.AND,
+    constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],
+  },
+  user: {
+    operator: FilterOperator.AND,
+    constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+  },
 };

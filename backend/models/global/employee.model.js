@@ -29,4 +29,7 @@ export default (sequelize, Sequelize) =>
     dn: {
       type: Sequelize.STRING,
     },
+    is_present: {
+      type: Sequelize.BOOLEAN,
+    },
   });

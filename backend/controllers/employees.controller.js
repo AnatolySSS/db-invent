@@ -13,9 +13,11 @@ export const EmployeesController = {
   async downloadEmployees(request, responce) {
     const client = new Client({
       url: config.url,
+      timeout: 9999,
+      connectTimeout: 9999,
     });
     try {
-      const { employee, employeeCols } = db.GLOBAL;
+      const { employee } = db.GLOBAL;
 
       await client.bind(config.bindDN, config.password);
       console.log("Успешно подключились к LDAP-серверу");
@@ -25,22 +27,14 @@ export const EmployeesController = {
         scope: "sub",
         filter: "(&(objectClass=person)(title=*))",
         explicitBufferAttributes: ["objectSid"],
-        // attributes: [
-        //   "cn",
-        //   "telephoneNumber",
-        //   "mail",
-        //   "mailNickname",
-        //   "department",
-        //   "title",
-        //   "objectSid",
-        // ],
+        attributes: ["cn", "telephoneNumber", "mail", "mailNickname", "department", "title", "objectSid"],
       };
 
       let { searchEntries } = await client.search("dc=sfurf,dc=office", opts);
 
       //Изменяем пустые массивы на пустые строки
       searchEntries = searchEntries
-        // .filter((entry) => entry.dn.includes("OU=User Accounts"))
+        .filter((entry) => entry.dn.includes("OU=User Accounts"))
         .map((entry) => {
           let obj = { ...entry };
           for (const key in obj) {
@@ -48,14 +42,16 @@ export const EmployeesController = {
           }
 
           if (obj.dn.includes("Саратов")) {
-            obj.division = 1;
+            obj.division_id = 1;
           } else if (obj.dn.includes("Санкт-Петербург")) {
-            obj.division = 2;
+            obj.division_id = 2;
           } else if (obj.dn.includes("Нижний Новгород")) {
-            obj.division = 3;
+            obj.division_id = 3;
           } else {
-            obj.division = 0;
+            obj.division_id = 0;
           }
+
+          obj.is_present = true;
 
           //Переименовываем наименования полей
           obj["employee_id"] = obj["objectSid"];
@@ -77,10 +73,8 @@ export const EmployeesController = {
           employee_id: sidToString(entry.employee_id),
         };
       });
-      let data = {};
+      let data = { lib: [], newEmployers: [], deletedEmployers: [], message: [], status: false };
       data.lib = JSON.parse(JSON.stringify(searchEntries));
-      data.columns = await employeeCols.findAll();
-      data.name = "Сотрудники";
 
       let currentEmployees = await employee.findAll({
         attributes: ["employee_id"],
@@ -91,21 +85,28 @@ export const EmployeesController = {
 
       //Добавление только новых значений
       for (const obj of searchEntries) {
-        !currentEmployees.includes(obj.employee_id) &&
-          (await employee.create(obj)) &&
+        if (!currentEmployees.includes(obj.employee_id)) {
+          await employee.create(obj);
           console.log(obj.full_name + " добавлен");
+          data.newEmployers.push(obj);
+          data.message.push("Новые пользователи добавлены");
+          data.status = true;
+        }
       }
       //Отмечаем пользователей, которых уже нет в системе
       for (const currentEmployee of currentEmployees) {
-        !newEmployees.includes(currentEmployee) &&
+        if (!newEmployees.includes(currentEmployee)) {
+          await employee.update({ is_present: false }, { where: { employee_id: currentEmployee.employee_id } });
           console.log(currentEmployee + " is gone");
+          data.deletedEmployers.push(currentEmployee);
+          data.message.push("Старые пользователи удалены");
+          data.status = true;
+        }
       }
 
       responce.json(data);
     } catch (error) {
-      console.log(
-        "__________EmployeesController__downloadEmployees___________"
-      );
+      console.log("__________EmployeesController__downloadEmployees___________");
       console.log(error);
       responce.json(error);
     } finally {
@@ -116,11 +117,14 @@ export const EmployeesController = {
 
   async getEmployees(request, responce) {
     try {
+      let { userAuth } = request.body;
       const { employee, employeeCols, vals, division } = db.GLOBAL;
       let data = {};
 
+      const whereObj = userAuth.access_type === "limited" ? { division_id: userAuth.division_id } : {};
+
       data.lib = await employee.findAll({
-        // where: { division: 3 },
+        where: whereObj,
         attributes: {
           include: [[Sequelize.col("division.name"), "city_name"]],
           exclude: ["createdAt"],
@@ -135,9 +139,6 @@ export const EmployeesController = {
       });
 
       data.columns = await employeeCols.findAll({ raw: true });
-      data.name = "Сотрудники";
-
-      // data.lib = JSON.parse(JSON.stringify(data.lib));
       data.values = await vals.findAll({
         attributes: { exclude: ["id", "createdAt", "updatedAt"] },
         raw: true,
@@ -149,14 +150,20 @@ export const EmployeesController = {
       data.lib = data.lib.map((libObg) => {
         for (const libKey in libObg) {
           data.columns.forEach((columnObg) => {
-            if (
-              columnObg.dbFieldType == "boolean" &&
-              columnObg.field == libKey
-            ) {
-              libObg[libKey] =
-                libObg[libKey] === null
-                  ? (libObg[libKey] = "null")
-                  : libObg[libKey];
+            if (columnObg.dbFieldType == "boolean" && columnObg.field == libKey) {
+              switch (libObg[libKey]) {
+                case null:
+                  libObg[libKey] = "null";
+                  break;
+                case 1:
+                  libObg[libKey] = "true";
+                  break;
+                case 0:
+                  libObg[libKey] = "false";
+                  break;
+                default:
+                  break;
+              }
             }
           });
           libObg[libKey] === null ? (libObg[libKey] = "") : libObg[libKey];
@@ -197,26 +204,11 @@ const sidToString = (base64) => {
   const BERID = `${G[24]}${G[25]}${G[26]}${G[27]}`;
   const LESA1 = `${G[2]}${G[3]}${G[4]}${G[5]}${G[6]}${G[7]}`;
 
-  const LESA2 = `${BESA2.substr(6, 2)}${BESA2.substr(4, 2)}${BESA2.substr(
-    2,
-    2
-  )}${BESA2.substr(0, 2)}`;
-  const LESA3 = `${BESA3.substr(6, 2)}${BESA3.substr(4, 2)}${BESA3.substr(
-    2,
-    2
-  )}${BESA3.substr(0, 2)}`;
-  const LESA4 = `${BESA4.substr(6, 2)}${BESA4.substr(4, 2)}${BESA4.substr(
-    2,
-    2
-  )}${BESA4.substr(0, 2)}`;
-  const LESA5 = `${BESA5.substr(6, 2)}${BESA5.substr(4, 2)}${BESA5.substr(
-    2,
-    2
-  )}${BESA5.substr(0, 2)}`;
-  const LERID = `${BERID.substr(6, 2)}${BERID.substr(4, 2)}${BERID.substr(
-    2,
-    2
-  )}${BERID.substr(0, 2)}`;
+  const LESA2 = `${BESA2.substr(6, 2)}${BESA2.substr(4, 2)}${BESA2.substr(2, 2)}${BESA2.substr(0, 2)}`;
+  const LESA3 = `${BESA3.substr(6, 2)}${BESA3.substr(4, 2)}${BESA3.substr(2, 2)}${BESA3.substr(0, 2)}`;
+  const LESA4 = `${BESA4.substr(6, 2)}${BESA4.substr(4, 2)}${BESA4.substr(2, 2)}${BESA4.substr(0, 2)}`;
+  const LESA5 = `${BESA5.substr(6, 2)}${BESA5.substr(4, 2)}${BESA5.substr(2, 2)}${BESA5.substr(0, 2)}`;
+  const LERID = `${BERID.substr(6, 2)}${BERID.substr(4, 2)}${BERID.substr(2, 2)}${BERID.substr(0, 2)}`;
 
   const LE_SID_HEX = `${LESA1}-${LESA2}-${LESA3}-${LESA4}-${LESA5}-${LERID}`;
 

@@ -82,7 +82,7 @@ const TableCraft = (props) => {
 
   useEffect(() => {
     requestData(userAuth);
-    requestCurrentInventory(type, userAuth.division);
+    requestCurrentInventory(type, userAuth.division_id);
     initFilters();
     creactLocale();
     locale("ru");
@@ -136,7 +136,7 @@ const TableCraft = (props) => {
 
   const deleteItem = () => {
     let _item = { ...item };
-    deleteData(_item.id, userAuth.division);
+    deleteData(_item.id, userAuth);
 
     toast.current.show({
       severity: "success",
@@ -159,10 +159,7 @@ const TableCraft = (props) => {
     transferedItem.changedUserId = userAuth.employee_id;
     transferedItem.employee_id = filteredEmployees[0].employee_id;
 
-    console.log(selectedItems);
-    console.log(transferedItem);
-
-    transferItem(selectedItems, transferedItem, userAuth.division);
+    transferItem(selectedItems, transferedItem, userAuth);
     setTransferItem(emptyTransferedItem);
     setTransferDialog(false);
   };
@@ -182,13 +179,7 @@ const TableCraft = (props) => {
   const editColumnBodyTemplate = (rowData) => {
     return (
       <React.Fragment>
-        <Button
-          // icon={`pi ${userAuth.role === "admin" ? "pi-pencil" : "pi-eye"}`}
-          icon={`pi pi-eye`}
-          rounded
-          outlined
-          onClick={() => editItem(rowData)}
-        />
+        <Button icon={`pi pi-eye`} rounded outlined onClick={() => editItem(rowData)} />
         {userAuth.role === "admin" && (
           <Button icon="pi pi-trash" rounded outlined className="ml-2" severity="danger" onClick={() => confirmDeleteItem(rowData)} />
         )}
@@ -196,19 +187,12 @@ const TableCraft = (props) => {
     );
   };
 
-  // const [employeeNames, setEmployeeNames] = useState([]);
-  // const [employeeIds, setEmployeeIds] = useState([]);
   const [filteredEmployees, setFilteredEmployees] = useState([]);
-
   const employeesFullNames = employees.map((user) => user.full_name);
 
   const searchEmployees = (event) => {
-    // setEmployeeNames(employeesFullNames.filter((item) => item.toLowerCase().includes(event.query.toLowerCase())));
     setFilteredEmployees(employees.filter((item) => item.full_name.toLowerCase().includes(event.query.toLowerCase())));
   };
-  // useEffect(() => {
-  //   console.log(filteredEmployees);
-  // }, [filteredEmployees]);
 
   return isFetching ? (
     <div className="h-screen flex align-items-center justify-content-center">
@@ -250,7 +234,7 @@ const TableCraft = (props) => {
             hasCurrentInventory={hasCurrentInventory}
             requestCurrentInventory={requestCurrentInventory}
             clearState={clearState}
-            userMenuType="main"
+            tableType="main"
             setDialogType={setDialogType}
           />
         }

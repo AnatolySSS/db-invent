@@ -3,20 +3,19 @@ import PanelMenuCraft from "./PanelMenuCraft";
 import { requestYears } from "../../redux/reducers/panel-menu-reducer";
 
 let mapStateToProps = (state) => {
-
   return {
     tables: state.panelMenu.tables,
     yearsIt: state.panelMenu.yearsIt,
     yearsFurniture: state.panelMenu.yearsFurniture,
     yearsUnmarked: state.panelMenu.yearsUnmarked,
     yearsAssets: state.panelMenu.yearsAssets,
-    userDivision: state.auth.division,
+    userDivision: state.auth.division_id,
     userAuth: state.auth,
   };
 };
 
-let mapDispatchToProps =  {
-  requestYears
+let mapDispatchToProps = {
+  requestYears,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PanelMenuCraft)
+export default connect(mapStateToProps, mapDispatchToProps)(PanelMenuCraft);

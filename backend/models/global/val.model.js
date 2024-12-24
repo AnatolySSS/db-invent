@@ -5,6 +5,9 @@ export default (sequelize, Sequelize) =>
       role: {
         type: Sequelize.STRING(20),
       },
+      access_type: {
+        type: Sequelize.STRING(20),
+      },
       it_type: {
         type: Sequelize.STRING(100),
       },

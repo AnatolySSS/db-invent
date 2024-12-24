@@ -7,15 +7,7 @@ import formatDate from "../../function-helpers/formatDate";
 import changeDateType from "../../function-helpers/changeDateType";
 
 const UploadCraft = (props) => {
-  const {
-    uploadData,
-    uploadItData,
-    uploadFurnitureData,
-    uploadUnmarkedData,
-    uploadAssetsData,
-    setVisible,
-    userAuth,
-  } = props;
+  const { uploadData, uploadItData, uploadFurnitureData, uploadUnmarkedData, uploadAssetsData, setVisible, userAuth } = props;
   const toast = useRef(null);
 
   const onUpload = (type) => {
@@ -42,14 +34,7 @@ const UploadCraft = (props) => {
     var hours = Math.floor(total_seconds / (60 * 60));
     var minutes = Math.floor(total_seconds / 60) % 60;
 
-    return new Date(
-      date_info.getFullYear(),
-      date_info.getMonth(),
-      date_info.getDate(),
-      hours,
-      minutes,
-      seconds
-    );
+    return new Date(date_info.getFullYear(), date_info.getMonth(), date_info.getDate(), hours, minutes, seconds);
   }
 
   const uploadDataHandler = (type) => {
@@ -75,7 +60,7 @@ const UploadCraft = (props) => {
               }
             }
           });
-          v.division_id = userAuth.division;
+          v.division_id = userAuth.division_id;
           v.class_type = type;
           return v;
         });

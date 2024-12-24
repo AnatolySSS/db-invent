@@ -1,64 +1,64 @@
+import Sequelize from "sequelize";
 import db from "../models/_index.js";
-import { QueryTypes } from "sequelize";
 import { getValues } from "./functions/getValues.js";
 
 export const InventaryYearsController = {
-  async getYears(request, responce) {
-    let { userDivision } = request.body;
-   
+  async beginInventory(request, responce) {
     try {
-      const tableObj = await db.DIVISIONS[`D${userDivision}`].sequelize.getQueryInterface().showAllSchemas();
+      let { type, userDivision } = request.body;
+      const { lib, inv } = db.GLOBAL;
+      console.log(type);
+      console.log(userDivision);
+      let currentInvData = await inv.findOne({ where: { class_type: type, division_id: userDivision, year: new Date().getFullYear() }, raw: true });
 
-      let tables = tableObj
-        .map((table) => Object.values(table)[0])
-        .filter((table) => table.includes("_lib"))
-        .map((table) => table.replace("_lib", ""));
+      if (currentInvData === null) {
+        let data = (
+          await lib.findAll({
+            attributes: {
+              exclude: ["id", "createdAt", "updatedAt"],
+            },
+            where: { class_type: type, division_id: userDivision },
+          })
+        ).map((record) => record.get({ plain: true }));
 
-      let yearsIt = tableObj
-        .map((table) => Object.values(table)[0])
-        .filter((tableName) =>
-          tableName.indexOf("inv_") !== -1 &&
-          tableName.indexOf("it") !== -1 &&
-          tableName.indexOf("furniture") == -1
-            ? tableName
-            : null
-        )
-        .map((value) => value.substr(4, 4));
-
-      let yearsFurniture = tableObj
-        .map((table) => Object.values(table)[0])
-        .filter((tableName) =>
-          tableName.indexOf("inv_") !== -1 &&
-          tableName.indexOf("furniture") !== -1
-            ? tableName
-            : null
-        )
-        .map((value) => value.substr(4, 4));
-      
-      let yearsUnmarked = tableObj
-        .map((table) => Object.values(table)[0])
-        .filter((tableName) =>
-          tableName.indexOf("inv_") !== -1 &&
-          tableName.indexOf("unmarked") !== -1
-            ? tableName
-            : null
-        )
-        .map((value) => value.substr(4, 4));
-      
-      let yearsAssets = tableObj
-        .map((table) => Object.values(table)[0])
-        .filter((tableName) =>
-          tableName.indexOf("inv_") !== -1 &&
-          tableName.indexOf("assets") !== -1
-            ? tableName
-            : null
-        )
-        .map((value) => value.substr(4, 4));
-
-        responce.json({tables, yearsIt, yearsFurniture, yearsUnmarked, yearsAssets});
-
+        for (const obj of data) {
+          obj.checked = false;
+          obj.year = new Date().getFullYear();
+          await inv.create(obj);
+        }
+        responce.json({
+          message: `Инвентаризация инициирована`,
+        });
+      } else {
+        responce.json({
+          message: `Инвентаризация в текущем году уже была инициирована`,
+        });
+      }
     } catch (error) {
-      console.log('_____________________InventaryYearsController_getYears____________________');
+      console.log("_____________________InventoryController_beginInventory____________________");
+      console.log(error);
+      responce.json(error);
+    }
+  },
+
+  async getYears(request, responce) {
+    try {
+      let { userDivision } = request.body;
+      const { lib, inv } = db.GLOBAL;
+
+      let libData = await lib.findAll({ attributes: ["class_type"], where: { division_id: userDivision }, raw: true });
+      let yearsData = await inv.findAll({ attributes: ["class_type", "year"], where: { division_id: userDivision }, raw: true });
+
+      let tables = [...new Set(libData.map((obj) => obj.class_type))];
+
+      let yearsIt = [...new Set(yearsData.filter((obj) => obj.class_type === "it").map((obj) => obj.year))];
+      let yearsFurniture = [...new Set(yearsData.filter((obj) => obj.class_type === "furniture").map((obj) => obj.year))];
+      let yearsUnmarked = [...new Set(yearsData.filter((obj) => obj.class_type === "unmarked").map((obj) => obj.year))];
+      let yearsAssets = [...new Set(yearsData.filter((obj) => obj.class_type === "assets").map((obj) => obj.year))];
+
+      responce.json({ tables, yearsIt, yearsFurniture, yearsUnmarked, yearsAssets });
+    } catch (error) {
+      console.log("_____________________InventaryYearsController_getYears____________________");
       console.log(error);
       responce.json(error);
     }
@@ -66,50 +66,54 @@ export const InventaryYearsController = {
 
   async getYearData(request, responce) {
     try {
-      let { tableName, year, userDivision } = request.body;
-      const {
-        itValues,
-        itColumns,
-        furnitureValues,
-        furnitureColumns,
-        unmarkedValues,
-        unmarkedColumns,
-        assetsValues,
-        assetsColumns,
-        sequelize,
-      } = db.DIVISIONS[`D${userDivision}`];
+      let { type, year, userAuth } = request.body;
+      const { inv, vals, itCols, furnitureCols, unmarkedCols, assetsCols, employee, division } = db.GLOBAL;
+      // const { itValues, itColumns, furnitureValues, furnitureColumns, unmarkedValues, unmarkedColumns, assetsValues, assetsColumns, sequelize } =
+      //   db.DIVISIONS[`D${userDivision}`];
 
       let data = {};
 
-      switch (tableName) {
+      switch (type) {
         case "it":
-          data.columns = await itColumns.findAll();
-          data.values = await itValues.findAll({
-            attributes: { exclude: ['id', 'createdAt', 'updatedAt'] }
+          data.columns = await itCols.findAll({
+            attributes: {
+              exclude: ["createdAt", "updatedAt", "division_0", "division_1", "division_2", "division_3"],
+            },
+            where: { [`division_${userAuth.division_id}`]: true },
+            raw: true,
           });
           data.name = "Оборудование";
           break;
 
         case "furniture":
-          data.columns = await furnitureColumns.findAll();
-          data.values = await furnitureValues.findAll({
-            attributes: { exclude: ['id', 'createdAt', 'updatedAt'] }
+          data.columns = await furnitureCols.findAll({
+            attributes: {
+              exclude: ["createdAt", "updatedAt", "division_0", "division_1", "division_2", "division_3"],
+            },
+            where: { [`division_${userAuth.division_id}`]: true },
+            raw: true,
           });
           data.name = "Мебель";
           break;
 
         case "unmarked":
-          data.columns = await unmarkedColumns.findAll();
-          data.values = await unmarkedValues.findAll({
-            attributes: { exclude: ['id', 'createdAt', 'updatedAt'] }
+          data.columns = await unmarkedCols.findAll({
+            attributes: {
+              exclude: ["createdAt", "updatedAt", "division_0", "division_1", "division_2", "division_3"],
+            },
+            where: { [`division_${userAuth.division_id}`]: true },
+            raw: true,
           });
           data.name = "Прочее";
           break;
-        
+
         case "assets":
-          data.columns = await assetsColumns.findAll();
-          data.values = await assetsValues.findAll({
-            attributes: { exclude: ['id', 'createdAt', 'updatedAt'] }
+          data.columns = await assetsCols.findAll({
+            attributes: {
+              exclude: ["createdAt", "updatedAt", "division_0", "division_1", "division_2", "division_3"],
+            },
+            where: { [`division_${userAuth.division_id}`]: true },
+            raw: true,
           });
           data.name = "Основные средства";
           break;
@@ -117,11 +121,8 @@ export const InventaryYearsController = {
           break;
       }
 
-      data.columns = JSON.parse(JSON.stringify(data.columns));
-      data.values = JSON.parse(JSON.stringify(data.values));
-
       data.columns.splice(1, 0, {
-        id: 21,
+        id: data.columns.length + 1,
         field: "checked",
         header: "Проверено",
         width: "4rem",
@@ -131,8 +132,8 @@ export const InventaryYearsController = {
         editingType: "checkbox",
       });
       data.columns.splice(2, 0, {
-        id: 22,
-        field: "user",
+        id: data.columns.length + 1,
+        field: "inv_user",
         header: "Оператор",
         width: "18rem",
         showFilterMenu: true,
@@ -141,7 +142,7 @@ export const InventaryYearsController = {
         editingType: "input",
       });
       data.columns.splice(3, 0, {
-        id: 23,
+        id: data.columns.length + 1,
         field: "scan_date",
         header: "Дата сканирования",
         width: "12rem",
@@ -150,27 +151,83 @@ export const InventaryYearsController = {
         dbFieldType: "date",
         editingType: "date",
       });
+      data.columns.splice(4, 0, {
+        id: data.columns.length + 1,
+        field: "invent_note",
+        header: "Комментарий",
+        width: "12rem",
+        showFilterMenu: true,
+        dataType: "date",
+        dbFieldType: "date",
+        editingType: "date",
+      });
 
       //Удаление столбцов createdAt и updatedAt
-      data.columns = data.columns.filter(
-        (col) => col.field != "createdAt" && col.field != "updatedAt"
-      );
+      // data.columns = data.columns.filter((col) => col.field != "createdAt" && col.field != "updatedAt");
+      data.values = await vals.findAll({
+        attributes: [[`locations_${userAuth.division_id}`, "location"], [`${type}_type`, "type"], "workplace_type", "serviceable", "office", "measurement"],
+        raw: true,
+      });
       data.values = getValues(data.values);
 
-      data.lib = await sequelize.query(
-        `SELECT * FROM inv_${year}_${tableName}`,
-        { type: QueryTypes.SELECT, raw: false }
-      );
+      const whereObj =
+        userAuth.access_type === "limited" ? { year: year, division_id: userAuth.division_id, class_type: type } : { year: year, class_type: type };
+
+      data.lib = await inv.findAll({
+        attributes: {
+          include: [
+            [Sequelize.col("employee_inv.full_name"), "employee"],
+            [Sequelize.col("financially_responsible_person_inv.full_name"), "financially_responsible_person"],
+            [Sequelize.col("inv_user_inv.full_name"), "inv_user"],
+            [Sequelize.col("division.name"), "city_name"],
+          ],
+          exclude: ["createdAt"],
+        },
+        where: whereObj,
+        include: [
+          {
+            model: employee,
+            as: "employee_inv",
+            attributes: [],
+          },
+          {
+            model: employee,
+            as: "financially_responsible_person_inv",
+            attributes: [],
+          },
+          {
+            model: employee,
+            as: "inv_user_inv",
+            attributes: [],
+          },
+          {
+            model: division,
+            attributes: [],
+          },
+        ],
+        raw: true,
+      });
 
       data.lib = JSON.parse(JSON.stringify(data.lib));
 
-      //Изменение tinyint на boolean и null на "null"
+      //Изменение null на "null"
       data.lib = data.lib.map((libObg) => {
         for (const libKey in libObg) {
-          data.columns.forEach(columnObg => {
+          data.columns.forEach((columnObg) => {
             if (columnObg.dbFieldType == "boolean" && columnObg.field == libKey) {
-              libObg[libKey] = libObg[libKey] === null ? libObg[libKey] === "null" : libObg[libKey];
-              libObg[libKey] = libObg[libKey] ? true : false;
+              switch (libObg[libKey]) {
+                case null:
+                  libObg[libKey] = "null";
+                  break;
+                case 1:
+                  libObg[libKey] = "true";
+                  break;
+                case 0:
+                  libObg[libKey] = "false";
+                  break;
+                default:
+                  break;
+              }
             }
           });
         }
@@ -179,7 +236,24 @@ export const InventaryYearsController = {
 
       responce.json(data);
     } catch (error) {
-      console.log('_____________________InventaryYearsController_getYearData____________________');
+      console.log("_____________________InventaryYearsController_getYearData____________________");
+      console.log(error);
+      responce.json(error);
+    }
+  },
+
+  async requestCurrentInventory(request, responce) {
+    try {
+      let { type, userDivision } = request.body;
+      const { inv } = db.GLOBAL;
+
+      let currentInvData = await inv.findOne({ where: { class_type: type, division_id: userDivision, year: new Date().getFullYear() }, raw: true });
+
+      responce.json({
+        hasCurrentInventory: currentInvData !== null ? true : false,
+      });
+    } catch (error) {
+      console.log("_____________________InventoryController_requestCurrentInventory____________________");
       console.log(error);
       responce.json(error);
     }

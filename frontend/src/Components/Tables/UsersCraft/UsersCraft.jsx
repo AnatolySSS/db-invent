@@ -28,7 +28,7 @@ const UsersCraft = (props) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [dialogType, setDialogType] = useState("");
   const toast = useRef(null);
-  let emptyItem = { full_name: "", role: "" };
+  let emptyItem = { full_name: "", role: "", access_type: "" };
 
   values.department = [...new Set(data.map((element) => element.department).filter((element) => element.length !== 0))].sort((a, b) => a.localeCompare(b));
   values.department.unshift("");
@@ -36,10 +36,12 @@ const UsersCraft = (props) => {
   values.title = [...new Set(data.map((element) => element.title).filter((element) => element.length !== 0))].sort((a, b) => a.localeCompare(b));
   values.title.unshift("");
 
+  values.city_name = ["Москва", "Саратов", "Санкт-Петербург", "Нижний Новгород"];
+
   const [item, setItem] = useState(emptyItem);
 
   useEffect(() => {
-    requestData(userAuth.division);
+    requestData(userAuth);
     initFilters();
     creactLocale();
     locale("ru");
@@ -70,7 +72,7 @@ const UsersCraft = (props) => {
 
   const deleteItem = () => {
     let _item = { ...item };
-    deleteData(_item.user_id, userAuth.division);
+    deleteData(_item.user_id, userAuth);
 
     toast.current.show({
       severity: "success",
@@ -118,7 +120,7 @@ const UsersCraft = (props) => {
         filters={filters}
         filterDisplay="menu"
         globalFilterFields={getglobalFilterColumns(visibleColumns)}
-        dataKey="employee_id"
+        dataKey="user_id"
         header={
           <TableHeader
             type={type}
@@ -137,7 +139,7 @@ const UsersCraft = (props) => {
             columns={columns}
             filters={filters}
             tableName={name}
-            userMenuType="users"
+            tableType="users"
             globalFilterValue={globalFilterValue}
             clearState={clearState}
             setDialogType={setDialogType}

@@ -10,7 +10,7 @@ let initialState = {
   isAuth: false,
   role: "",
   access_type: "",
-  division: null,
+  division_id: null,
   message: "",
 };
 
@@ -31,12 +31,14 @@ const authReducer = (state = initialState, action) => {
   }
 };
 
-const setAuth = (employee_id, login, fullName, isAuth, role, access_type, division, message) => ({
+const setAuth = (employee_id, login, fullName, isAuth, role, access_type, division_id, message) => ({
   type: SET_AUTH,
-  data: { employee_id, login, fullName, isAuth, role, access_type, division, message },
+  data: { employee_id, login, fullName, isAuth, role, access_type, division_id, message },
 });
 
 const setMessage = (message) => ({ type: SET_MESSAGE, data: { message } });
+
+let startEmployeesCheckingID;
 
 export const getAuthUserData = () => {
   return async (dispatch) => {
@@ -46,7 +48,11 @@ export const getAuthUserData = () => {
         let { employee_id, login, full_name, role, access_type, division_id } = data.currentUser;
         await dispatch(setAuth(employee_id, login, full_name, true, role, access_type, division_id, data.message));
         await dispatch(downloadEmployees());
-        await dispatch(requestData());
+        await dispatch(requestData(data.currentUser));
+        // startEmployeesCheckingID = setInterval(async () => {
+        //   await dispatch(downloadEmployees());
+        //   await dispatch(requestData());
+        // }, 60000);
         break;
       case 1:
         dispatch(setMessage(data.message));
@@ -82,6 +88,7 @@ export const logout = () => (dispatch) => {
     if (data.resultCode === 0) {
       dispatch(setAuth(null, null, false, null));
       localStorage.removeItem("accessToken");
+      clearInterval(startEmployeesCheckingID);
     }
   });
 };

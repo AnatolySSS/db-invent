@@ -60,33 +60,33 @@ export const InventoryAPI = {
     const responce = await instance.post(`years`, { userDivision });
     return responce.data;
   },
-  async beginInventory(tableName, userDivision) {
+  async beginInventory(type, userDivision) {
     const responce = await instance.post(`beginInventory`, {
-      tableName,
+      type,
       userDivision,
     });
     return responce.data;
   },
-  async requestCurrentInventory(tableName, userDivision) {
+  async requestCurrentInventory(type, userDivision) {
     const responce = await instance.post(`requestCurrentInventory`, {
-      tableName,
+      type,
       userDivision,
     });
     return responce.data;
   },
-  async getData(tableName, year, userDivision) {
+  async getData(type, year, userAuth) {
     const responce = await instance.post(`getYearData`, {
-      tableName,
+      type,
       year,
-      userDivision,
+      userAuth,
     });
     return responce.data;
   },
 };
 
 export const UsersAPI = {
-  async getUsers(userDivision) {
-    const responce = await instance.post(`getUsers`, { userDivision });
+  async getUsers(userAuth) {
+    const responce = await instance.post(`getUsers`, { userAuth });
     return responce.data;
   },
   async addUser(userData) {
@@ -108,8 +108,8 @@ export const EmployeesAPI = {
     const responce = await instance.get(`downloadEmployees`);
     return responce.data;
   },
-  async getEmployees() {
-    const responce = await instance.get(`getEmployees`);
+  async getEmployees(userAuth) {
+    const responce = await instance.post(`getEmployees`, { userAuth });
     return responce.data;
   },
 };

@@ -8,6 +8,7 @@ import lib from "./global/lib.model.js";
 import log from "./global/log.model.js";
 import trans from "./global/trans.model.js";
 import vals from "./global/val.model.js";
+import inv from "./global/inv.model.js";
 import { Columns } from "./global/columns.model.js";
 
 import { getDbConfig } from "../config/getDbConfig.js";
@@ -48,6 +49,7 @@ db.GLOBAL.lib = lib(sequelize.GLOBAL, Sequelize);
 db.GLOBAL.log = log(sequelize.GLOBAL, Sequelize);
 db.GLOBAL.trans = trans(sequelize.GLOBAL, Sequelize);
 db.GLOBAL.vals = vals(sequelize.GLOBAL, Sequelize);
+db.GLOBAL.inv = inv(sequelize.GLOBAL, Sequelize);
 
 for (const key in Columns) {
   db.GLOBAL[`${key}Cols`] = Columns[key](sequelize.GLOBAL, Sequelize);
@@ -66,6 +68,14 @@ db.GLOBAL.division.hasMany(db.GLOBAL.lib, {
   foreignKey: "division_id",
 });
 db.GLOBAL.lib.belongsTo(db.GLOBAL.division, {
+  foreignKey: "division_id",
+});
+
+//division > inv
+db.GLOBAL.division.hasMany(db.GLOBAL.inv, {
+  foreignKey: "division_id",
+});
+db.GLOBAL.inv.belongsTo(db.GLOBAL.division, {
   foreignKey: "division_id",
 });
 
@@ -95,6 +105,36 @@ db.GLOBAL.employee.hasMany(db.GLOBAL.lib, {
 db.GLOBAL.lib.belongsTo(db.GLOBAL.employee, {
   as: "financially_responsible_person",
   foreignKey: "financially_responsible_person_id",
+});
+
+//employee > inv
+db.GLOBAL.employee.hasMany(db.GLOBAL.inv, {
+  as: "employee_inv",
+  foreignKey: "employee_id",
+});
+db.GLOBAL.inv.belongsTo(db.GLOBAL.employee, {
+  as: "employee_inv",
+  foreignKey: "employee_id",
+});
+
+//employee > inv
+db.GLOBAL.employee.hasMany(db.GLOBAL.inv, {
+  as: "financially_responsible_person_inv",
+  foreignKey: "financially_responsible_person_id",
+});
+db.GLOBAL.inv.belongsTo(db.GLOBAL.employee, {
+  as: "financially_responsible_person_inv",
+  foreignKey: "financially_responsible_person_id",
+});
+
+//employee > inv
+db.GLOBAL.employee.hasMany(db.GLOBAL.inv, {
+  as: "inv_user_inv",
+  foreignKey: "inv_user_id",
+});
+db.GLOBAL.inv.belongsTo(db.GLOBAL.employee, {
+  as: "inv_user_inv",
+  foreignKey: "inv_user_id",
 });
 
 //employee > log
@@ -151,19 +191,5 @@ db.DIVISIONS.D3 = getDb_D3(sequelize.DIVISIONS.D3, Sequelize);
 for (const key in db.GLOBAL) {
   db.GLOBAL[key].sync();
 }
-
-// for (const division in db.DIVISIONS) {
-//   for (const model in db.DIVISIONS[division]) {
-//     if (
-//       model !== "sequelize" &&
-//       model !== "Sequelize" &&
-//       model !== "currentYearInventaryIt" &&
-//       model !== "currentYearInventaryFurniture" &&
-//       model !== "currentYearInventaryUnmarked"
-//     ) {
-//       db.DIVISIONS[division][model].sync();
-//     }
-//   }
-// }
 
 export default db;

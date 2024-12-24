@@ -42,9 +42,9 @@ export const requestYears = (userDivision) => {
   };
 };
 
-export const beginInventory = (tableName, userDivision) => {
+export const beginInventory = (type, userDivision) => {
   return async (dispatch) => {
-    await InventoryAPI.beginInventory(tableName, userDivision);
+    await InventoryAPI.beginInventory(type, userDivision);
     const data = await InventoryAPI.getYears(userDivision);
     dispatch(setYears(data));
   };

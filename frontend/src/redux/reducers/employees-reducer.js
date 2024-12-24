@@ -2,16 +2,15 @@ import { EmployeesAPI } from "../../api/api";
 import { FilterMatchMode, FilterOperator } from "primereact/api";
 
 const SET_DATA = "sodfu-inventory/employees-reducer/SET_DATA";
-const TOGGLE_IS_FETCHING =
-  "sodfu-inventory/employees-reducer/TOGGLE_IS_FETCHING";
+const SET_DOWNLOAD_STATUS = "sodfu-inventory/employees-reducer/SET_DOWNLOAD_STATUS";
+const TOGGLE_IS_FETCHING = "sodfu-inventory/employees-reducer/TOGGLE_IS_FETCHING";
 
 let initialState = {
   columns: [],
   data: [
     {
       full_name: "Шиляев Анатолий Николаевич",
-      department:
-        "Отдел перспективного развития и новых технологий Управления информатизации",
+      department: "Отдел перспективного развития и новых технологий Управления информатизации",
       dn: "",
       mail: "anatoly_shilyaev@mail.ru",
       login: "anatoly_shilyaev",
@@ -50,9 +49,11 @@ let initialState = {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
     },
+    is_present: { value: null, matchMode: FilterMatchMode.EQUALS },
   },
-  name: "",
-  message: "",
+  name: "Сотрудники",
+  downloadStatus: false,
+  message: [],
   isFetching: false,
 };
 
@@ -64,12 +65,17 @@ const employeesReducer = (state = initialState, action) => {
         data: action.data.lib,
         columns: action.data.columns,
         values: action.data.values,
-        name: action.data.name,
       };
     case TOGGLE_IS_FETCHING:
       return {
         ...state,
         isFetching: action.isFetching,
+      };
+    case SET_DOWNLOAD_STATUS:
+      return {
+        ...state,
+        downloadStatus: action.downloadStatus,
+        message: action.message,
       };
     default:
       return state;
@@ -77,6 +83,7 @@ const employeesReducer = (state = initialState, action) => {
 };
 
 const setData = (data) => ({ type: SET_DATA, data });
+const setDownloadStatus = (downloadStatus, message) => ({ type: SET_DOWNLOAD_STATUS, downloadStatus, message });
 const toggleIsFetching = (isFetching) => ({
   type: TOGGLE_IS_FETCHING,
   isFetching: isFetching,
@@ -85,15 +92,14 @@ const toggleIsFetching = (isFetching) => ({
 export const downloadEmployees = () => {
   return async (dispatch) => {
     const data = await EmployeesAPI.downloadEmpoyers();
-    // console.log(data);
-    // data.code !== "ECONNREFUSED" && dispatch(setData(data));
+    data.downloadStatus && dispatch(setDownloadStatus(data.downloadStatus, data.message));
   };
 };
 
-export const requestData = () => {
+export const requestData = (userAuth) => {
   return async (dispatch) => {
     dispatch(toggleIsFetching(true));
-    const data = await EmployeesAPI.getEmployees();
+    const data = await EmployeesAPI.getEmployees(userAuth);
     dispatch(setData(data));
     dispatch(toggleIsFetching(false));
   };

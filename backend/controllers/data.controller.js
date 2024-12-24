@@ -9,7 +9,6 @@ export const DataController = {
     try {
       let { type, userAuth } = request.body;
       const { division, lib, log, trans, vals, itCols, furnitureCols, unmarkedCols, assetsCols, employee } = db.GLOBAL;
-      console.log(userAuth);
 
       let data = {};
       let columns;
@@ -30,7 +29,7 @@ export const DataController = {
         default:
           break;
       }
-      const whereObj = userAuth.access_type === "limited" ? { division_id: userAuth.division, class_type: type } : { class_type: type };
+      const whereObj = userAuth.access_type === "limited" ? { division_id: userAuth.division_id, class_type: type } : { class_type: type };
 
       data.lib = await lib.findAll({
         attributes: {
@@ -65,12 +64,12 @@ export const DataController = {
         attributes: {
           exclude: ["createdAt", "updatedAt", "division_0", "division_1", "division_2", "division_3"],
         },
-        where: { [`division_${userAuth.division}`]: true },
+        where: { [`division_${userAuth.division_id}`]: true },
         raw: true,
       });
 
       data.values = await vals.findAll({
-        attributes: [[`locations_${userAuth.division}`, "location"], [`${type}_type`, "type"], "workplace_type", "serviceable", "office", "measurement"],
+        attributes: [[`locations_${userAuth.division_id}`, "location"], [`${type}_type`, "type"], "workplace_type", "serviceable", "office", "measurement"],
         raw: true,
       });
 

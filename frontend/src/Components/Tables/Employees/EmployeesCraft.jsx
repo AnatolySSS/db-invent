@@ -4,6 +4,7 @@ import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
 import Preloader from "../../Common/Preloader/Preloader";
 import { creactLocale } from "../../../function-helpers/addLocale";
@@ -12,14 +13,17 @@ import { getColumnFilterElement, getglobalFilterColumns } from "../Functions/Fil
 import { getColumnBody } from "../Functions/Body/getColumnBody";
 import { getTableHeight } from "../Functions/Helpers/getTableHeight";
 import { TableHeader } from "../../Common/TableHeader/TableHeader";
+import { DialogCraftEmployees } from "./DialogsCraft/Users/DialogCraftEmployees";
 
 const EmployeesCraft = (props) => {
-  let { type, name, data, columns, values, requestData, setVisible, logout, userAuth, isFetching, clearState } = props;
+  let { type, name, data, columns, values, requestData, setVisible, logout, userAuth, isFetching, clearState, itData } = props;
 
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filters, setFilters] = useState(props.filters);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
   const [selectedItems, setSelectedItems] = useState([]);
+  const [ItemDialog, setItemDialog] = useState(false);
+  const [item, setItem] = useState({});
   const toast = useRef(null);
   let emptyItem = {};
 
@@ -46,8 +50,10 @@ const EmployeesCraft = (props) => {
   );
   values.title.unshift("");
 
+  values.city_name = ["Москва", "Саратов", "Санкт-Петербург", "Нижний Новгород"];
+
   useEffect(() => {
-    requestData();
+    requestData(userAuth);
     initFilters();
     creactLocale();
     locale("ru");
@@ -64,6 +70,19 @@ const EmployeesCraft = (props) => {
   const initFilters = () => {
     setFilters(props.filters);
     setGlobalFilterValue(props.filters.global.value);
+  };
+
+  const viewItem = (rowData) => {
+    setItem({ ...rowData });
+    setItemDialog(true);
+  };
+
+  const editColumnBodyTemplate = (rowData) => {
+    return (
+      <React.Fragment>
+        <Button icon={"pi pi-eye"} rounded outlined onClick={() => viewItem(rowData)} />
+      </React.Fragment>
+    );
   };
 
   return isFetching ? (
@@ -98,7 +117,7 @@ const EmployeesCraft = (props) => {
             columns={columns}
             filters={filters}
             tableName={name}
-            userMenuType="employees"
+            tableType="employees"
             globalFilterValue={globalFilterValue}
             clearState={clearState}
           />
@@ -144,7 +163,19 @@ const EmployeesCraft = (props) => {
             body={getColumnBody(col)}
           />
         ))}
+        {data.length != 0 && (
+          <Column
+            body={editColumnBodyTemplate}
+            header={"Редактирование"}
+            exportable={false}
+            alignFrozen="right"
+            frozen
+            headerStyle={{ minWidth: "8rem" }}
+            bodyStyle={{ textAlign: "center" }}
+          ></Column>
+        )}
       </DataTable>
+      <DialogCraftEmployees setItemDialog={setItemDialog} ItemDialog={ItemDialog} item={item} itData={itData} />
     </div>
   );
 };

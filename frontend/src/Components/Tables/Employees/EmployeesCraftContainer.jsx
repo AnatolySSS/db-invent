@@ -19,6 +19,7 @@ let mapStateToProps = (state) => {
     userAuth: state.auth,
     isFetching: state.employees.isFetching,
     employees: state.employees.data,
+    itData: state.itData.data,
   };
 };
 
@@ -29,7 +30,4 @@ let mapDispatchToProps = {
   logout,
 };
 
-export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
-  withAuthNavigate
-)(EmployeesCraft);
+export default compose(connect(mapStateToProps, mapDispatchToProps), withAuthNavigate)(EmployeesCraft);

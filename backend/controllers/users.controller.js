@@ -8,10 +8,11 @@ import { getValues } from "./functions/getValues.js";
 export const UsersController = {
   async getUsers(request, responce) {
     try {
-      let { userDivision } = request.body;
-
+      let { userAuth } = request.body;
       const { user, vals, userCols, employee, division } = db.GLOBAL;
       let data = {};
+
+      const whereObj = userAuth.access_type === "limited" ? { division_id: userAuth.division_id } : {};
 
       data.lib = await employee.findAll({
         attributes: {
@@ -20,10 +21,11 @@ export const UsersController = {
             [Sequelize.col("user.access_type"), "access_type"],
             [Sequelize.col("user.updatedAt"), "updatedAt"],
             [Sequelize.col("division.name"), "city_name"],
+            ["employee_id", "user_id"],
           ],
-          exclude: ["createdAt", "dn"],
+          exclude: ["createdAt", "dn", "employee_id"],
         },
-        where: { division_id: userDivision },
+        where: whereObj,
         include: [
           {
             model: user,
@@ -38,14 +40,11 @@ export const UsersController = {
         raw: true,
       });
 
-      data.columns = await userCols.findAll();
+      data.columns = await userCols.findAll({ raw: true });
       data.values = await vals.findAll({
         attributes: { exclude: ["id", "createdAt", "updatedAt"] },
         raw: true,
       });
-      data.name = "Пользователи";
-
-      data.columns = JSON.parse(JSON.stringify(data.columns));
 
       data.values = getValues(data.values);
 
@@ -63,7 +62,7 @@ export const UsersController = {
 
       responce.json(data);
     } catch (error) {
-      console.log("__________UsersController__getData___________");
+      console.log("__________UsersController__getUsers___________");
       console.log(error);
       responce.json(error);
     }
@@ -73,6 +72,7 @@ export const UsersController = {
     try {
       let { userData } = request.body;
       const { user } = db.GLOBAL;
+      console.log(userData);
 
       userData.is_auth = false;
 
@@ -97,26 +97,26 @@ export const UsersController = {
       //     },
       // });
 
-      // let transporter = nodemailer.createTransport({
-      //   service: 'gmail',
-      //   auth: {
-      //       user: 'anatoly.shilyaev@gmail.com',
-      //       pass: 'sqot kogx iijd fuyr',
-      //   },
-      // });
+      let transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: "anatoly.shilyaev@gmail.com",
+          pass: "sqot kogx iijd fuyr",
+        },
+      });
 
-      // let result = await transporter.sendMail({
-      //     from: '"Inventory" <anatoly.shilyaev@gmail.com>',
-      //     to: `${rowData.login}@finombudsman.ru`,
-      //     subject: 'Инвентаризация (логин & пароль)',
-      //     html:`Учетные данные для входа в систему инвентаризации:<br><br>
-      //           <strong>Логин:</strong> ${rowData.login}<br>
-      //           <strong>Пароль:</strong> ${passwordGen}`,
-      // });
+      let result = await transporter.sendMail({
+        from: '"Inventory" <anatoly.shilyaev@gmail.com>',
+        to: `anatoly_shilyaev@mail.ru`,
+        subject: "Инвентаризация (логин & пароль)",
+        html: `Учетные данные для входа в систему инвентаризации:<br><br>
+                <strong>Логин:</strong> ${userData.login}<br>
+                <strong>Пароль:</strong> ${passwordGen}`,
+      });
 
       responce.json();
     } catch (error) {
-      console.log("__________UsersController__addData___________");
+      console.log("__________UsersController__addUser___________");
       console.log(error);
       responce.json(error);
     }
@@ -127,10 +127,10 @@ export const UsersController = {
       let { userData } = request.body;
       const { user } = db.GLOBAL;
 
-      await user.update({ role: userData.role }, { where: { user_id: userData.object_sid } });
+      await user.update(userData, { where: { user_id: userData.user_id } });
       responce.json({});
     } catch (error) {
-      console.log("__________UsersController__updateData___________");
+      console.log("__________UsersController__updateUser___________");
       console.log(error);
       responce.json(error);
     }
@@ -140,7 +140,6 @@ export const UsersController = {
     try {
       let { userId } = request.body;
       const { user } = db.GLOBAL;
-      console.log(userId);
 
       await user.destroy({ where: { user_id: userId } });
       responce.json({ message: `User ${userId} has been deleted` });

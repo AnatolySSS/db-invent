@@ -7,25 +7,17 @@ export const InventaryController = {
 
       const currentYear = new Date().getFullYear();
 
-      const [resultsIt] = await db.DIVISIONS[
-        `D${userDivision}`
-      ].sequelize.query(`SHOW TABLES LIKE 'inv_${currentYear}_it'`);
-      const [resultsFurniture] = await db.DIVISIONS[
-        `D${userDivision}`
-      ].sequelize.query(`SHOW TABLES LIKE 'inv_${currentYear}_furniture'`);
-      const [resultsUnmarked] = await db.DIVISIONS[
-        `D${userDivision}`
-      ].sequelize.query(`SHOW TABLES LIKE 'inv_${currentYear}_unmarked'`);
-      const [resultsAssets] = await db.DIVISIONS[
-        `D${userDivision}`
-      ].sequelize.query(`SHOW TABLES LIKE 'inv_${currentYear}_assets'`);
+      const [resultsIt] = await db.DIVISIONS[`D${userDivision}`].sequelize.query(`SHOW TABLES LIKE 'inv_${currentYear}_it'`);
+      const [resultsFurniture] = await db.DIVISIONS[`D${userDivision}`].sequelize.query(`SHOW TABLES LIKE 'inv_${currentYear}_furniture'`);
+      const [resultsUnmarked] = await db.DIVISIONS[`D${userDivision}`].sequelize.query(`SHOW TABLES LIKE 'inv_${currentYear}_unmarked'`);
+      const [resultsAssets] = await db.DIVISIONS[`D${userDivision}`].sequelize.query(`SHOW TABLES LIKE 'inv_${currentYear}_assets'`);
 
       let resultCodeIt, resultCodeFurniture, resultCodeUnmarked, resultCodeAssets;
 
-      resultsIt.length == 0 ? resultCodeIt = false : resultCodeIt = true;
-      resultsFurniture.length == 0 ? resultCodeFurniture = false : resultCodeFurniture = true;
-      resultsUnmarked.length == 0 ? resultCodeUnmarked = false : resultCodeUnmarked = true;
-      resultsAssets.length == 0 ? resultCodeAssets = false : resultCodeAssets = true;
+      resultsIt.length == 0 ? (resultCodeIt = false) : (resultCodeIt = true);
+      resultsFurniture.length == 0 ? (resultCodeFurniture = false) : (resultCodeFurniture = true);
+      resultsUnmarked.length == 0 ? (resultCodeUnmarked = false) : (resultCodeUnmarked = true);
+      resultsAssets.length == 0 ? (resultCodeAssets = false) : (resultCodeAssets = true);
 
       responce.json({
         resultCodeIt,
@@ -33,94 +25,7 @@ export const InventaryController = {
         resultCodeUnmarked,
         resultCodeAssets,
       });
-      
     } catch (error) {
-      responce.json(error);
-    }
-  },
-
-  async requestCurrentInventory(request, responce) {
-    try {
-      let { tableName, userDivision } = request.body;
-      
-      const currentYear = new Date().getFullYear();
-      const [hasCurrentInventory] = await db.DIVISIONS[
-        `D${userDivision}`
-      ].sequelize.query(`SHOW TABLES LIKE 'inv_${currentYear}_${tableName}'`);
-      
-      responce.json({
-        hasCurrentInventory: hasCurrentInventory.length != 0 ? true : false,
-      });
-      
-    } catch (error) {
-      console.log('_____________________InventoryController_requestCurrentInventory____________________');
-      console.log(error);
-      responce.json(error);
-    }
-  },
-
-  async beginInventory(request, responce) {
-    try {
-      let { tableName, userDivision } = request.body;
-
-      const currentYear = new Date().getFullYear();
-      const [results] = await db.DIVISIONS[`D${userDivision}`].sequelize.query(
-        `SHOW TABLES LIKE 'inv_${currentYear}_${tableName}'`
-      );
-
-      if (results.length == 0) {
-        let data, inventData, dataTable, inventTable;
-
-        switch (tableName) {
-          case "it":
-            dataTable = db.DIVISIONS[`D${userDivision}`].itLib;
-            inventTable =
-              db.DIVISIONS[`D${userDivision}`].currentYearInventaryIt;
-            break;
-          case "furniture":
-            dataTable = db.DIVISIONS[`D${userDivision}`].furnitureLib;
-            inventTable =
-              db.DIVISIONS[`D${userDivision}`].currentYearInventaryFurniture;
-            break;
-          case "unmarked":
-            dataTable = db.DIVISIONS[`D${userDivision}`].unmarkedLib;
-            inventTable =
-              db.DIVISIONS[`D${userDivision}`].currentYearInventaryUnmarked;
-            break;
-          case "assets":
-            dataTable = db.DIVISIONS[`D${userDivision}`].assetsLib;
-            inventTable =
-              db.DIVISIONS[`D${userDivision}`].currentYearInventaryAssets;
-            break;
-          default:
-            break;
-        }
-        
-        data = await dataTable.findAll();
-        data = JSON.parse(JSON.stringify(data));
-
-        await inventTable.sync();
-        for (const obj of data) {
-          delete obj.id;
-          obj.checked = false;
-          await inventTable.create(obj);
-        }
-
-        responce.json({
-          tableName: tableName,
-          message: `Таблица ${tableName} за ${currentYear} год создана`,
-          inventData,
-        });
-      } else {
-        responce.json({
-          tableName: tableName,
-          message: `Таблица ${tableName} за ${currentYear} год уже создана`,
-        });
-      }
-
-    } catch (error) {
-      console.log('_____________________InventoryController_beginInventory____________________');
-      console.log(error);
       responce.json(error);
     }
   },
@@ -138,73 +43,81 @@ export const InventaryController = {
         currentYearInventaryFurniture,
         currentYearInventaryUnmarked,
         currentYearInventaryAssets,
-      } = db.DIVISIONS[`D${user.division}`];
+      } = db.DIVISIONS[`D${user.division_id}`];
 
       const currentYear = new Date().getFullYear();
-      let itemName
+      let itemName;
       switch (tableName) {
         case "it":
-          await currentYearInventaryIt.update({ 
+          await currentYearInventaryIt.update(
+            {
               checked: true,
               user: user.full_name,
               scan_date: new Date(),
             },
-            { where: { qr_code: qrCode, }});
+            { where: { qr_code: qrCode } }
+          );
 
           if (roomNumber != 0) {
-            await currentYearInventaryIt.update({ location: roomNumber }, { where: { qr_code: qrCode }});
-            await itLib.update({ location: roomNumber }, { where: { qr_code: qrCode }});
+            await currentYearInventaryIt.update({ location: roomNumber }, { where: { qr_code: qrCode } });
+            await itLib.update({ location: roomNumber }, { where: { qr_code: qrCode } });
           }
 
-          itemName = await currentYearInventaryIt.findOne({ where: { qr_code: qrCode }})
+          itemName = await currentYearInventaryIt.findOne({ where: { qr_code: qrCode } });
           break;
         case "furniture":
-          await currentYearInventaryFurniture.update({
+          await currentYearInventaryFurniture.update(
+            {
               checked: true,
               user: user.full_name,
               scan_date: new Date(),
             },
-            { where: { qr_code: qrCode }});
+            { where: { qr_code: qrCode } }
+          );
 
           if (roomNumber != 0) {
-            await currentYearInventaryFurniture.update({ location: roomNumber }, { where: { qr_code: qrCode }});
-            await furnitureLib.update({ location: roomNumber }, { where: { qr_code: qrCode }});
+            await currentYearInventaryFurniture.update({ location: roomNumber }, { where: { qr_code: qrCode } });
+            await furnitureLib.update({ location: roomNumber }, { where: { qr_code: qrCode } });
           }
 
-          itemName = await currentYearInventaryFurniture.findOne({ where: { qr_code: qrCode } })
-          
+          itemName = await currentYearInventaryFurniture.findOne({ where: { qr_code: qrCode } });
+
           break;
         case "unmarked":
-          await currentYearInventaryUnmarked.update({
+          await currentYearInventaryUnmarked.update(
+            {
               checked: true,
               user: user.full_name,
               scan_date: new Date(),
             },
-            { where: { qr_code: qrCode, }});
+            { where: { qr_code: qrCode } }
+          );
 
           if (roomNumber != 0) {
-            await currentYearInventaryUnmarked.update({ location: roomNumber }, { where: { qr_code: qrCode }});
-            await unmarkedLib.update({ location: roomNumber }, { where: { qr_code: qrCode }});
+            await currentYearInventaryUnmarked.update({ location: roomNumber }, { where: { qr_code: qrCode } });
+            await unmarkedLib.update({ location: roomNumber }, { where: { qr_code: qrCode } });
           }
 
-          itemName = await currentYearInventaryUnmarked.findOne({ where: { qr_code: qrCode } })
-          
+          itemName = await currentYearInventaryUnmarked.findOne({ where: { qr_code: qrCode } });
+
           break;
         case "assets":
-          await currentYearInventaryAssets.update({
+          await currentYearInventaryAssets.update(
+            {
               checked: true,
               user: user.full_name,
               scan_date: new Date(),
             },
-            { where: { qr_code: qrCode, }});
+            { where: { qr_code: qrCode } }
+          );
 
           if (roomNumber != 0) {
-            await currentYearInventaryAssets.update({ location: roomNumber }, { where: { qr_code: qrCode }});
-            await assetsLib.update({ location: roomNumber }, { where: { qr_code: qrCode }});
+            await currentYearInventaryAssets.update({ location: roomNumber }, { where: { qr_code: qrCode } });
+            await assetsLib.update({ location: roomNumber }, { where: { qr_code: qrCode } });
           }
 
-          itemName = await currentYearInventaryAssets.findOne({ where: { qr_code: qrCode } })
-          
+          itemName = await currentYearInventaryAssets.findOne({ where: { qr_code: qrCode } });
+
           break;
         default:
           break;
@@ -212,40 +125,37 @@ export const InventaryController = {
       responce.json({
         tableName: tableName,
         message: `${itemName.name} инвентаризован в таблице ${tableName} за ${currentYear} год`,
-        name: itemName.name
+        name: itemName.name,
       });
-    } catch (error) {
-      
-    }
+    } catch (error) {}
   },
 
   async inventUnmarked(request, responce) {
     try {
       let { id, count, user } = request.body;
 
-      const {
-        unmarkedLib,
-        currentYearInventaryUnmarked,
-      } = db.DIVISIONS[`D${user.division}`];
+      const { unmarkedLib, currentYearInventaryUnmarked } = db.DIVISIONS[`D${user.division_id}`];
 
       const currentYear = new Date().getFullYear();
       let itemName;
 
-      await currentYearInventaryUnmarked.update({
-        checked: true,
-        user: user.full_name,
-        scan_date: new Date(),
-        count: count,
-      },
-      { where: { id: id, }});
+      await currentYearInventaryUnmarked.update(
+        {
+          checked: true,
+          user: user.full_name,
+          scan_date: new Date(),
+          count: count,
+        },
+        { where: { id: id } }
+      );
 
-      await unmarkedLib.update({ count: count }, { where: { id: id }});
+      await unmarkedLib.update({ count: count }, { where: { id: id } });
 
-      itemName = await currentYearInventaryUnmarked.findOne({ where: { id: id }, raw : true, })
+      itemName = await currentYearInventaryUnmarked.findOne({ where: { id: id }, raw: true });
 
       responce.json({
         message: `${itemName.name} инвентаризован в таблице Unmarked за ${currentYear} год`,
-        name: itemName.name
+        name: itemName.name,
       });
     } catch (error) {
       console.log("__________InventaryController__inventUnmarked___________");
@@ -261,45 +171,33 @@ export const InventaryController = {
     try {
       let { qrCode, userDivision } = request.body;
 
-      const {
-        itLib,
-        furnitureLib,
-        assetsLib,
-      } = db.DIVISIONS[`D${userDivision}`];
+      const { itLib, furnitureLib, assetsLib } = db.DIVISIONS[`D${userDivision}`];
 
       let object;
-      object = await itLib.findOne({ where: { qr_code: qrCode } })
+      object = await itLib.findOne({ where: { qr_code: qrCode } });
       if (!object) {
-        object = await furnitureLib.findOne({ where: { qr_code: qrCode } })
+        object = await furnitureLib.findOne({ where: { qr_code: qrCode } });
       }
       if (!object) {
-        object = await assetsLib.findOne({ where: { qr_code: qrCode } })
+        object = await assetsLib.findOne({ where: { qr_code: qrCode } });
       }
       responce.json({
         message: `Объект ${object.dataValues.name} найден`,
         object: object.dataValues,
       });
-      
-    } catch (error) {
-      
-    }
+    } catch (error) {}
   },
 
   async checkRemainsWithLocations(request, responce) {
     try {
-
       let { currentTable, userDivision, location } = request.body;
 
       if (location == "Без локации") {
         location = null;
       }
 
-      const {
-        currentYearInventaryIt,
-        currentYearInventaryFurniture,
-        currentYearInventaryUnmarked,
-        currentYearInventaryAssets
-      } = db.DIVISIONS[`D${userDivision}`];
+      const { currentYearInventaryIt, currentYearInventaryFurniture, currentYearInventaryUnmarked, currentYearInventaryAssets } =
+        db.DIVISIONS[`D${userDivision}`];
 
       let inv_data;
 
@@ -340,23 +238,15 @@ export const InventaryController = {
         message: `Объекты найдены`,
         inv_data,
       });
-      
-    } catch (error) {
-      
-    }
+    } catch (error) {}
   },
 
   async checkRemainsWithoutLocations(request, responce) {
     try {
-
       let { currentTable, userDivision } = request.body;
 
-      const {
-        currentYearInventaryIt,
-        currentYearInventaryFurniture,
-        currentYearInventaryUnmarked,
-        currentYearInventaryAssets
-      } = db.DIVISIONS[`D${userDivision}`];
+      const { currentYearInventaryIt, currentYearInventaryFurniture, currentYearInventaryUnmarked, currentYearInventaryAssets } =
+        db.DIVISIONS[`D${userDivision}`];
 
       let inv_data, name;
 
@@ -398,10 +288,7 @@ export const InventaryController = {
         name,
         inv_data,
       });
-      
-    } catch (error) {
-      
-    }
+    } catch (error) {}
   },
 
   async checkStatus(request, responce) {
@@ -416,7 +303,7 @@ export const InventaryController = {
         currentYearInventaryIt,
         currentYearInventaryFurniture,
         currentYearInventaryUnmarked,
-        currentYearInventaryAssets
+        currentYearInventaryAssets,
       } = db.DIVISIONS[`D${userDivision}`];
 
       let it_inv_data,
@@ -429,31 +316,31 @@ export const InventaryController = {
         checked_assets = 0;
 
       let locations = {};
-      locations = await itValues.findAll({attributes: ['location'], raw : true, });
+      locations = await itValues.findAll({ attributes: ["location"], raw: true });
 
-      currentYearInventaryIt ? it_inv_data = await currentYearInventaryIt.findAll({ raw : true }) : it_inv_data = [];
-      currentYearInventaryFurniture ? furniture_inv_data = await currentYearInventaryFurniture.findAll({ raw : true }): furniture_inv_data = [];
-      currentYearInventaryUnmarked ? unmarked_inv_data = await currentYearInventaryUnmarked.findAll({ raw : true }) : unmarked_inv_data = [];
-      currentYearInventaryAssets ? assets_inv_data = await currentYearInventaryAssets.findAll({ raw : true }) : assets_inv_data = [];
+      currentYearInventaryIt ? (it_inv_data = await currentYearInventaryIt.findAll({ raw: true })) : (it_inv_data = []);
+      currentYearInventaryFurniture ? (furniture_inv_data = await currentYearInventaryFurniture.findAll({ raw: true })) : (furniture_inv_data = []);
+      currentYearInventaryUnmarked ? (unmarked_inv_data = await currentYearInventaryUnmarked.findAll({ raw: true })) : (unmarked_inv_data = []);
+      currentYearInventaryAssets ? (assets_inv_data = await currentYearInventaryAssets.findAll({ raw: true })) : (assets_inv_data = []);
 
       //Формирование массива объектов инвентаризации по кабинетам
       locations.forEach((location) => {
-        location.it = it_inv_data.filter(it => it.location == location.location)
-        location.furniture = furniture_inv_data.filter(furniture => furniture.location == location.location)
-        location.unmarked = unmarked_inv_data.filter(unmarked => unmarked.location == location.location)
-        location.assets = assets_inv_data.filter(assets => assets.location == location.location)
+        location.it = it_inv_data.filter((it) => it.location == location.location);
+        location.furniture = furniture_inv_data.filter((furniture) => furniture.location == location.location);
+        location.unmarked = unmarked_inv_data.filter((unmarked) => unmarked.location == location.location);
+        location.assets = assets_inv_data.filter((assets) => assets.location == location.location);
       });
-      
+
       //Получение количества инвентаризированных объектов
       locations.forEach((location) => {
-        location.checked_it = location.it.filter(it => it.checked == true).length
-        location.checked_furniture = location.furniture.filter(furniture => furniture.checked == true).length
-        location.checked_unmarked = location.unmarked.filter(unmarked => unmarked.checked == true).length
-        location.checked_assets = location.assets.filter(assets => assets.checked == true).length
-        checked_it = checked_it + location.checked_it
-        checked_furniture = checked_furniture + location.checked_furniture
-        checked_unmarked = checked_unmarked + location.checked_unmarked
-        checked_assets = checked_assets + location.checked_assets
+        location.checked_it = location.it.filter((it) => it.checked == true).length;
+        location.checked_furniture = location.furniture.filter((furniture) => furniture.checked == true).length;
+        location.checked_unmarked = location.unmarked.filter((unmarked) => unmarked.checked == true).length;
+        location.checked_assets = location.assets.filter((assets) => assets.checked == true).length;
+        checked_it = checked_it + location.checked_it;
+        checked_furniture = checked_furniture + location.checked_furniture;
+        checked_unmarked = checked_unmarked + location.checked_unmarked;
+        checked_assets = checked_assets + location.checked_assets;
       });
 
       responce.json({
@@ -468,7 +355,6 @@ export const InventaryController = {
         unmarked_count: unmarked_inv_data.length,
         assets_count: assets_inv_data.length,
       });
-      
     } catch (error) {
       console.log(error);
       responce.json({
@@ -490,57 +376,57 @@ export const InventaryController = {
         currentYearInventaryIt,
         currentYearInventaryFurniture,
         currentYearInventaryUnmarked,
-        currentYearInventaryAssets
+        currentYearInventaryAssets,
       } = db.DIVISIONS[`D${userDivision}`];
 
       let inv_data,
-      locations = [],
-      name,
-      checked = 0;
+        locations = [],
+        name,
+        checked = 0;
 
       switch (currentTable) {
         case "it":
-          locations = await itValues.findAll({attributes: ['location'], raw : true, });
-          inv_data = await currentYearInventaryIt.findAll({ raw : true });
+          locations = await itValues.findAll({ attributes: ["location"], raw: true });
+          inv_data = await currentYearInventaryIt.findAll({ raw: true });
           name = "Оборудование";
           break;
 
         case "furniture":
-          locations = await furnitureValues.findAll({attributes: ['location'], raw : true, });
-          inv_data = await currentYearInventaryFurniture.findAll({ raw : true });
+          locations = await furnitureValues.findAll({ attributes: ["location"], raw: true });
+          inv_data = await currentYearInventaryFurniture.findAll({ raw: true });
           name = "Мебель";
           break;
 
         case "unmarked":
-          locations = await unmarkedValues.findAll({attributes: ['location'], raw : true, });
-          inv_data = await currentYearInventaryUnmarked.findAll({ raw : true });
+          locations = await unmarkedValues.findAll({ attributes: ["location"], raw: true });
+          inv_data = await currentYearInventaryUnmarked.findAll({ raw: true });
           name = "Прочее";
           break;
 
         case "assets":
-          locations = await assetsValues.findAll({attributes: ['location'], raw : true, });
-          inv_data = await currentYearInventaryAssets.findAll({ raw : true });
+          locations = await assetsValues.findAll({ attributes: ["location"], raw: true });
+          inv_data = await currentYearInventaryAssets.findAll({ raw: true });
           name = "Основные средства";
           break;
 
         default:
           break;
       }
-      locations = locations.filter(location => location.location != null)
-      locations.push({ location: 'Без локации' })
+      locations = locations.filter((location) => location.location != null);
+      locations.push({ location: "Без локации" });
 
       //Формирование массива объектов инвентаризации по кабинетам
       locations.forEach((location) => {
-        location.inv_data = inv_data.filter(v => v.location == location.location);
+        location.inv_data = inv_data.filter((v) => v.location == location.location);
         if (location.location == "Без локации") {
-          location.inv_data = inv_data.filter(v => v.location == null);
+          location.inv_data = inv_data.filter((v) => v.location == null);
         }
       });
-      locations = locations.filter(location => location.inv_data.length != 0);
+      locations = locations.filter((location) => location.inv_data.length != 0);
       //Получение количества инвентаризированных объектов
       locations.forEach((location) => {
-        location.checked = location.inv_data.filter(v => v.checked == true).length
-        checked = checked + location.checked
+        location.checked = location.inv_data.filter((v) => v.checked == true).length;
+        checked = checked + location.checked;
       });
 
       responce.json({
@@ -550,7 +436,6 @@ export const InventaryController = {
         name,
         count: inv_data.length,
       });
-      
     } catch (error) {
       console.log(error);
       responce.json({
@@ -564,34 +449,22 @@ export const InventaryController = {
     try {
       let { userDivision } = request.body;
 
-      const {
-        currentYearInventaryIt,
-        currentYearInventaryFurniture,
-        currentYearInventaryUnmarked,
-        currentYearInventaryAssets
-      } = db.DIVISIONS[`D${userDivision}`];
+      const { currentYearInventaryIt, currentYearInventaryFurniture, currentYearInventaryUnmarked, currentYearInventaryAssets } =
+        db.DIVISIONS[`D${userDivision}`];
 
       const currentYear = new Date().getFullYear();
 
-      const [resultsIt] = await db.DIVISIONS[
-        `D${userDivision}`
-      ].sequelize.query(`SHOW TABLES LIKE 'inv_${currentYear}_it'`);
-      const [resultsFurniture] = await db.DIVISIONS[
-        `D${userDivision}`
-      ].sequelize.query(`SHOW TABLES LIKE 'inv_${currentYear}_furniture'`);
-      const [resultsUnmarked] = await db.DIVISIONS[
-        `D${userDivision}`
-      ].sequelize.query(`SHOW TABLES LIKE 'inv_${currentYear}_unmarked'`);
-      const [resultsAssets] = await db.DIVISIONS[
-        `D${userDivision}`
-      ].sequelize.query(`SHOW TABLES LIKE 'inv_${currentYear}_assets'`);
+      const [resultsIt] = await db.DIVISIONS[`D${userDivision}`].sequelize.query(`SHOW TABLES LIKE 'inv_${currentYear}_it'`);
+      const [resultsFurniture] = await db.DIVISIONS[`D${userDivision}`].sequelize.query(`SHOW TABLES LIKE 'inv_${currentYear}_furniture'`);
+      const [resultsUnmarked] = await db.DIVISIONS[`D${userDivision}`].sequelize.query(`SHOW TABLES LIKE 'inv_${currentYear}_unmarked'`);
+      const [resultsAssets] = await db.DIVISIONS[`D${userDivision}`].sequelize.query(`SHOW TABLES LIKE 'inv_${currentYear}_assets'`);
 
       let resultCodeIt, resultCodeFurniture, resultCodeUnmarked, resultCodeAssets;
 
-      resultsIt.length == 0 ? resultCodeIt = false : resultCodeIt = true;
-      resultsFurniture.length == 0 ? resultCodeFurniture = false : resultCodeFurniture = true;
-      resultsUnmarked.length == 0 ? resultCodeUnmarked = false : resultCodeUnmarked = true;
-      resultsAssets.length == 0 ? resultCodeAssets = false : resultCodeAssets = true;
+      resultsIt.length == 0 ? (resultCodeIt = false) : (resultCodeIt = true);
+      resultsFurniture.length == 0 ? (resultCodeFurniture = false) : (resultCodeFurniture = true);
+      resultsUnmarked.length == 0 ? (resultCodeUnmarked = false) : (resultCodeUnmarked = true);
+      resultsAssets.length == 0 ? (resultCodeAssets = false) : (resultCodeAssets = true);
 
       let it_inv_data,
         furniture_inv_data,
@@ -602,15 +475,15 @@ export const InventaryController = {
         checked_unmarked = 0,
         checked_assets = 0;
 
-      resultCodeIt ? it_inv_data = await currentYearInventaryIt.findAll({ raw : true }) : it_inv_data = [];
-      resultCodeFurniture ? furniture_inv_data = await currentYearInventaryFurniture.findAll({ raw : true }): furniture_inv_data = [];
-      resultCodeUnmarked ? unmarked_inv_data = await currentYearInventaryUnmarked.findAll({ raw : true }) : unmarked_inv_data = [];
-      resultCodeAssets ? assets_inv_data = await currentYearInventaryAssets.findAll({ raw : true }) : assets_inv_data = [];
+      resultCodeIt ? (it_inv_data = await currentYearInventaryIt.findAll({ raw: true })) : (it_inv_data = []);
+      resultCodeFurniture ? (furniture_inv_data = await currentYearInventaryFurniture.findAll({ raw: true })) : (furniture_inv_data = []);
+      resultCodeUnmarked ? (unmarked_inv_data = await currentYearInventaryUnmarked.findAll({ raw: true })) : (unmarked_inv_data = []);
+      resultCodeAssets ? (assets_inv_data = await currentYearInventaryAssets.findAll({ raw: true })) : (assets_inv_data = []);
 
-      checked_it = it_inv_data.filter(v => v.checked == true).length
-      checked_furniture = furniture_inv_data.filter(v => v.checked == true).length
-      checked_unmarked = unmarked_inv_data.filter(v => v.checked == true).length
-      checked_assets = assets_inv_data.filter(v => v.checked == true).length
+      checked_it = it_inv_data.filter((v) => v.checked == true).length;
+      checked_furniture = furniture_inv_data.filter((v) => v.checked == true).length;
+      checked_unmarked = unmarked_inv_data.filter((v) => v.checked == true).length;
+      checked_assets = assets_inv_data.filter((v) => v.checked == true).length;
 
       responce.json({
         message: `Объекты найдены`,
@@ -623,7 +496,6 @@ export const InventaryController = {
         unmarked_count: unmarked_inv_data.length,
         assets_count: assets_inv_data.length,
       });
-      
     } catch (error) {
       console.log("__________InventaryController__checkStatusType___________");
       console.log(error);
@@ -642,32 +514,31 @@ export const InventaryController = {
 
       switch (currentTable) {
         case "it":
-          locations = await itValues.findAll({attributes: ['location'], raw : true, });
+          locations = await itValues.findAll({ attributes: ["location"], raw: true });
           break;
 
         case "furniture":
-          locations = await furnitureValues.findAll({attributes: ['location'], raw : true, });
+          locations = await furnitureValues.findAll({ attributes: ["location"], raw: true });
           break;
 
         case "unmarked":
-          locations = await unmarkedValues.findAll({attributes: ['location'], raw : true, });
+          locations = await unmarkedValues.findAll({ attributes: ["location"], raw: true });
           break;
 
         case "assets":
-          locations = await assetsValues.findAll({attributes: ['location'], raw : true, });
+          locations = await assetsValues.findAll({ attributes: ["location"], raw: true });
           break;
 
         default:
           break;
       }
 
-      locations = locations.map(location => location.location).filter(location => location != null);
+      locations = locations.map((location) => location.location).filter((location) => location != null);
 
       responce.json({
         message: `Объекты найдены`,
         locations,
       });
-      
     } catch (error) {
       console.log("__________InventaryController__getLocations___________");
       console.log(error);

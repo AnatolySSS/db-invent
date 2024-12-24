@@ -7,21 +7,9 @@ const getDb = (sequelize, Sequelize) => {
 
   let modelObj = {};
 
-  modelObj.currentYearInventaryIt = yearInventaryIt(
-    sequelize,
-    Sequelize,
-    currentYear
-  );
-  modelObj.currentYearInventaryFurniture = yearInventaryFurniture(
-    sequelize,
-    Sequelize,
-    currentYear
-  );
-  modelObj.currentYearInventaryUnmarked = yearInventaryUnmarked(
-    sequelize,
-    Sequelize,
-    currentYear
-  );
+  modelObj.currentYearInventaryIt = yearInventaryIt(sequelize, Sequelize, currentYear);
+  modelObj.currentYearInventaryFurniture = yearInventaryFurniture(sequelize, Sequelize, currentYear);
+  modelObj.currentYearInventaryUnmarked = yearInventaryUnmarked(sequelize, Sequelize, currentYear);
 
   modelObj.sequelize = sequelize;
   modelObj.Sequelize = Sequelize;

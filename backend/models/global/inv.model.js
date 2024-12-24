@@ -1,5 +1,5 @@
 export default (sequelize, Sequelize) =>
-  sequelize.define(`lib`, {
+  sequelize.define(`inv`, {
     qr_code: {
       type: Sequelize.STRING(10),
     },
@@ -87,5 +87,22 @@ export default (sequelize, Sequelize) =>
     },
     division_id: {
       type: Sequelize.INTEGER,
+    },
+
+    scan_date: {
+      type: Sequelize.DATE,
+    },
+    inv_user_id: {
+      type: Sequelize.STRING(50),
+    },
+    invent_note: {
+      type: Sequelize.TEXT,
+    },
+    checked: {
+      type: Sequelize.BOOLEAN,
+    },
+
+    year: {
+      type: Sequelize.STRING(5),
     },
   });

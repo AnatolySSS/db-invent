@@ -23,6 +23,7 @@ export const AuthController = {
           {
             model: user,
             attributes: [],
+            required: true,
           },
         ],
         raw: true,
