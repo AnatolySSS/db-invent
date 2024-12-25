@@ -98,7 +98,7 @@ export const EmployeesController = {
         console.log(currentEmployee);
 
         if (!newEmployees.includes(currentEmployee)) {
-          await employee.update({ is_present: false }, { where: { employee_id: currentEmployee.employee_id } });
+          await employee.update({ is_present: false }, { where: { employee_id: currentEmployee } });
           console.log(currentEmployee + " is gone");
           data.deletedEmployers.push(currentEmployee);
           data.message.push("Старые пользователи удалены");
