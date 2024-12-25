@@ -95,6 +95,8 @@ export const EmployeesController = {
       }
       //Отмечаем пользователей, которых уже нет в системе
       for (const currentEmployee of currentEmployees) {
+        console.log(currentEmployee);
+
         if (!newEmployees.includes(currentEmployee)) {
           await employee.update({ is_present: false }, { where: { employee_id: currentEmployee.employee_id } });
           console.log(currentEmployee + " is gone");
