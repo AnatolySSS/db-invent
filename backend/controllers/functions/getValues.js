@@ -7,9 +7,7 @@ export const getValues = (valuesFromDb) => {
   }
 
   valuesArr.map((item) => {
-    valuesObj[item] = valuesFromDb
-      .map((value) => value[item])
-      .filter((v) => v !== null);
+    valuesObj[item] = valuesFromDb.map((value) => value[item]).filter((v) => v !== null && v !== "");
   });
 
   return valuesObj;

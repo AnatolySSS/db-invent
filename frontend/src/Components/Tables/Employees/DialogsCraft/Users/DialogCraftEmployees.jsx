@@ -3,14 +3,14 @@ import { Dialog } from "primereact/dialog";
 import { Image } from "primereact/image";
 import { classNames } from "primereact/utils";
 import { DataScroller } from "primereact/datascroller";
-import { getItemDialogFooter } from "../Functions/getItemDialogFooter";
-import styles from "./DialogCraftEmployees.module.css";
 import { Tag } from "primereact/tag";
 import { formatDate } from "../../../Functions/Helpers/formatDate";
 import { Tooltip } from "primereact/tooltip";
+import { Button } from "primereact/button";
+import { makeCommitment } from "../../../../../function-helpers/makeCommitment";
 
 export const DialogCraftEmployees = (props) => {
-  const { setItemDialog, ItemDialog, item, itData } = props;
+  const { setItemDialog, ItemDialog, item, itData, employees, fullName } = props;
   const itOfEmployee = itData.filter((it) => it.employee_id === item.employee_id);
 
   const hideDialog = () => {
@@ -18,7 +18,7 @@ export const DialogCraftEmployees = (props) => {
   };
 
   const getItemDialogFooter = (item) => (
-    <div className="flex justify-content-start">
+    <div className="flex justify-content-between">
       <div className="text-left">
         <ul className="list-none pl-0">
           <li className="mb-2">
@@ -41,8 +41,9 @@ export const DialogCraftEmployees = (props) => {
             </em>
           </li>
         </ul>
-
-        {/* <br /> */}
+      </div>
+      <div className="fles align-content-center">
+        <Button label="Сформировать обязательство" icon="pi pi-file-word" onClick={() => makeCommitment(itOfEmployee, employees, fullName)} />
       </div>
     </div>
   );

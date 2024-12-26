@@ -175,7 +175,7 @@ const EmployeesCraft = (props) => {
           ></Column>
         )}
       </DataTable>
-      <DialogCraftEmployees setItemDialog={setItemDialog} ItemDialog={ItemDialog} item={item} itData={itData} />
+      <DialogCraftEmployees setItemDialog={setItemDialog} ItemDialog={ItemDialog} item={item} itData={itData} employees={data} fullName={userAuth.fullName} />
     </div>
   );
 };

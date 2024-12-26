@@ -24,7 +24,8 @@ export const setUserMenuItems = (
   emptyItem,
   setItem,
   setItemDialog,
-  setDialogType
+  setDialogType,
+  employees
 ) => {
   const openNew = () => {
     setDialogType("create");
@@ -40,11 +41,11 @@ export const setUserMenuItems = (
 
   const makeCommitmentHelper = () => {
     //Получение массива текущих пользователей
-    const employees = selectedItems.map((item) => item.employee);
+    const uniqOwners = selectedItems.map((item) => item.employee_id);
     //Проверка на совпадение пользователя (пользователь должен быть один и тот же)
     let check = true;
-    for (let i = 1; i < employees.length; i++) {
-      if (employees[0] !== employees[i]) {
+    for (let i = 1; i < uniqOwners.length; i++) {
+      if (uniqOwners[0] !== uniqOwners[i]) {
         check = false;
         break;
       }

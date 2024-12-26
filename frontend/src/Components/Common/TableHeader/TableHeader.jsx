@@ -37,6 +37,7 @@ export const TableHeader = (props) => {
     requestCurrentInventory,
     clearState,
     setDialogType,
+    employees,
   } = props;
 
   const userMenu = useRef(null);
@@ -85,7 +86,8 @@ export const TableHeader = (props) => {
     emptyItem,
     setItem,
     setItemDialog,
-    setDialogType
+    setDialogType,
+    employees
   );
 
   return (

@@ -22,21 +22,10 @@ import { inclineFirstname, inclineMiddlename, inclineLastname } from "lvovich";
 import { saveAs } from "file-saver";
 
 export function makeCommitment(selectedItems, employees, fullName) {
-  const department = employees.filter(
-    (employee) => employee.full_name == selectedItems[0].employee
-  )[0]?.department;
-
-  const title = employees.filter(
-    (employee) => employee.full_name == selectedItems[0].employee
-  )[0]?.title;
-
-  const telephoneNumber = employees.filter(
-    (employee) => employee.full_name == selectedItems[0].employee
-  )[0]?.phone;
-
-  const cityName = employees.filter(
-    (employee) => employee.full_name == selectedItems[0].employee
-  )[0]?.city_name;
+  const department = employees.filter((employee) => employee.employee_id == selectedItems[0].employee_id)[0]?.department;
+  const title = employees.filter((employee) => employee.employee_id == selectedItems[0].employee_id)[0]?.title;
+  const telephoneNumber = employees.filter((employee) => employee.employee_id == selectedItems[0].employee_id)[0]?.phone;
+  const cityName = employees.filter((employee) => employee.employee_id == selectedItems[0].employee_id)[0]?.city_name;
 
   let owners = [];
   let names = [];
@@ -527,10 +516,7 @@ export function makeCommitment(selectedItems, employees, fullName) {
             style: "textStyle",
             children: [
               new TextRun({
-                text: `получил(а) от ${inclineLastname(
-                  fullName.split(" ")[0],
-                  "genitive"
-                )} ${inclineFirstname(
+                text: `получил(а) от ${inclineLastname(fullName.split(" ")[0], "genitive")} ${inclineFirstname(
                   fullName.split(" ")[1],
                   "genitive"
                 )} ${inclineMiddlename(
@@ -871,10 +857,7 @@ export function makeCommitment(selectedItems, employees, fullName) {
                 text: `При переходе на другое место работы или увольнения, а также по требованию АНО «СОДФУ» в лице ${inclineLastname(
                   fullName.split(" ")[0],
                   "genitive"
-                )} ${inclineFirstname(
-                  fullName.split(" ")[1],
-                  "genitive"
-                )} ${inclineMiddlename(
+                )} ${inclineFirstname(fullName.split(" ")[1], "genitive")} ${inclineMiddlename(
                   fullName.split(" ")[2],
                   "genitive"
                 )}, либо следующих структурных подразделений АНО «СОДФУ», полученное мною имущество обязуюсь возвратить немедленно: Управление информатизации, Административное управление, Отдел безопасности и защиты информации Аппарата АНО «СОДФУ», Отдел по работе с персоналом Аппарата АНО «СОДФУ».`,

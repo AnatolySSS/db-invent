@@ -236,6 +236,7 @@ const TableCraft = (props) => {
             clearState={clearState}
             tableType="main"
             setDialogType={setDialogType}
+            employees={employees}
           />
         }
         paginator
