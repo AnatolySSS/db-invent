@@ -95,7 +95,7 @@ export const AuthController = {
   async auth(request, responce) {
     try {
       let { login } = request.body;
-      const { user, employee } = db.GLOBAL;
+      const { user, employee, division } = db.GLOBAL;
 
       const currentUser = await employee.findOne({
         attributes: {
@@ -104,6 +104,7 @@ export const AuthController = {
             [Sequelize.col("user.is_auth"), "is_auth"],
             [Sequelize.col("user.role"), "role"],
             [Sequelize.col("user.access_type"), "access_type"],
+            [Sequelize.col("division.name"), "city_name"],
           ],
           exclude: ["createdAt", "updatedAt"],
         },
@@ -111,6 +112,10 @@ export const AuthController = {
         include: [
           {
             model: user,
+            attributes: [],
+          },
+          {
+            model: division,
             attributes: [],
           },
         ],

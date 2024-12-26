@@ -38,6 +38,7 @@ export const setUserMenuItems = (
     clearState();
     logout();
   };
+  console.log(userAuth);
 
   const makeCommitmentHelper = () => {
     //Получение массива текущих пользователей
@@ -198,7 +199,7 @@ export const setUserMenuItems = (
             <div className="flex flex-column align">
               <span className="font-bold">{`${userAuth.fullName.split(" ")[0]} ${Array.from(userAuth.fullName.split(" ")[1])[0]}.${
                 Array.from(userAuth.fullName.split(" ")[2])[0]
-              }. (филиал №${userAuth.division_id}) `}</span>
+              }. (${userAuth.city_name}) `}</span>
             </div>
           </button>
         );
