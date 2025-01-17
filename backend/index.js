@@ -20,9 +20,10 @@ app.get("/*", (request, responce) => {
   responce.sendFile(path.join(dirname, "build", "index.html"));
 });
 
+//Загрузка сотрудников из AD (каждые 30 минут)
 setInterval(async () => {
   await EmployeesController.downloadEmployees();
-}, 10000); //60000 * 30
+}, 30 * 60000);
 
 // const { PORT } = getDbConfig();
 const PORT = process.env.PORT || 3008;

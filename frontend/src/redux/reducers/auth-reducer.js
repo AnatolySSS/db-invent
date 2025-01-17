@@ -48,7 +48,7 @@ export const getAuthUserData = () => {
       case 0:
         let { employee_id, login, full_name, role, access_type, division_id, city_name } = data.currentUser;
         await dispatch(setAuth(employee_id, login, full_name, true, role, access_type, division_id, city_name, data.message));
-        await dispatch(downloadEmployees());
+        // await dispatch(downloadEmployees());
         await dispatch(requestData(data.currentUser));
         // startEmployeesCheckingID = setInterval(async () => {
         //   await dispatch(downloadEmployees());
@@ -89,7 +89,7 @@ export const logout = () => (dispatch) => {
     if (data.resultCode === 0) {
       dispatch(setAuth(null, null, false, null));
       localStorage.removeItem("accessToken");
-      clearInterval(startEmployeesCheckingID);
+      // clearInterval(startEmployeesCheckingID);
     }
   });
 };
