@@ -57,9 +57,12 @@ export async function makeQRCode(selectedItems) {
     pdf.setFillColor(255, 255, 255);
     pdf.roundedRect(x - rectQrcodeOffset + 1, y - rectQrcodeOffset + 1, rectWigth - 2, rectWigth - 2, 1, 1, "F");
     pdf.addImage(img, "png", x, y, qrCodeWidth, qrCodeHeight, "", "MEDIUM");
-    let x_text = 9 - selectedItems[totalCounter - 1].qr_code.length;
 
-    pdf.text(selectedItems[totalCounter - 1].qr_code, x + x_text - 2.3, y + rectHeight - 4);
+    //Вычисление левого отступа для центрирования qr-кода
+    const textWidth = pdf.getTextWidth(selectedItems[totalCounter - 1].qr_code);
+    const text_lm = (rectWigth - textWidth) / 2; // левый отступ
+
+    pdf.text(selectedItems[totalCounter - 1].qr_code, x - rectQrcodeOffset + text_lm, y + rectHeight - 4);
   };
 
   for (const container of canvasContainers) {
