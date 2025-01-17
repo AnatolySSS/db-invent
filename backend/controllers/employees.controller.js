@@ -11,7 +11,7 @@ let config = {
 
 export const EmployeesController = {
   async downloadEmployees() {
-    console.log("start EmployeesController");
+    console.log(`start EmployeesController ${new Date()}`);
 
     const client = new Client({
       url: config.url,
