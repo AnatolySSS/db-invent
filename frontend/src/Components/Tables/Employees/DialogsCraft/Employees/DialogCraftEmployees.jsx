@@ -78,16 +78,16 @@ export const DialogCraftEmployees = (props) => {
 
   const items = [
     {
-      label: "Загрузить скан обязательства",
-      icon: "pi pi-upload",
-      command: () => uploadFile,
-    },
-    {
       label: "Скачать скан обязательства",
       icon: "pi pi-download",
       command: () => {
         console.log("Обязательство скачано");
       },
+    },
+    {
+      label: "Загрузить скан обязательства",
+      icon: "pi pi-upload",
+      command: () => uploadFile,
     },
     {
       label: "Сформировать обязательство",
