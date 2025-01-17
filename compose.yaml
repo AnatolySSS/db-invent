@@ -4,6 +4,7 @@ services:
     image: db-invent/frontend
     build:
       context: frontend
+    restart: always
     ports:
       - 80:80
     environment:
@@ -23,6 +24,7 @@ services:
     image: db-invent/backend
     build:
       context: backend
+    restart: always
     networks:
       - my-app
     volumes:

@@ -59,6 +59,6 @@ export const addData = getAddData("furniture", toggleIsFetching, setData, setVal
 export const updateData = getUpdateData("furniture", toggleIsFetching, setData);
 export const transferItem = getTransferItem("furniture", toggleIsFetching, setData);
 export const deleteData = getDeleteData("furniture", toggleIsFetching, setData);
-export const uploadData = getUploadData(toggleIsFetching, setUploadStatus);
+export const uploadData = getUploadData(setData, toggleIsFetching, setUploadStatus);
 
 export default furnitureDataReducer;

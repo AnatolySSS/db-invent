@@ -59,6 +59,6 @@ export const addData = getAddData("assets", toggleIsFetching, setData, setValida
 export const updateData = getUpdateData("assets", toggleIsFetching, setData);
 export const transferItem = getTransferItem("assets", toggleIsFetching, setData);
 export const deleteData = getDeleteData("assets", toggleIsFetching, setData);
-export const uploadData = getUploadData(toggleIsFetching, setUploadStatus);
+export const uploadData = getUploadData(setData, toggleIsFetching, setUploadStatus);
 
 export default assetsDataReducer;

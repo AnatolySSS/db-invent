@@ -25,10 +25,7 @@ export const TablelHistoryCraft = (props) => {
     uniqlog.changedDateTime = new Date(uniqlog.changedDateTime);
     logs.forEach((log) => {
       log.changedDateTime = new Date(log.changedDateTime);
-      if (
-        uniqlog.changedDateTime.toString() === log.changedDateTime.toString() &&
-        uniqlog.changedEmployeeName === log.changedEmployeeName
-      ) {
+      if (uniqlog.changedDateTime.toString() === log.changedDateTime.toString() && uniqlog.changedEmployeeName === log.changedEmployeeName) {
         uniqlog.changeLog.push({
           id: log.id,
           changedFiled: log.changedFiled,

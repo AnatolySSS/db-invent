@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import { NavLink } from "react-router-dom";
@@ -8,16 +7,7 @@ import { classNames } from "primereact/utils";
 import { PiOfficeChairBold } from "react-icons/pi";
 
 const PanelMenuCraft = (props) => {
-  const {
-    tables,
-    yearsIt,
-    yearsFurniture,
-    yearsUnmarked,
-    yearsAssets,
-    requestYears,
-    userDivision,
-    userAuth,
-  } = props;
+  const { tables, yearsIt, yearsFurniture, yearsUnmarked, yearsAssets, requestYears, userDivision, userAuth } = props;
 
   useEffect(() => {
     requestYears(userDivision);
@@ -32,10 +22,7 @@ const PanelMenuCraft = (props) => {
         return (
           <NavLink
             to="/it"
-            className={classNames(
-              options.className,
-              "w-full p-link flex align-items-center"
-            )}
+            className={classNames(options.className, "w-full p-link flex align-items-center")}
             style={{
               textDecoration: "none",
               color: "#495057",
@@ -57,10 +44,7 @@ const PanelMenuCraft = (props) => {
             return (
               <NavLink
                 to={`/it/${year}`}
-                className={classNames(
-                  options.className,
-                  "w-full p-link flex align-items-center pl-4"
-                )}
+                className={classNames(options.className, "w-full p-link flex align-items-center pl-4")}
                 style={{
                   textDecoration: "none",
                   color: "#495057",
@@ -82,10 +66,7 @@ const PanelMenuCraft = (props) => {
         return (
           <NavLink
             to="/furniture"
-            className={classNames(
-              options.className,
-              "w-full p-link flex align-items-center"
-            )}
+            className={classNames(options.className, "w-full p-link flex align-items-center")}
             style={{
               textDecoration: "none",
               color: "#495057",
@@ -113,10 +94,7 @@ const PanelMenuCraft = (props) => {
             return (
               <NavLink
                 to={`/furniture/${year}`}
-                className={classNames(
-                  options.className,
-                  "w-full p-link flex align-items-center pl-4"
-                )}
+                className={classNames(options.className, "w-full p-link flex align-items-center pl-4")}
                 style={{
                   textDecoration: "none",
                   color: "#495057",
@@ -138,10 +116,7 @@ const PanelMenuCraft = (props) => {
         return (
           <NavLink
             to="/unmarked"
-            className={classNames(
-              options.className,
-              "w-full p-link flex align-items-center"
-            )}
+            className={classNames(options.className, "w-full p-link flex align-items-center")}
             style={{
               textDecoration: "none",
               color: "#495057",
@@ -163,10 +138,7 @@ const PanelMenuCraft = (props) => {
             return (
               <NavLink
                 to={`/unmarked/${year}`}
-                className={classNames(
-                  options.className,
-                  "w-full p-link flex align-items-center pl-4"
-                )}
+                className={classNames(options.className, "w-full p-link flex align-items-center pl-4")}
                 style={{
                   textDecoration: "none",
                   color: "#495057",
@@ -188,10 +160,7 @@ const PanelMenuCraft = (props) => {
         return (
           <NavLink
             to="/assets"
-            className={classNames(
-              options.className,
-              "w-full p-link flex align-items-center"
-            )}
+            className={classNames(options.className, "w-full p-link flex align-items-center")}
             style={{
               textDecoration: "none",
               color: "#495057",
@@ -213,10 +182,7 @@ const PanelMenuCraft = (props) => {
             return (
               <NavLink
                 to={`/assets/${year}`}
-                className={classNames(
-                  options.className,
-                  "w-full p-link flex align-items-center pl-4"
-                )}
+                className={classNames(options.className, "w-full p-link flex align-items-center pl-4")}
                 style={{
                   textDecoration: "none",
                   color: "#495057",
@@ -255,10 +221,7 @@ const PanelMenuCraft = (props) => {
             return (
               <NavLink
                 to="/users"
-                className={classNames(
-                  options.className,
-                  "w-full p-link flex align-items-center"
-                )}
+                className={classNames(options.className, "w-full p-link flex align-items-center")}
                 style={{
                   textDecoration: "none",
                   color: "#495057",
@@ -275,10 +238,7 @@ const PanelMenuCraft = (props) => {
             return (
               <NavLink
                 to="/employees"
-                className={classNames(
-                  options.className,
-                  "w-full p-link flex align-items-center"
-                )}
+                className={classNames(options.className, "w-full p-link flex align-items-center")}
                 style={{
                   textDecoration: "none",
                   color: "#495057",
@@ -304,10 +264,7 @@ const PanelMenuCraft = (props) => {
           return (
             <NavLink
               to="/upload"
-              className={classNames(
-                options.className,
-                "w-full p-link flex align-items-center"
-              )}
+              className={classNames(options.className, "w-full p-link flex align-items-center")}
               style={{
                 textDecoration: "none",
                 color: "#495057",

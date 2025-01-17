@@ -1,3 +1,4 @@
+import * as XLSX from "xlsx";
 import { makeCommitment } from "../../../../function-helpers/makeCommitment";
 import { makeQRCode } from "../../../../function-helpers/makeQRCode2";
 import { getUserLogo } from "../../../Tables/Functions/Helpers/getUserLogo";
@@ -5,13 +6,19 @@ import { Avatar } from "primereact/avatar";
 import { classNames } from "primereact/utils";
 import { getTableHeight } from "../../../Tables/Functions/Helpers/getTableHeight";
 import { MdOutlineInventory } from "react-icons/md";
+import formatDate from "../../../../function-helpers/formatDate";
+import changeDateType from "../../../../function-helpers/changeDateType";
+import { FileUpload } from "primereact/fileupload";
+import { createQRCode } from "../../../../function-helpers/createQRCode";
 
 export const setUserMenuItems = (
   type,
   data,
+  values,
   logout,
   userToast,
   transferToast,
+  uploadToast,
   userAuth,
   selectedItems,
   clearFilter,
@@ -25,7 +32,10 @@ export const setUserMenuItems = (
   setItem,
   setItemDialog,
   setDialogType,
-  employees
+  employees,
+  uploadData,
+  userMenu,
+  setUploadDialogVisible
 ) => {
   const openNew = () => {
     setDialogType("create");
@@ -33,12 +43,15 @@ export const setUserMenuItems = (
     setItemDialog(true);
   };
 
+  const openUploadDialog = () => {
+    setUploadDialogVisible(true);
+  };
+
   const makeLogout = (logout) => () => {
     clearFilter();
     clearState();
     logout();
   };
-  console.log(userAuth);
 
   const makeCommitmentHelper = () => {
     //Получение массива текущих пользователей
@@ -104,6 +117,7 @@ export const setUserMenuItems = (
       }
     });
   };
+
   let addTypes;
   switch (tableType) {
     case "main":
@@ -136,7 +150,13 @@ export const setUserMenuItems = (
           icon: "pi pi-plus",
           command: openNew,
         });
-        addTypes.splice(1, 0, {
+        addTypes.splice(4, 0, { separator: true });
+        addTypes.splice(5, 0, {
+          label: "Массовая загрузка",
+          icon: "pi pi-upload",
+          command: openUploadDialog,
+        });
+        addTypes.splice(2, 0, {
           label: "Переместить",
           icon: "pi pi-angle-double-right",
           command: handleTransfer,

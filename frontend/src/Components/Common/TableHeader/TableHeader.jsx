@@ -26,6 +26,7 @@ export const TableHeader = (props) => {
     hasCurrentInventory,
     type,
     data,
+    values,
     logout,
     selectedItems,
     userAuth,
@@ -38,9 +39,12 @@ export const TableHeader = (props) => {
     clearState,
     setDialogType,
     employees,
+    uploadData,
+    uploadToast,
+    setUploadDialogVisible,
+    userMenu,
   } = props;
 
-  const userMenu = useRef(null);
   const userToast = useRef(null);
   const transferToast = useRef(null);
 
@@ -71,9 +75,11 @@ export const TableHeader = (props) => {
   const userMenuItems = setUserMenuItems(
     type,
     data,
+    values,
     logout,
     userToast,
     transferToast,
+    uploadToast,
     userAuth,
     selectedItems,
     clearFilter,
@@ -87,7 +93,10 @@ export const TableHeader = (props) => {
     setItem,
     setItemDialog,
     setDialogType,
-    employees
+    employees,
+    uploadData,
+    userMenu,
+    setUploadDialogVisible
   );
 
   return (

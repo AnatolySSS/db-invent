@@ -1,8 +1,9 @@
 import { formatDate } from "../../../Functions/Helpers/formatDate";
 import changeDateType from "../../../../../function-helpers/changeDateType";
 import { createId } from "./createId";
+import { createQRCode } from "../../../../../function-helpers/createQRCode";
 
-export const saveItem = (type, addData, updateData, data, item, setItemDialog, setItem, emptyItem, userAuth, setDisabled) => () => {
+export const saveItem = (type, addData, updateData, data, item, setItemDialog, setItem, emptyItem, userAuth, setDisabled, values) => () => {
   setDisabled(true);
   let _item = { ...item };
   _item.changedDateTime = Date.now();
@@ -28,10 +29,11 @@ export const saveItem = (type, addData, updateData, data, item, setItemDialog, s
     updateData(_item, userAuth);
   } else {
     // _item.id = createId(data);
+    let qrCode = createQRCode(userAuth.division_id, type, _item.type, data, values);
     _item.changedUserId = userAuth.employee_id;
     _item.division_id = userAuth.division_id;
     _item.class_type = type;
-    console.log(_item);
+    _item.qr_code = qrCode;
 
     addData(_item, userAuth);
   }

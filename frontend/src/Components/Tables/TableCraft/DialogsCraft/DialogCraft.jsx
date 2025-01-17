@@ -67,24 +67,14 @@ export const DialogCraft = (props) => {
         activeTabIndex,
         setActiveTabIndex,
         dialogType,
-        employees
+        values
       )}
       onHide={hideNew(setItemDialog, setDisabled)}
     >
       <div className={styles.tabContainer}>
-        <TabView
-          activeIndex={activeTabIndex}
-          onTabChange={handleTabChange}
-          scrollable
-        >
-          <TabPanel
-            header="Описание объекта"
-            leftIcon="pi pi-objects-column mr-2"
-          >
-            <div
-              className={styles.tabContent}
-              style={{ padding: activeTabIndex == 1 ? 0 : "1.25rem" }}
-            >
+        <TabView activeIndex={activeTabIndex} onTabChange={handleTabChange} scrollable>
+          <TabPanel header="Описание объекта" leftIcon="pi pi-objects-column mr-2">
+            <div className={styles.tabContent} style={{ padding: activeTabIndex == 1 ? 0 : "1.25rem" }}>
               <Description
                 name={name}
                 data={data}
@@ -115,10 +105,7 @@ export const DialogCraft = (props) => {
             </TabPanel>
           )} */}
           {item.logs !== undefined && (
-            <TabPanel
-              header="История перемещений"
-              leftIcon="pi pi-objects-column mr-2"
-            >
+            <TabPanel header="История перемещений" leftIcon="pi pi-objects-column mr-2">
               <div className={styles.tabContent}>
                 <TimelinelTransferCraft trans={item.trans} />
               </div>
@@ -135,10 +122,7 @@ export const DialogCraft = (props) => {
             </TabPanel>
           )} */}
           {item.logs !== undefined && (
-            <TabPanel
-              header="История изменений"
-              leftIcon="pi pi-objects-column mr-2"
-            >
+            <TabPanel header="История изменений" leftIcon="pi pi-objects-column mr-2">
               <div className={styles.tabContent}>
                 <TablelHistoryCraft2 columns={columns} logs={item.logs} />
               </div>

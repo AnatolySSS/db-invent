@@ -1,12 +1,7 @@
 import { connect } from "react-redux";
 import { compose } from "redux";
 import TableCraft from "./TableCraft";
-import {
-  requestData,
-  addData,
-  updateData,
-  deleteData,
-} from "../../../redux/reducers/unmarked-data-reducer";
+import { requestData, addData, updateData, deleteData, uploadData } from "../../../redux/reducers/unmarked-data-reducer";
 import { clearState } from "../../../redux/reducers/it-data-reducer";
 import { beginInventory } from "../../../redux/reducers/panel-menu-reducer";
 import { requestCurrentInventory } from "../../../redux/reducers/year-inventory-reducer";
@@ -41,9 +36,7 @@ let mapDispatchToProps = {
   beginInventory,
   requestCurrentInventory,
   clearState,
+  uploadData,
 };
 
-export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
-  withAuthNavigate
-)(TableCraft);
+export default compose(connect(mapStateToProps, mapDispatchToProps), withAuthNavigate)(TableCraft);

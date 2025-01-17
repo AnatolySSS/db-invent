@@ -5,9 +5,10 @@ import { FileUpload } from "primereact/fileupload";
 import { Button } from "primereact/button";
 import formatDate from "../../function-helpers/formatDate";
 import changeDateType from "../../function-helpers/changeDateType";
+import { createQRCode } from "../../function-helpers/createQRCode";
 
 const UploadCraft = (props) => {
-  const { uploadData, uploadItData, uploadFurnitureData, uploadUnmarkedData, uploadAssetsData, setVisible, userAuth } = props;
+  const { uploadData, setVisible, userAuth } = props;
   const toast = useRef(null);
 
   const onUpload = (type) => {
@@ -62,31 +63,16 @@ const UploadCraft = (props) => {
           });
           v.division_id = userAuth.division_id;
           v.class_type = type;
+
+          // console.log(type);
+
+          if (v.qr_code !== "") {
+            // v.qr_code = createQRCode(userAuth.division_id, type, v.type, data, values);
+          }
           return v;
         });
-        uploadData(jsonData);
+        // uploadData(jsonData);
         onUpload(type);
-
-        // switch (type) {
-        //   case "it":
-        //     uploadItData(jsonData);
-        //     onUpload("IT");
-        //     break;
-        //   case "furniture":
-        //     uploadFurnitureData(jsonData);
-        //     onUpload("FURNITURE");
-        //     break;
-        //   case "unmarked":
-        //     uploadUnmarkedData(jsonData);
-        //     onUpload("UNMARKED");
-        //     break;
-        //   case "assets":
-        //     uploadAssetsData(jsonData);
-        //     onUpload("ASSETS");
-        //     break;
-        //   default:
-        //     break;
-        // }
       };
     };
   };

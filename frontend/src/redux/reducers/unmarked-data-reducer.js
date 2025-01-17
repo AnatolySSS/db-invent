@@ -59,6 +59,6 @@ export const addData = getAddData("unmarked", toggleIsFetching, setData, setVali
 export const updateData = getUpdateData("unmarked", toggleIsFetching, setData);
 export const transferItem = getTransferItem("unmarked", toggleIsFetching, setData);
 export const deleteData = getDeleteData("unmarked", toggleIsFetching, setData);
-export const uploadData = getUploadData(toggleIsFetching, setUploadStatus);
+export const uploadData = getUploadData(setData, toggleIsFetching, setUploadStatus);
 
 export default unmarkedDataReducer;

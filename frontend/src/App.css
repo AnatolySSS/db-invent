@@ -6,9 +6,13 @@
 label {
     display: inline-block;
     margin-bottom: 5px;
-    font-weight: bold;
+    /* font-weight: bold; */
 }
 
 .p-timeline-event-opposite {
     max-width: 0px;
+}
+
+.p-fileupload-content, .p-fileupload .p-fileupload-row > div {
+    padding: 0px !important;
 }

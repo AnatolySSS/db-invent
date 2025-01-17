@@ -51,40 +51,15 @@ export async function makeQRCode(selectedItems) {
     let x_step = rectWigth; // расстояние от левого края одного qr-code до следующего = ширине прямоугольника
     let x = x_start + x_step * ((totalCounter - 1) % 8);
 
-    pdf.roundedRect(
-      x - rectQrcodeOffset,
-      y - rectQrcodeOffset,
-      rectWigth,
-      rectHeight,
-      1,
-      1
-    );
+    pdf.roundedRect(x - rectQrcodeOffset, y - rectQrcodeOffset, rectWigth, rectHeight, 1, 1);
     pdf.setFillColor(0, 134, 117);
-    pdf.roundedRect(
-      x - rectQrcodeOffset,
-      y - rectQrcodeOffset,
-      rectWigth,
-      rectHeight,
-      1,
-      1,
-      "F"
-    );
+    pdf.roundedRect(x - rectQrcodeOffset, y - rectQrcodeOffset, rectWigth, rectHeight, 1, 1, "F");
     pdf.setFillColor(255, 255, 255);
-    pdf.roundedRect(
-      x - rectQrcodeOffset + 1,
-      y - rectQrcodeOffset + 1,
-      rectWigth - 2,
-      rectWigth - 2,
-      1,
-      1,
-      "F"
-    );
+    pdf.roundedRect(x - rectQrcodeOffset + 1, y - rectQrcodeOffset + 1, rectWigth - 2, rectWigth - 2, 1, 1, "F");
     pdf.addImage(img, "png", x, y, qrCodeWidth, qrCodeHeight, "", "MEDIUM");
-    pdf.text(
-      "00" + selectedItems[totalCounter - 1].qr_code,
-      x - 0.5,
-      y + rectHeight - 4
-    );
+    let x_text = 9 - selectedItems[totalCounter - 1].qr_code.length;
+
+    pdf.text(selectedItems[totalCounter - 1].qr_code, x + x_text - 0.5, y + rectHeight - 4);
   };
 
   for (const container of canvasContainers) {

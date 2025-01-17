@@ -61,12 +61,14 @@ export const getDeleteData = (type, toggleIsFetching, setData) => {
   };
 };
 
-export const getUploadData = (toggleIsFetching, setUploadStatus) => {
-  return (data) => {
+export const getUploadData = (setData, toggleIsFetching, setUploadStatus) => {
+  return (type, rowData, userAuth) => {
     return async (dispatch) => {
       dispatch(toggleIsFetching(true));
-      await DataAPI.uploadData(data);
+      await DataAPI.uploadData(rowData);
+      let data = await DataAPI.getData(type, userAuth);
       dispatch(toggleIsFetching(false));
+      dispatch(setData(changeDateFormat(data)));
       dispatch(setUploadStatus(true));
     };
   };

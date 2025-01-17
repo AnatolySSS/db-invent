@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
-import { classNames } from 'primereact/utils';
+import { classNames } from "primereact/utils";
 import { Button } from "primereact/button";
-import { Toast } from 'primereact/toast';
-import { Avatar } from 'primereact/avatar';
-import { Menu } from 'primereact/menu';
-import { Chart } from 'primereact/chart';
+import { Toast } from "primereact/toast";
+import { Avatar } from "primereact/avatar";
+import { Menu } from "primereact/menu";
+import { Chart } from "primereact/chart";
 
 const ChartCraft = (props) => {
   let {
@@ -31,8 +30,14 @@ const ChartCraft = (props) => {
   } = props;
   const userMenu = useRef(null);
 
-  let itLocation, itType, itCountType = [], itCountLocation = []
-  let furnitureLocation, furnitureType, furnitureCountType = [], furnitureCountLocation = []
+  let itLocation,
+    itType,
+    itCountType = [],
+    itCountLocation = [];
+  let furnitureLocation,
+    furnitureType,
+    furnitureCountType = [],
+    furnitureCountLocation = [];
 
   if (itValues) {
     itLocation = itValues.map((obj) => obj.location).filter((obj) => obj !== null);
@@ -46,54 +51,54 @@ const ChartCraft = (props) => {
 
   if (itData) {
     for (let i = 0; i < itType.length; i++) {
-      itCountType[i] = 0
-      itData.forEach(data => {
+      itCountType[i] = 0;
+      itData.forEach((data) => {
         if (itType[i] == data.type) {
-          itCountType[i]++
+          itCountType[i]++;
         }
-      })
+      });
     }
-    itType = itType.filter((element, index) => itCountType[index] != 0)
-    itCountType = itCountType.filter((element, index) => element != 0)
-    bubbleSort(itCountType, itType)
+    itType = itType.filter((element, index) => itCountType[index] != 0);
+    itCountType = itCountType.filter((element, index) => element != 0);
+    bubbleSort(itCountType, itType);
 
     for (let i = 0; i < itLocation.length; i++) {
-      itCountLocation[i] = 0
-      itData.forEach(data => {
+      itCountLocation[i] = 0;
+      itData.forEach((data) => {
         if (itLocation[i] == data.location) {
-          itCountLocation[i]++
+          itCountLocation[i]++;
         }
-      })
+      });
     }
-    itLocation = itLocation.filter((element, index) => itCountLocation[index] != 0)
-    itCountLocation = itCountLocation.filter((element, index) => element != 0)
-    bubbleSort(itCountLocation, itLocation)
+    itLocation = itLocation.filter((element, index) => itCountLocation[index] != 0);
+    itCountLocation = itCountLocation.filter((element, index) => element != 0);
+    bubbleSort(itCountLocation, itLocation);
   }
 
   if (furnitureData) {
     for (let i = 0; i < furnitureType.length; i++) {
-      furnitureCountType[i] = 0
-      furnitureData.forEach(data => {
+      furnitureCountType[i] = 0;
+      furnitureData.forEach((data) => {
         if (furnitureType[i] == data.type) {
-          furnitureCountType[i]++
+          furnitureCountType[i]++;
         }
-      })
+      });
     }
-    furnitureType = furnitureType.filter((element, index) => furnitureCountType[index] != 0)
-    furnitureCountType = furnitureCountType.filter((element, index) => element != 0)
-    bubbleSort(furnitureCountType, furnitureType)
+    furnitureType = furnitureType.filter((element, index) => furnitureCountType[index] != 0);
+    furnitureCountType = furnitureCountType.filter((element, index) => element != 0);
+    bubbleSort(furnitureCountType, furnitureType);
 
     for (let i = 0; i < furnitureLocation.length; i++) {
-      furnitureCountLocation[i] = 0
-      furnitureData.forEach(data => {
+      furnitureCountLocation[i] = 0;
+      furnitureData.forEach((data) => {
         if (furnitureLocation[i] == data.location) {
-          furnitureCountLocation[i]++
+          furnitureCountLocation[i]++;
         }
-      })
+      });
     }
-    furnitureLocation = furnitureLocation.filter((element, index) => furnitureCountLocation[index] != 0)
-    furnitureCountLocation = furnitureCountLocation.filter((element, index) => element != 0)
-    bubbleSort(furnitureCountLocation, furnitureLocation)
+    furnitureLocation = furnitureLocation.filter((element, index) => furnitureCountLocation[index] != 0);
+    furnitureCountLocation = furnitureCountLocation.filter((element, index) => element != 0);
+    bubbleSort(furnitureCountLocation, furnitureLocation);
   }
 
   const [dataItType, setItTypeData] = useState({});
@@ -105,153 +110,153 @@ const ChartCraft = (props) => {
 
   useEffect(() => {
     requestItData();
-    requestFurnitureData()
-    
-      const documentStyle = getComputedStyle(document.documentElement);
-      const itDataType = {
-        labels: itType,
-        datasets: [
-          {
-            data: itCountType,
-            backgroundColor: [
-              documentStyle.getPropertyValue("--blue-500"),
-              documentStyle.getPropertyValue("--yellow-500"),
-              documentStyle.getPropertyValue("--green-500"),
-              documentStyle.getPropertyValue("--red-500"),
-              documentStyle.getPropertyValue("--purple-500"),
-              documentStyle.getPropertyValue("--grey-500"),
-              documentStyle.getPropertyValue("--teal-500"),
-              documentStyle.getPropertyValue("--indigo-500"),
-              documentStyle.getPropertyValue("--orange-500"),
-              documentStyle.getPropertyValue("--cyan-500"),
-              documentStyle.getPropertyValue("--pink-500"),
-              documentStyle.getPropertyValue("--primary-500"),
-            ],
-            hoverBackgroundColor: [
-              documentStyle.getPropertyValue("--blue-400"),
-              documentStyle.getPropertyValue("--yellow-400"),
-              documentStyle.getPropertyValue("--green-400"),
-              documentStyle.getPropertyValue("--red-400"),
-              documentStyle.getPropertyValue("--purple-400"),
-              documentStyle.getPropertyValue("--grey-400"),
-              documentStyle.getPropertyValue("--teal-400"),
-              documentStyle.getPropertyValue("--indigo-400"),
-              documentStyle.getPropertyValue("--orange-400"),
-              documentStyle.getPropertyValue("--cyan-400"),
-              documentStyle.getPropertyValue("--pink-400"),
-              documentStyle.getPropertyValue("--primary-400"),
-            ],
-          },
-        ],
-      };
-      const itDataLocation = {
-        labels: itLocation,
-        datasets: [
-          {
-            data: itCountLocation,
-            backgroundColor: [
-              documentStyle.getPropertyValue("--blue-500"),
-              documentStyle.getPropertyValue("--yellow-500"),
-              documentStyle.getPropertyValue("--green-500"),
-              documentStyle.getPropertyValue("--red-500"),
-              documentStyle.getPropertyValue("--purple-500"),
-              documentStyle.getPropertyValue("--grey-500"),
-              documentStyle.getPropertyValue("--teal-500"),
-              documentStyle.getPropertyValue("--indigo-500"),
-              documentStyle.getPropertyValue("--orange-500"),
-              documentStyle.getPropertyValue("--cyan-500"),
-              documentStyle.getPropertyValue("--pink-500"),
-              documentStyle.getPropertyValue("--primary-500"),
-            ],
-            hoverBackgroundColor: [
-              documentStyle.getPropertyValue("--blue-400"),
-              documentStyle.getPropertyValue("--yellow-400"),
-              documentStyle.getPropertyValue("--green-400"),
-              documentStyle.getPropertyValue("--red-400"),
-              documentStyle.getPropertyValue("--purple-400"),
-              documentStyle.getPropertyValue("--grey-400"),
-              documentStyle.getPropertyValue("--teal-400"),
-              documentStyle.getPropertyValue("--indigo-400"),
-              documentStyle.getPropertyValue("--orange-400"),
-              documentStyle.getPropertyValue("--cyan-400"),
-              documentStyle.getPropertyValue("--pink-400"),
-              documentStyle.getPropertyValue("--primary-400"),
-            ],
-          },
-        ],
-      };
-      const furnitureDataType = {
-        labels: furnitureType,
-        datasets: [
-          {
-            data: furnitureCountType,
-            backgroundColor: [
-              documentStyle.getPropertyValue("--blue-500"),
-              documentStyle.getPropertyValue("--yellow-500"),
-              documentStyle.getPropertyValue("--green-500"),
-              documentStyle.getPropertyValue("--red-500"),
-              documentStyle.getPropertyValue("--purple-500"),
-              documentStyle.getPropertyValue("--grey-500"),
-              documentStyle.getPropertyValue("--teal-500"),
-              documentStyle.getPropertyValue("--indigo-500"),
-              documentStyle.getPropertyValue("--orange-500"),
-              documentStyle.getPropertyValue("--cyan-500"),
-              documentStyle.getPropertyValue("--pink-500"),
-              documentStyle.getPropertyValue("--primary-500"),
-            ],
-            hoverBackgroundColor: [
-              documentStyle.getPropertyValue("--blue-400"),
-              documentStyle.getPropertyValue("--yellow-400"),
-              documentStyle.getPropertyValue("--green-400"),
-              documentStyle.getPropertyValue("--red-400"),
-              documentStyle.getPropertyValue("--purple-400"),
-              documentStyle.getPropertyValue("--grey-400"),
-              documentStyle.getPropertyValue("--teal-400"),
-              documentStyle.getPropertyValue("--indigo-400"),
-              documentStyle.getPropertyValue("--orange-400"),
-              documentStyle.getPropertyValue("--cyan-400"),
-              documentStyle.getPropertyValue("--pink-400"),
-              documentStyle.getPropertyValue("--primary-400"),
-            ],
-          },
-        ],
-      };
-      const furnitureDataLocation = {
-        labels: furnitureLocation,
-        datasets: [
-          {
-            data: furnitureCountLocation,
-            backgroundColor: [
-              documentStyle.getPropertyValue("--blue-500"),
-              documentStyle.getPropertyValue("--yellow-500"),
-              documentStyle.getPropertyValue("--green-500"),
-              documentStyle.getPropertyValue("--red-500"),
-              documentStyle.getPropertyValue("--purple-500"),
-              documentStyle.getPropertyValue("--grey-500"),
-              documentStyle.getPropertyValue("--teal-500"),
-              documentStyle.getPropertyValue("--indigo-500"),
-              documentStyle.getPropertyValue("--orange-500"),
-              documentStyle.getPropertyValue("--cyan-500"),
-              documentStyle.getPropertyValue("--pink-500"),
-              documentStyle.getPropertyValue("--primary-500"),
-            ],
-            hoverBackgroundColor: [
-              documentStyle.getPropertyValue("--blue-400"),
-              documentStyle.getPropertyValue("--yellow-400"),
-              documentStyle.getPropertyValue("--green-400"),
-              documentStyle.getPropertyValue("--red-400"),
-              documentStyle.getPropertyValue("--purple-400"),
-              documentStyle.getPropertyValue("--grey-400"),
-              documentStyle.getPropertyValue("--teal-400"),
-              documentStyle.getPropertyValue("--indigo-400"),
-              documentStyle.getPropertyValue("--orange-400"),
-              documentStyle.getPropertyValue("--cyan-400"),
-              documentStyle.getPropertyValue("--pink-400"),
-              documentStyle.getPropertyValue("--primary-400"),
-            ],
-          },
-        ],
-      };
+    requestFurnitureData();
+
+    const documentStyle = getComputedStyle(document.documentElement);
+    const itDataType = {
+      labels: itType,
+      datasets: [
+        {
+          data: itCountType,
+          backgroundColor: [
+            documentStyle.getPropertyValue("--blue-500"),
+            documentStyle.getPropertyValue("--yellow-500"),
+            documentStyle.getPropertyValue("--green-500"),
+            documentStyle.getPropertyValue("--red-500"),
+            documentStyle.getPropertyValue("--purple-500"),
+            documentStyle.getPropertyValue("--grey-500"),
+            documentStyle.getPropertyValue("--teal-500"),
+            documentStyle.getPropertyValue("--indigo-500"),
+            documentStyle.getPropertyValue("--orange-500"),
+            documentStyle.getPropertyValue("--cyan-500"),
+            documentStyle.getPropertyValue("--pink-500"),
+            documentStyle.getPropertyValue("--primary-500"),
+          ],
+          hoverBackgroundColor: [
+            documentStyle.getPropertyValue("--blue-400"),
+            documentStyle.getPropertyValue("--yellow-400"),
+            documentStyle.getPropertyValue("--green-400"),
+            documentStyle.getPropertyValue("--red-400"),
+            documentStyle.getPropertyValue("--purple-400"),
+            documentStyle.getPropertyValue("--grey-400"),
+            documentStyle.getPropertyValue("--teal-400"),
+            documentStyle.getPropertyValue("--indigo-400"),
+            documentStyle.getPropertyValue("--orange-400"),
+            documentStyle.getPropertyValue("--cyan-400"),
+            documentStyle.getPropertyValue("--pink-400"),
+            documentStyle.getPropertyValue("--primary-400"),
+          ],
+        },
+      ],
+    };
+    const itDataLocation = {
+      labels: itLocation,
+      datasets: [
+        {
+          data: itCountLocation,
+          backgroundColor: [
+            documentStyle.getPropertyValue("--blue-500"),
+            documentStyle.getPropertyValue("--yellow-500"),
+            documentStyle.getPropertyValue("--green-500"),
+            documentStyle.getPropertyValue("--red-500"),
+            documentStyle.getPropertyValue("--purple-500"),
+            documentStyle.getPropertyValue("--grey-500"),
+            documentStyle.getPropertyValue("--teal-500"),
+            documentStyle.getPropertyValue("--indigo-500"),
+            documentStyle.getPropertyValue("--orange-500"),
+            documentStyle.getPropertyValue("--cyan-500"),
+            documentStyle.getPropertyValue("--pink-500"),
+            documentStyle.getPropertyValue("--primary-500"),
+          ],
+          hoverBackgroundColor: [
+            documentStyle.getPropertyValue("--blue-400"),
+            documentStyle.getPropertyValue("--yellow-400"),
+            documentStyle.getPropertyValue("--green-400"),
+            documentStyle.getPropertyValue("--red-400"),
+            documentStyle.getPropertyValue("--purple-400"),
+            documentStyle.getPropertyValue("--grey-400"),
+            documentStyle.getPropertyValue("--teal-400"),
+            documentStyle.getPropertyValue("--indigo-400"),
+            documentStyle.getPropertyValue("--orange-400"),
+            documentStyle.getPropertyValue("--cyan-400"),
+            documentStyle.getPropertyValue("--pink-400"),
+            documentStyle.getPropertyValue("--primary-400"),
+          ],
+        },
+      ],
+    };
+    const furnitureDataType = {
+      labels: furnitureType,
+      datasets: [
+        {
+          data: furnitureCountType,
+          backgroundColor: [
+            documentStyle.getPropertyValue("--blue-500"),
+            documentStyle.getPropertyValue("--yellow-500"),
+            documentStyle.getPropertyValue("--green-500"),
+            documentStyle.getPropertyValue("--red-500"),
+            documentStyle.getPropertyValue("--purple-500"),
+            documentStyle.getPropertyValue("--grey-500"),
+            documentStyle.getPropertyValue("--teal-500"),
+            documentStyle.getPropertyValue("--indigo-500"),
+            documentStyle.getPropertyValue("--orange-500"),
+            documentStyle.getPropertyValue("--cyan-500"),
+            documentStyle.getPropertyValue("--pink-500"),
+            documentStyle.getPropertyValue("--primary-500"),
+          ],
+          hoverBackgroundColor: [
+            documentStyle.getPropertyValue("--blue-400"),
+            documentStyle.getPropertyValue("--yellow-400"),
+            documentStyle.getPropertyValue("--green-400"),
+            documentStyle.getPropertyValue("--red-400"),
+            documentStyle.getPropertyValue("--purple-400"),
+            documentStyle.getPropertyValue("--grey-400"),
+            documentStyle.getPropertyValue("--teal-400"),
+            documentStyle.getPropertyValue("--indigo-400"),
+            documentStyle.getPropertyValue("--orange-400"),
+            documentStyle.getPropertyValue("--cyan-400"),
+            documentStyle.getPropertyValue("--pink-400"),
+            documentStyle.getPropertyValue("--primary-400"),
+          ],
+        },
+      ],
+    };
+    const furnitureDataLocation = {
+      labels: furnitureLocation,
+      datasets: [
+        {
+          data: furnitureCountLocation,
+          backgroundColor: [
+            documentStyle.getPropertyValue("--blue-500"),
+            documentStyle.getPropertyValue("--yellow-500"),
+            documentStyle.getPropertyValue("--green-500"),
+            documentStyle.getPropertyValue("--red-500"),
+            documentStyle.getPropertyValue("--purple-500"),
+            documentStyle.getPropertyValue("--grey-500"),
+            documentStyle.getPropertyValue("--teal-500"),
+            documentStyle.getPropertyValue("--indigo-500"),
+            documentStyle.getPropertyValue("--orange-500"),
+            documentStyle.getPropertyValue("--cyan-500"),
+            documentStyle.getPropertyValue("--pink-500"),
+            documentStyle.getPropertyValue("--primary-500"),
+          ],
+          hoverBackgroundColor: [
+            documentStyle.getPropertyValue("--blue-400"),
+            documentStyle.getPropertyValue("--yellow-400"),
+            documentStyle.getPropertyValue("--green-400"),
+            documentStyle.getPropertyValue("--red-400"),
+            documentStyle.getPropertyValue("--purple-400"),
+            documentStyle.getPropertyValue("--grey-400"),
+            documentStyle.getPropertyValue("--teal-400"),
+            documentStyle.getPropertyValue("--indigo-400"),
+            documentStyle.getPropertyValue("--orange-400"),
+            documentStyle.getPropertyValue("--cyan-400"),
+            documentStyle.getPropertyValue("--pink-400"),
+            documentStyle.getPropertyValue("--primary-400"),
+          ],
+        },
+      ],
+    };
     const itOptionsType = {
       plugins: {
         legend: {
@@ -292,7 +297,7 @@ const ChartCraft = (props) => {
     setFurnitureLocationData(furnitureDataLocation);
 
     setOptionsType(itOptionsType);
-    setOptionsLocation(itOptionsLocation)
+    setOptionsLocation(itOptionsLocation);
   }, []);
 
   const makeLogout = () => {
@@ -301,9 +306,7 @@ const ChartCraft = (props) => {
 
   const getUserLogo = () => {
     try {
-      return require(`../../img/${
-        props.userAuth.isAuth ? props.userAuth.login : ""
-      }.png`);
+      return require(`../../img/${props.userAuth.isAuth ? props.userAuth.login : ""}.png`);
     } catch (error) {
       return "";
     }
@@ -314,23 +317,10 @@ const ChartCraft = (props) => {
       command: () => {},
       template: (item, options) => {
         return (
-          <button
-            onClick={(e) => options.onClick(e)}
-            className={classNames(
-              options.className,
-              "w-full p-link flex align-items-center"
-            )}
-          >
-            <Avatar
-              image={getUserLogo()}
-              className="mr-2"
-              icon="pi pi-user"
-              shape="circle"
-            />
+          <button onClick={(e) => options.onClick(e)} className={classNames(options.className, "w-full p-link flex align-items-center")}>
+            <Avatar image={getUserLogo()} className="mr-2" icon="pi pi-user" shape="circle" />
             <div className="flex flex-column align">
-              <span className="font-bold">{`${
-                props.userAuth.fullName.split(" ")[0]
-              } ${Array.from(props.userAuth.fullName.split(" ")[1])[0]}.${
+              <span className="font-bold">{`${props.userAuth.fullName.split(" ")[0]} ${Array.from(props.userAuth.fullName.split(" ")[1])[0]}.${
                 Array.from(props.userAuth.fullName.split(" ")[2])[0]
               }.`}</span>
             </div>
@@ -360,26 +350,10 @@ const ChartCraft = (props) => {
           </div> */}
           <div className="flex align-items-center justify-content-center">
             <div className="col-fixed flex align-items-center">
-              <Menu
-                model={userMenuItems}
-                popup
-                ref={userMenu}
-                style={{ width: "max-content" }}
-              />
-              <Button
-                className="bg-gray-50 hover:bg-gray-400 border-gray-50 px-2 py-1"
-                onClick={(e) => userMenu.current.toggle(e)}
-              >
-                <Avatar
-                  image={getUserLogo()}
-                  icon="pi pi-user"
-                  size="large"
-                  shape="circle"
-                />
-                <i
-                  className="pi pi-angle-down ml-2"
-                  style={{ color: "#4a4a4a" }}
-                ></i>
+              <Menu model={userMenuItems} popup ref={userMenu} style={{ width: "max-content" }} />
+              <Button className="bg-gray-50 hover:bg-gray-400 border-gray-50 px-2 py-1" onClick={(e) => userMenu.current.toggle(e)}>
+                <Avatar image={getUserLogo()} icon="pi pi-user" size="large" shape="circle" />
+                <i className="pi pi-angle-down ml-2" style={{ color: "#4a4a4a" }}></i>
               </Button>
             </div>
           </div>
@@ -397,7 +371,7 @@ const ChartCraft = (props) => {
       </div>
     </div>
   );
-}
+};
 
 export default ChartCraft;
 

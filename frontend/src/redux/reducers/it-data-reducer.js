@@ -63,7 +63,7 @@ export const addData = getAddData("it", toggleIsFetching, setData, setValidation
 export const updateData = getUpdateData("it", toggleIsFetching, setData);
 export const transferItem = getTransferItem("it", toggleIsFetching, setData);
 export const deleteData = getDeleteData("it", toggleIsFetching, setData);
-export const uploadData = getUploadData(toggleIsFetching, setUploadStatus);
+export const uploadData = getUploadData(setData, toggleIsFetching, setUploadStatus);
 
 export const clearState = () => {
   return (dispatch) => {

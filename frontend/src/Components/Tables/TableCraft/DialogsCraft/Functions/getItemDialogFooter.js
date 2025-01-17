@@ -17,36 +17,21 @@ export const getItemDialogFooter = (
   setDisabled,
   activeTabIndex,
   setActiveTabIndex,
-  dialogType
+  dialogType,
+  values
 ) => (
   <React.Fragment>
     <div className="mt-2">
       {userAuth.role == "admin" &&
         activeTabIndex === 0 &&
         (disabled && dialogType === "edit" ? (
-          <Button
-            type="submit"
-            label="Изменить"
-            icon="pi pi-pencil"
-            onClick={() => setDisabled(false)}
-          />
+          <Button type="submit" label="Изменить" icon="pi pi-pencil" onClick={() => setDisabled(false)} />
         ) : (
           <Button
             type="submit"
             label="Сохранить"
             icon="pi pi-check"
-            onClick={saveItem(
-              type,
-              addData,
-              updateData,
-              data,
-              item,
-              setItemDialog,
-              setItem,
-              emptyItem,
-              userAuth,
-              setDisabled
-            )}
+            onClick={saveItem(type, addData, updateData, data, item, setItemDialog, setItem, emptyItem, userAuth, setDisabled, values)}
           />
         ))}
       <Button

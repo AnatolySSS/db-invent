@@ -10,7 +10,9 @@ let config = {
 };
 
 export const EmployeesController = {
-  async downloadEmployees(request, responce) {
+  async downloadEmployees() {
+    console.log("start EmployeesController");
+
     const client = new Client({
       url: config.url,
       timeout: 9999,
@@ -104,11 +106,11 @@ export const EmployeesController = {
         }
       }
 
-      responce.json(data);
+      // responce.json(data);
     } catch (error) {
       console.log("__________EmployeesController__downloadEmployees___________");
       console.log(error);
-      responce.json(error);
+      // responce.json(error);
     } finally {
       await client.unbind();
       console.log("Соединение закрыто");

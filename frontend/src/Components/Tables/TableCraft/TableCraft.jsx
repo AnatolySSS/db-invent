@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import { DataTable } from "primereact/datatable";
@@ -20,6 +19,7 @@ import { InputText } from "primereact/inputtext";
 import { AutoComplete } from "primereact/autocomplete";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Calendar } from "primereact/calendar";
+import UploadDialog from "../../Common/UploadDialog/UploadDialog";
 
 const TableCraft = (props) => {
   let {
@@ -43,17 +43,21 @@ const TableCraft = (props) => {
     hasCurrentInventory,
     clearState,
     employees,
+    uploadData,
   } = props;
 
   const [visibleColumns, setVisibleColumns] = useState([]);
   const [filters, setFilters] = useState(props.filters);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
   const [ItemDialog, setItemDialog] = useState(false);
+  const [uploadDialogVisible, setUploadDialogVisible] = useState(false);
   const [deleteItemDialog, setDeleteItemDialog] = useState(false);
   const [transferDialog, setTransferDialog] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
   const [dialogType, setDialogType] = useState("");
   const toast = useRef(null);
+  const uploadToast = useRef(null);
+  const userMenu = useRef(null);
   let emptyItem = {};
   let emptyTransferedItem = {
     employee_name: "",
@@ -197,6 +201,7 @@ const TableCraft = (props) => {
   return isFetching ? (
     <div className="h-screen flex align-items-center justify-content-center">
       <Toast ref={toast} />
+      <Toast ref={uploadToast} />
       <div className="flex flex-column">
         <Preloader />
       </div>
@@ -204,6 +209,7 @@ const TableCraft = (props) => {
   ) : (
     <div className="card">
       <Toast ref={toast} />
+      <Toast ref={uploadToast} />
       <DataTable
         value={data}
         filters={filters}
@@ -214,6 +220,7 @@ const TableCraft = (props) => {
           <TableHeader
             type={type}
             data={data}
+            values={values}
             logout={logout}
             selectedItems={selectedItems}
             userAuth={userAuth}
@@ -237,6 +244,10 @@ const TableCraft = (props) => {
             tableType="main"
             setDialogType={setDialogType}
             employees={employees}
+            uploadData={uploadData}
+            uploadToast={uploadToast}
+            setUploadDialogVisible={setUploadDialogVisible}
+            userMenu={userMenu}
           />
         }
         paginator
@@ -405,6 +416,18 @@ const TableCraft = (props) => {
           </div>
         </div>
       </Dialog>
+      <UploadDialog
+        uploadDialogVisible={uploadDialogVisible}
+        setUploadDialogVisible={setUploadDialogVisible}
+        type={type}
+        data={data}
+        values={values}
+        uploadToast={uploadToast}
+        uploadData={uploadData}
+        userMenu={userMenu}
+        userAuth={userAuth}
+        columns={columns}
+      />
     </div>
   );
 };
