@@ -16,3 +16,7 @@ label {
 .p-fileupload-content, .p-fileupload .p-fileupload-row > div {
     padding: 0px !important;
 }
+
+.p-speeddial-button {
+    width: 4rem !important;
+}

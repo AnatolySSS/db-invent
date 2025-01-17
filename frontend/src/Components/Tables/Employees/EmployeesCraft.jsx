@@ -12,7 +12,7 @@ import { getColumnFilterElement, getglobalFilterColumns } from "../Functions/Fil
 import { getColumnBody } from "../Functions/Body/getColumnBody";
 import { getTableHeight } from "../Functions/Helpers/getTableHeight";
 import { TableHeader } from "../../Common/TableHeader/TableHeader";
-import { DialogCraftEmployees } from "./DialogsCraft/Users/DialogCraftEmployees";
+import { DialogCraftEmployees } from "./DialogsCraft/Employees/DialogCraftEmployees";
 
 const EmployeesCraft = (props) => {
   let { type, name, data, columns, values, requestData, setVisible, logout, userAuth, isFetching, clearState, itData } = props;

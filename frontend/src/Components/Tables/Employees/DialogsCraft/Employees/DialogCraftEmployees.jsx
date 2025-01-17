@@ -8,9 +8,13 @@ import { formatDate } from "../../../Functions/Helpers/formatDate";
 import { Tooltip } from "primereact/tooltip";
 import { Button } from "primereact/button";
 import { makeCommitment } from "../../../../../function-helpers/makeCommitment";
+import { SpeedDial } from "primereact/speeddial";
 
 export const DialogCraftEmployees = (props) => {
   const { setItemDialog, ItemDialog, item, itData, employees, fullName } = props;
+
+  const [file, setFile] = useState(null);
+
   const itOfEmployee = itData.filter((it) => it.employee_id === item.employee_id);
 
   const hideDialog = () => {
@@ -42,11 +46,57 @@ export const DialogCraftEmployees = (props) => {
           </li>
         </ul>
       </div>
-      <div className="fles align-content-center">
-        <Button label="Сформировать обязательство" icon="pi pi-file-word" onClick={() => makeCommitment(itOfEmployee, employees, fullName)} />
+      <div className="fles align-content-center" style={{ position: "relative" }}>
+        {/* <Button label="Сформировать обязательство" icon="pi pi-file-word" onClick={() => makeCommitment(itOfEmployee, employees, fullName)} />
+        <Button
+          className="w-3rem custom-close-btn"
+          icon="pi pi-file-word"
+          rounded
+          // outlined
+          // severity="secondary"
+          aria-label="Bookmark"
+          onClick={() => makeCommitment(itOfEmployee, employees, fullName)}
+        /> */}
+        <Tooltip target=".speeddial-bottom-right .p-speeddial-action" position="top" />
+        <SpeedDial model={items} direction="left" className="speeddial-bottom-right" style={{ top: "calc(50% - 2rem)", right: 0 }} />
+        {/* <input type="file" accept="application/pdf" onChange={(e) => setFile(e.target.files[0])} /> */}
       </div>
     </div>
   );
+
+  const uploadFile = async () => {
+    const formData = new FormData();
+    formData.append("pdf", file);
+
+    const response = await fetch("/commitments/upload", {
+      method: "POST",
+      body: formData,
+    });
+    const result = await response.json();
+    console.log("Uploaded File Path:", result.filePath);
+  };
+
+  const items = [
+    {
+      label: "Загрузить скан обязательства",
+      icon: "pi pi-upload",
+      command: () => uploadFile,
+    },
+    {
+      label: "Скачать скан обязательства",
+      icon: "pi pi-download",
+      command: () => {
+        console.log("Обязательство скачано");
+      },
+    },
+    {
+      label: "Сформировать обязательство",
+      icon: "pi pi-file-word",
+      command: () => {
+        makeCommitment(itOfEmployee, employees, fullName);
+      },
+    },
+  ];
 
   const getImage = () => {
     switch (Math.floor(Math.random() * 7)) {
