@@ -218,6 +218,8 @@ const TableCraft = (props) => {
         dataKey="id"
         header={
           <TableHeader
+            tableType="main"
+            tableName={`${name}  (общая)`}
             type={type}
             data={data}
             values={values}
@@ -230,18 +232,16 @@ const TableCraft = (props) => {
             setItem={setItem}
             setItemDialog={setItemDialog}
             setTransferDialog={setTransferDialog}
+            globalFilterValue={globalFilterValue}
             setGlobalFilterValue={setGlobalFilterValue}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
             columns={columns}
             filters={filters}
-            tableName={`${name}  (общая)`}
-            globalFilterValue={globalFilterValue}
             beginInventory={beginInventory}
             hasCurrentInventory={hasCurrentInventory}
             requestCurrentInventory={requestCurrentInventory}
             clearState={clearState}
-            tableType="main"
             setDialogType={setDialogType}
             employees={employees}
             uploadData={uploadData}

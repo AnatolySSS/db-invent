@@ -1,6 +1,6 @@
 import * as XLSX from "xlsx";
 import { makeCommitment } from "../../../../function-helpers/makeCommitment";
-import { makeQRCode } from "../../../../function-helpers/makeQRCode2";
+import { makeQRCode } from "../../../../function-helpers/makeQRCodeNew";
 import { getUserLogo } from "../../../Tables/Functions/Helpers/getUserLogo";
 import { Avatar } from "primereact/avatar";
 import { classNames } from "primereact/utils";

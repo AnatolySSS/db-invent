@@ -27,6 +27,7 @@ const UsersCraft = (props) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [dialogType, setDialogType] = useState("");
   const toast = useRef(null);
+  const userMenu = useRef(null);
   let emptyItem = { full_name: "", role: "", access_type: "" };
 
   values.department = [...new Set(data.map((element) => element.department).filter((element) => element.length !== 0))].sort((a, b) => a.localeCompare(b));
@@ -142,6 +143,7 @@ const UsersCraft = (props) => {
             globalFilterValue={globalFilterValue}
             clearState={clearState}
             setDialogType={setDialogType}
+            userMenu={userMenu}
           />
         }
         paginator

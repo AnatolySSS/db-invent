@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
@@ -36,6 +36,7 @@ const YearInventoryCraft = (props) => {
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filters, setFilters] = useState(props.filters);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
+  const userMenu = useRef(null);
 
   columns.map((obj) => {
     let dataType;
@@ -110,6 +111,7 @@ const YearInventoryCraft = (props) => {
             globalFilterValue={globalFilterValue}
             hasCurrentInventory={hasCurrentInventory}
             clearState={clearItState}
+            userMenu={userMenu}
           />
         }
         paginator

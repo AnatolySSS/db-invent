@@ -24,6 +24,7 @@ const EmployeesCraft = (props) => {
   const [ItemDialog, setItemDialog] = useState(false);
   const [item, setItem] = useState({});
   const toast = useRef(null);
+  const userMenu = useRef(null);
   let emptyItem = {};
 
   columns.map((obj) => {
@@ -102,23 +103,25 @@ const EmployeesCraft = (props) => {
         dataKey="employee_id"
         header={
           <TableHeader
+            tableType="employees"
+            tableName={name}
             type={type}
             data={data}
+            values={values}
             logout={logout}
             selectedItems={selectedItems}
             userAuth={userAuth}
             emptyItem={emptyItem}
             setVisible={setVisible}
             setFilters={setFilters}
+            globalFilterValue={globalFilterValue}
             setGlobalFilterValue={setGlobalFilterValue}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
             columns={columns}
             filters={filters}
-            tableName={name}
-            tableType="employees"
-            globalFilterValue={globalFilterValue}
             clearState={clearState}
+            userMenu={userMenu}
           />
         }
         paginator

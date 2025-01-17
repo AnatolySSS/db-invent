@@ -59,7 +59,7 @@ export async function makeQRCode(selectedItems) {
     pdf.addImage(img, "png", x, y, qrCodeWidth, qrCodeHeight, "", "MEDIUM");
     let x_text = 9 - selectedItems[totalCounter - 1].qr_code.length;
 
-    pdf.text(selectedItems[totalCounter - 1].qr_code, x + x_text - 0.5, y + rectHeight - 4);
+    pdf.text(selectedItems[totalCounter - 1].qr_code, x + x_text - 2.3, y + rectHeight - 4);
   };
 
   for (const container of canvasContainers) {
