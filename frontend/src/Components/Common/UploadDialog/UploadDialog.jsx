@@ -208,7 +208,7 @@ export default function UploadDialog(props) {
         {uploadButton}
         {cancelButton}
         <div className="flex align-items-center gap-3 ml-auto">
-          <span>{jsonData.lib?.length || 0} шт. ТМЦ</span>
+          <span>готово для загрузки {jsonData.lib?.length || 0} ед. ТМЦ</span>
           <ProgressBar value={value} showValue={false} style={{ width: "10rem", height: "12px" }}></ProgressBar>
           <Button
             className="w-3rem custom-close-btn"
