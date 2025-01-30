@@ -8,6 +8,9 @@ export default (sequelize, Sequelize) =>
       access_type: {
         type: Sequelize.STRING(20),
       },
+      data_type: {
+        type: Sequelize.STRING(255),
+      },
       it_type: {
         type: Sequelize.STRING(100),
       },

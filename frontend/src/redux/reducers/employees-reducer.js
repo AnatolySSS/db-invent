@@ -1,5 +1,5 @@
 import { EmployeesAPI } from "../../api/api";
-import { FilterMatchMode, FilterOperator } from "primereact/api";
+import { Filters } from "./filters/Filters";
 
 const SET_DATA = "sodfu-inventory/employees-reducer/SET_DATA";
 const SET_DOWNLOAD_STATUS = "sodfu-inventory/employees-reducer/SET_DOWNLOAD_STATUS";
@@ -20,37 +20,7 @@ let initialState = {
     },
   ],
   values: [],
-  filters: {
-    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    full_name: {
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
-    },
-    department: { value: null, matchMode: FilterMatchMode.IN },
-    title: { value: null, matchMode: FilterMatchMode.IN },
-    city_name: { value: null, matchMode: FilterMatchMode.IN },
-    login: {
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
-    },
-    mail: {
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
-    },
-    phone: {
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
-    },
-    dn: {
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
-    },
-    employee_id: {
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
-    },
-    is_present: { value: null, matchMode: FilterMatchMode.EQUALS },
-  },
+  filters: Filters.employees,
   name: "Сотрудники",
   downloadStatus: false,
   message: [],

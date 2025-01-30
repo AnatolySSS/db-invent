@@ -10,6 +10,7 @@ let initialState = {
   isAuth: false,
   role: "",
   access_type: "",
+  data_type: "",
   division_id: null,
   city_name: "",
   message: "",
@@ -32,9 +33,9 @@ const authReducer = (state = initialState, action) => {
   }
 };
 
-const setAuth = (employee_id, login, fullName, isAuth, role, access_type, division_id, city_name, message) => ({
+const setAuth = (employee_id, login, fullName, isAuth, role, access_type, data_type, division_id, city_name, message) => ({
   type: SET_AUTH,
-  data: { employee_id, login, fullName, isAuth, role, access_type, division_id, city_name, message },
+  data: { employee_id, login, fullName, isAuth, role, access_type, data_type, division_id, city_name, message },
 });
 
 const setMessage = (message) => ({ type: SET_MESSAGE, data: { message } });
@@ -46,8 +47,8 @@ export const getAuthUserData = () => {
     const data = await AuthAPI.me();
     switch (data.resultCode) {
       case 0:
-        let { employee_id, login, full_name, role, access_type, division_id, city_name } = data.currentUser;
-        await dispatch(setAuth(employee_id, login, full_name, true, role, access_type, division_id, city_name, data.message));
+        let { employee_id, login, full_name, role, access_type, data_type, division_id, city_name } = data.currentUser;
+        await dispatch(setAuth(employee_id, login, full_name, true, role, access_type, data_type, division_id, city_name, data.message));
         // await dispatch(downloadEmployees());
         await dispatch(requestData(data.currentUser));
         // startEmployeesCheckingID = setInterval(async () => {

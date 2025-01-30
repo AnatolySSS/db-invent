@@ -29,9 +29,5 @@ export const getImgBodyTemplate =
       />
     );
 
-    return (
-      <div className="flex align-items-center justify-content-center">
-        {qrCode}
-      </div>
-    );
+    return <div className="flex align-items-center justify-content-center">{qrCode}</div>;
   };

@@ -19,6 +19,7 @@ export const UsersController = {
           include: [
             [Sequelize.col("user.role"), "role"],
             [Sequelize.col("user.access_type"), "access_type"],
+            [Sequelize.col("user.data_type"), "data_type"],
             [Sequelize.col("user.updatedAt"), "updatedAt"],
             [Sequelize.col("division.name"), "city_name"],
             ["employee_id", "user_id"],
@@ -57,6 +58,7 @@ export const UsersController = {
             }
           });
         }
+        libObg.data_type = libObg.data_type?.split(",");
         return libObg;
       });
 
@@ -72,7 +74,6 @@ export const UsersController = {
     try {
       let { userData } = request.body;
       const { user } = db.GLOBAL;
-      console.log(userData);
 
       userData.is_auth = false;
 

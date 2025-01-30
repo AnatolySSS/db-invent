@@ -5,6 +5,7 @@ import { DescriptionAssets } from "./Descriptions/DescriptionAssets";
 
 export const Description = (props) => {
   const {
+    type,
     name,
     data,
     columns,
@@ -18,14 +19,17 @@ export const Description = (props) => {
     emptyItem,
     userAuth,
     disabled,
-    employeesFullNames,
+    employees,
     dialogType,
+    formButtonRef,
+    setDisabled,
   } = props;
 
   switch (name) {
     case "Оборудование":
       return (
         <DescriptionIt
+          type={type}
           data={data}
           columns={columns}
           setItemDialog={setItemDialog}
@@ -38,13 +42,16 @@ export const Description = (props) => {
           emptyItem={emptyItem}
           userAuth={userAuth}
           disabled={disabled}
-          employeesFullNames={employeesFullNames}
+          employees={employees}
           dialogType={dialogType}
+          formButtonRef={formButtonRef}
+          setDisabled={setDisabled}
         />
       );
     case "Мебель":
       return (
         <DescriptionFurniture
+          type={type}
           data={data}
           columns={columns}
           setItemDialog={setItemDialog}
@@ -57,13 +64,16 @@ export const Description = (props) => {
           emptyItem={emptyItem}
           userAuth={userAuth}
           disabled={disabled}
-          employeesFullNames={employeesFullNames}
+          employees={employees}
           dialogType={dialogType}
+          formButtonRef={formButtonRef}
+          setDisabled={setDisabled}
         />
       );
     case "Прочее":
       return (
         <DescriptionUnmarked
+          type={type}
           data={data}
           columns={columns}
           setItemDialog={setItemDialog}
@@ -76,13 +86,16 @@ export const Description = (props) => {
           emptyItem={emptyItem}
           userAuth={userAuth}
           disabled={disabled}
-          employeesFullNames={employeesFullNames}
+          employees={employees}
           dialogType={dialogType}
+          formButtonRef={formButtonRef}
+          setDisabled={setDisabled}
         />
       );
     case "Основные средства":
       return (
         <DescriptionAssets
+          type={type}
           data={data}
           columns={columns}
           setItemDialog={setItemDialog}
@@ -95,8 +108,10 @@ export const Description = (props) => {
           emptyItem={emptyItem}
           userAuth={userAuth}
           disabled={disabled}
-          employeesFullNames={employeesFullNames}
+          employees={employees}
           dialogType={dialogType}
+          formButtonRef={formButtonRef}
+          setDisabled={setDisabled}
         />
       );
     default:

@@ -27,6 +27,13 @@ export function makeCommitment(selectedItems, employees, fullName) {
   const telephoneNumber = employees.filter((employee) => employee.employee_id == selectedItems[0].employee_id)[0]?.phone;
   const cityName = employees.filter((employee) => employee.employee_id == selectedItems[0].employee_id)[0]?.city_name;
 
+  let surname = fullName.split(" ")[0] ? inclineLastname(fullName.split(" ")[0], "genitive") : "";
+  let firstname = fullName.split(" ")[1] ? ` ${inclineFirstname(fullName.split(" ")[1], "genitive")}` : "";
+  let middlename = fullName.split(" ")[2] ? ` ${inclineMiddlename(fullName.split(" ")[2], "genitive")}` : "";
+
+  let fullNameStr = `${surname}${firstname}${middlename}`;
+  console.log(fullNameStr);
+
   let owners = [];
   let names = [];
   selectedItems.forEach((item) => {
@@ -516,13 +523,7 @@ export function makeCommitment(selectedItems, employees, fullName) {
             style: "textStyle",
             children: [
               new TextRun({
-                text: `получил(а) от ${inclineLastname(fullName.split(" ")[0], "genitive")} ${inclineFirstname(
-                  fullName.split(" ")[1],
-                  "genitive"
-                )} ${inclineMiddlename(
-                  fullName.split(" ")[2],
-                  "genitive"
-                )} в пользование нижеперечисленное имущество (технику), принадлежащее АНО «СОДФУ» (далее — имущество):`,
+                text: `получил(а) от ${fullNameStr} в пользование нижеперечисленное имущество (технику), принадлежащее АНО «СОДФУ» (далее — имущество):`,
               }),
             ],
             alignment: AlignmentType.LEFT,
@@ -854,13 +855,7 @@ export function makeCommitment(selectedItems, employees, fullName) {
             style: "textStyle",
             children: [
               new TextRun({
-                text: `При переходе на другое место работы или увольнения, а также по требованию АНО «СОДФУ» в лице ${inclineLastname(
-                  fullName.split(" ")[0],
-                  "genitive"
-                )} ${inclineFirstname(fullName.split(" ")[1], "genitive")} ${inclineMiddlename(
-                  fullName.split(" ")[2],
-                  "genitive"
-                )}, либо следующих структурных подразделений АНО «СОДФУ», полученное мною имущество обязуюсь возвратить немедленно: Управление информатизации, Административное управление, Отдел безопасности и защиты информации Аппарата АНО «СОДФУ», Отдел по работе с персоналом Аппарата АНО «СОДФУ».`,
+                text: `При переходе на другое место работы или увольнения, а также по требованию АНО «СОДФУ» в лице ${fullNameStr}, либо следующих структурных подразделений АНО «СОДФУ», полученное мною имущество обязуюсь возвратить немедленно: Управление информатизации, Административное управление, Отдел безопасности и защиты информации Аппарата АНО «СОДФУ», Отдел по работе с персоналом Аппарата АНО «СОДФУ».`,
               }),
             ],
           }),

@@ -54,6 +54,16 @@ export const setUserMenuItems = (
   };
 
   const makeCommitmentHelper = () => {
+    if (selectedItems.length == 0) {
+      userToast.current.show({
+        severity: "info",
+        summary: "Предупреждение",
+        detail: `Для формирования обязательства необходимо выбрать один или несколько объектов`,
+        life: 3000,
+      });
+      return;
+    }
+
     //Получение массива текущих пользователей
     const uniqOwners = selectedItems.map((item) => item.employee_id);
     //Проверка на совпадение пользователя (пользователь должен быть один и тот же)
@@ -64,16 +74,17 @@ export const setUserMenuItems = (
         break;
       }
     }
-    if (check) {
-      return makeCommitment(selectedItems, employees, userAuth.fullName);
-    } else {
+    if (!check) {
       userToast.current.show({
         severity: "info",
         summary: "Предупреждение",
         detail: "Выбранные единицы оборудования закреплены за разными сотрудниками",
         life: 3000,
       });
+      return;
     }
+
+    return makeCommitment(selectedItems, employees, userAuth.fullName);
   };
 
   const makeQRCodeHelper = () => makeQRCode(selectedItems);
@@ -132,11 +143,6 @@ export const setUserMenuItems = (
           icon: "pi pi-qrcode",
           command: makeQRCodeHelper,
         },
-        // {
-        //   label: "Загрузить пользователей",
-        //   icon: "pi pi-users",
-        //   command: getUsers,
-        // },
         {
           label: "Сформировать EXCEL",
           icon: "pi pi-file-excel",
@@ -144,45 +150,48 @@ export const setUserMenuItems = (
         },
       ];
 
-      if (userAuth.role === "admin") {
+      if (userAuth.role === "admin" || userAuth.role === "moder" || userAuth.role === "user") {
         addTypes.splice(0, 0, {
-          label: "Новое",
-          icon: "pi pi-plus",
-          command: openNew,
-        });
-        addTypes.splice(4, 0, { separator: true });
-        addTypes.splice(5, 0, {
-          label: "Массовая загрузка",
-          icon: "pi pi-upload",
-          command: openUploadDialog,
-        });
-        addTypes.splice(2, 0, {
           label: "Переместить",
           icon: "pi pi-angle-double-right",
           command: handleTransfer,
         });
       }
 
-      if (!hasCurrentInventory) {
-        addTypes.splice(userAuth.role === "admin" ? 3 : 1, 0, {
-          label: "Начать инвентаризацию",
-          icon: (
-            <i className="mr-2">
-              <MdOutlineInventory />
-            </i>
-          ),
-          command: async () => {
-            await beginInventory(type, userAuth.division_id);
-            await requestCurrentInventory(type, userAuth.division_id);
-            getTableHeight();
-            userToast.current.show({
-              severity: "success",
-              summary: "Info",
-              detail: "Инвентаризация инициирована",
-              life: 3000,
-            });
-          },
+      if (userAuth.role === "admin" || userAuth.role === "moder") {
+        addTypes.splice(0, 0, {
+          label: "Новое",
+          icon: "pi pi-plus",
+          command: openNew,
         });
+        addTypes.splice(5, 0, { separator: true });
+        addTypes.splice(6, 0, {
+          label: "Массовая загрузка",
+          icon: "pi pi-upload",
+          command: openUploadDialog,
+        });
+
+        if (!hasCurrentInventory) {
+          addTypes.splice(5, 0, {
+            label: "Начать инвентаризацию",
+            icon: (
+              <i className="mr-2">
+                <MdOutlineInventory />
+              </i>
+            ),
+            command: async () => {
+              await beginInventory(type, userAuth.division_id);
+              await requestCurrentInventory(type, userAuth.division_id);
+              getTableHeight();
+              userToast.current.show({
+                severity: "success",
+                summary: "Info",
+                detail: "Инвентаризация инициирована",
+                life: 3000,
+              });
+            },
+          });
+        }
       }
 
       break;
@@ -213,13 +222,23 @@ export const setUserMenuItems = (
   const userMenuItems = [
     {
       template: (item, options) => {
+        let surname = userAuth.fullName.split(" ")[0] ? userAuth.fullName.split(" ")[0] : "";
+        let firstname = userAuth.fullName.split(" ")[1] ? ` ${Array.from(userAuth.fullName.split(" ")[1])[0]}.` : "";
+        let middlename = userAuth.fullName.split(" ")[2] ? ` ${Array.from(userAuth.fullName.split(" ")[2])[0]}.` : "";
+        let fullNameStr = `${surname}${firstname}${middlename}`;
         return (
-          <button onClick={(e) => options.onClick(e)} className={classNames(options.className, "w-full p-link flex align-items-center")}>
-            <Avatar image={getUserLogo(userAuth.isAuth, userAuth.login)} className="mr-2" icon="pi pi-user" shape="circle" />
+          <button
+            onClick={(e) => options.onClick(e)}
+            className={classNames(options.className, "w-full p-link flex align-items-center")}
+          >
+            <Avatar
+              image={getUserLogo(userAuth.isAuth, userAuth.login)}
+              className="mr-2"
+              icon="pi pi-user"
+              shape="circle"
+            />
             <div className="flex flex-column align">
-              <span className="font-bold">{`${userAuth.fullName.split(" ")[0]} ${Array.from(userAuth.fullName.split(" ")[1])[0]}.${
-                Array.from(userAuth.fullName.split(" ")[2])[0]
-              }. (${userAuth.city_name}) `}</span>
+              <span className="font-bold">{fullNameStr}</span>
             </div>
           </button>
         );

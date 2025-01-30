@@ -1,6 +1,6 @@
 import { UsersAPI } from "../../api/api";
-import { FilterMatchMode, FilterOperator } from "primereact/api";
 import { changeDateFormat } from "./functions/changeDateFormat";
+import { Filters } from "./filters/Filters";
 
 const SET_DATA = "sodfu-inventory/users-data-reducer/SET_DATA";
 const SET_UPLOAD_STATUS = "sodfu-inventory/users-data-reducer/SET_UPLOAD_STATUS";
@@ -10,34 +10,7 @@ let initialState = {
   columns: [],
   data: [],
   values: [],
-  filters: {
-    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    full_name: {
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
-    },
-    department: { value: null, matchMode: FilterMatchMode.IN },
-    title: { value: null, matchMode: FilterMatchMode.IN },
-    city_name: { value: null, matchMode: FilterMatchMode.IN },
-    login: {
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
-    },
-    mail: {
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
-    },
-    phone: {
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
-    },
-    role: { value: null, matchMode: FilterMatchMode.IN },
-    access_type: { value: null, matchMode: FilterMatchMode.IN },
-    updatedAt: {
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],
-    },
-  },
+  filters: Filters.users,
   uploadedStatus: false,
   name: "Пользователи",
   message: "",

@@ -8,6 +8,7 @@ import { requestCurrentInventory } from "../../../redux/reducers/year-inventory-
 import { setVisible } from "../../../redux/reducers/side-bar-reducer";
 import { logout } from "../../../redux/reducers/auth-reducer";
 import { withAuthNavigate } from "../../../hoc/withAuthNavigate";
+import { withDataTypeAccessNavigate } from "../../../hoc/withDataTypeAccessNavigate";
 
 let mapStateToProps = (state) => {
   return {
@@ -39,4 +40,4 @@ let mapDispatchToProps = {
   uploadData,
 };
 
-export default compose(connect(mapStateToProps, mapDispatchToProps), withAuthNavigate)(TableCraft);
+export default compose(connect(mapStateToProps, mapDispatchToProps), withDataTypeAccessNavigate, withAuthNavigate)(TableCraft);

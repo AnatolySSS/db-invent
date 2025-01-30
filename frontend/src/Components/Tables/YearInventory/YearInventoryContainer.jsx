@@ -1,11 +1,16 @@
 import { connect } from "react-redux";
 import { compose } from "redux";
-import YearInventoryCraft from "./YearInventoryCraft";
-import { requestData, clearState as clearYearState, requestCurrentInventory } from "../../../redux/reducers/year-inventory-reducer";
+import YearInventory from "./YearInventory";
+import {
+  requestData,
+  clearState as clearYearState,
+  requestCurrentInventory,
+} from "../../../redux/reducers/year-inventory-reducer";
 import { clearState as clearItState } from "../../../redux/reducers/it-data-reducer";
 import { setVisible } from "../../../redux/reducers/side-bar-reducer";
 import { logout } from "../../../redux/reducers/auth-reducer";
 import { withAuthNavigate } from "../../../hoc/withAuthNavigate";
+import { withDataTypeAccessNavigate } from "../../../hoc/withDataTypeAccessNavigate";
 
 let mapStateToProps = (state, ownProps) => {
   return {
@@ -31,4 +36,8 @@ let mapDispatchToProps = {
   logout,
 };
 
-export default compose(connect(mapStateToProps, mapDispatchToProps), withAuthNavigate)(YearInventoryCraft);
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  withDataTypeAccessNavigate,
+  withAuthNavigate
+)(YearInventory);

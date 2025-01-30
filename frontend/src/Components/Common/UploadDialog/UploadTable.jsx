@@ -1,12 +1,9 @@
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
-import { getTableHeight } from "../../Tables/Functions/Helpers/getTableHeight";
 import styles from "./UploadDialog.module.css";
 
 export const UploadTable = (props) => {
-  const { data, columns, getItemDialogFooter } = props;
-
-  //   const paginatorRight = <Button type="button" icon="pi pi-download" text />;
+  const { data, columns } = props;
 
   return (
     <DataTable
@@ -22,7 +19,6 @@ export const UploadTable = (props) => {
       currentPageReportTemplate="Показаны с {first} по {last} из {totalRecords} объектов"
       rows={10}
       rowsPerPageOptions={[10, 25, 50, 100]}
-      //   paginatorRight={getItemDialogFooter()}
     >
       {columns.map((col, i) => (
         <Column

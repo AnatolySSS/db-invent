@@ -104,6 +104,7 @@ export const AuthController = {
             [Sequelize.col("user.is_auth"), "is_auth"],
             [Sequelize.col("user.role"), "role"],
             [Sequelize.col("user.access_type"), "access_type"],
+            [Sequelize.col("user.data_type"), "data_type"],
             [Sequelize.col("division.name"), "city_name"],
           ],
           exclude: ["createdAt", "updatedAt"],
@@ -121,6 +122,9 @@ export const AuthController = {
         ],
         raw: true,
       });
+
+      currentUser.data_type = currentUser.data_type?.split(",");
+      console.log(currentUser);
 
       if (!currentUser) return;
 

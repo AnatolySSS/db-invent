@@ -15,11 +15,8 @@ import { getImgBodyTemplate } from "../Functions/Body/getImgBodyTemplate3";
 import { getTableHeight } from "../Functions/Helpers/getTableHeight";
 import { TableHeader } from "../../Common/TableHeader/TableHeader";
 import { DialogCraft } from "./DialogsCraft/DialogCraft";
-import { InputText } from "primereact/inputtext";
-import { AutoComplete } from "primereact/autocomplete";
-import { InputTextarea } from "primereact/inputtextarea";
-import { Calendar } from "primereact/calendar";
 import UploadDialog from "../../Common/UploadDialog/UploadDialog";
+import { TransferDialogCraft } from "./DialogsCraft/TransferDialogCraft";
 
 const TableCraft = (props) => {
   let {
@@ -55,16 +52,14 @@ const TableCraft = (props) => {
   const [transferDialog, setTransferDialog] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
   const [dialogType, setDialogType] = useState("");
+  const [filteredData, setFilteredData] = useState(data); // Храним отфильтрованные данные
+  const [filteredValues, setFilteredValues] = useState(null); // Храним отфильтрованные данные
+
   const toast = useRef(null);
   const uploadToast = useRef(null);
   const userMenu = useRef(null);
+
   let emptyItem = {};
-  let emptyTransferedItem = {
-    employee_name: "",
-    employee_id: "",
-    date: "",
-    note: "",
-  };
 
   values.city_name = ["Москва", "Саратов", "Санкт-Петербург", "Нижний Новгород"];
 
@@ -82,7 +77,6 @@ const TableCraft = (props) => {
   });
 
   const [item, setItem] = useState(emptyItem);
-  const [transferedItem, setTransferItem] = useState(emptyTransferedItem);
 
   useEffect(() => {
     requestData(userAuth);
@@ -94,11 +88,25 @@ const TableCraft = (props) => {
 
   useEffect(() => {
     getTableHeight();
-  }, [isFetching]);
+  }, [isFetching, selectedItems]);
 
   useEffect(() => {
     setVisibleColumns(columns);
   }, [columns]);
+
+  useEffect(() => {
+    setFilteredValues(values);
+  }, [values]);
+
+  useEffect(() => {
+    let _filteredValues = {};
+
+    for (const key in values) {
+      _filteredValues[key] = [...new Set(filteredData.map((field) => field[key]).filter((field) => field))].sort();
+    }
+
+    setFilteredValues(_filteredValues);
+  }, [filteredData]);
 
   useEffect(() => {
     if (validationStatus.inventary_number) {
@@ -120,11 +128,6 @@ const TableCraft = (props) => {
 
   const hideDeleteItemDialog = () => {
     setDeleteItemDialog(false);
-  };
-
-  const hideTransferDialog = () => {
-    setTransferItem(emptyTransferedItem);
-    setTransferDialog(false);
   };
 
   const editItem = (rowData) => {
@@ -159,22 +162,6 @@ const TableCraft = (props) => {
     </React.Fragment>
   );
 
-  const handletransferItem = () => {
-    transferedItem.changedUserId = userAuth.employee_id;
-    transferedItem.employee_id = filteredEmployees[0].employee_id;
-
-    transferItem(selectedItems, transferedItem, userAuth);
-    setTransferItem(emptyTransferedItem);
-    setTransferDialog(false);
-  };
-
-  const transferDialogFooter = (
-    <React.Fragment>
-      <Button label="Переместить" icon="pi pi-check" onClick={handletransferItem} />
-      <Button label="Выйти" icon="pi pi-times" outlined onClick={hideTransferDialog} />
-    </React.Fragment>
-  );
-
   const initFilters = () => {
     setFilters(props.filters);
     setGlobalFilterValue(props.filters.global.value);
@@ -185,17 +172,17 @@ const TableCraft = (props) => {
       <React.Fragment>
         <Button icon={`pi pi-eye`} rounded outlined onClick={() => editItem(rowData)} />
         {userAuth.role === "admin" && (
-          <Button icon="pi pi-trash" rounded outlined className="ml-2" severity="danger" onClick={() => confirmDeleteItem(rowData)} />
+          <Button
+            icon="pi pi-trash"
+            rounded
+            outlined
+            className="ml-2"
+            severity="danger"
+            onClick={() => confirmDeleteItem(rowData)}
+          />
         )}
       </React.Fragment>
     );
-  };
-
-  const [filteredEmployees, setFilteredEmployees] = useState([]);
-  const employeesFullNames = employees.map((user) => user.full_name);
-
-  const searchEmployees = (event) => {
-    setFilteredEmployees(employees.filter((item) => item.full_name.toLowerCase().includes(event.query.toLowerCase())));
   };
 
   return isFetching ? (
@@ -213,6 +200,7 @@ const TableCraft = (props) => {
       <DataTable
         value={data}
         filters={filters}
+        onValueChange={(filteredData) => setFilteredData(filteredData)}
         filterDisplay="menu"
         globalFilterFields={getglobalFilterColumns(visibleColumns)}
         dataKey="id"
@@ -225,6 +213,7 @@ const TableCraft = (props) => {
             values={values}
             logout={logout}
             selectedItems={selectedItems}
+            setSelectedItems={setSelectedItems}
             userAuth={userAuth}
             emptyItem={emptyItem}
             setVisible={setVisible}
@@ -285,7 +274,7 @@ const TableCraft = (props) => {
             filter
             filterField={col.field}
             dataType={col.dataType}
-            filterElement={getColumnFilterElement(col, values)}
+            filterElement={getColumnFilterElement(col, filteredValues)}
             showFilterMatchModes={col.showFilterMenu}
             style={{ minWidth: col.width, textWrap: "wrap" }}
             body={getColumnBody(col)}
@@ -314,6 +303,9 @@ const TableCraft = (props) => {
           ></Column>
         )}
       </DataTable>
+
+      {/* Создание / изменение элемента */}
+
       <DialogCraft
         type={type}
         name={name}
@@ -328,12 +320,12 @@ const TableCraft = (props) => {
         updateData={updateData}
         emptyItem={emptyItem}
         userAuth={userAuth}
-        employeesFullNames={employeesFullNames}
         dialogType={dialogType}
         employees={employees}
       />
 
       {/* Удаление элемента */}
+
       <Dialog
         visible={deleteItemDialog}
         style={{ width: "32rem" }}
@@ -354,68 +346,18 @@ const TableCraft = (props) => {
       </Dialog>
 
       {/* Перемещение элементов */}
-      <Dialog
-        visible={transferDialog}
-        className="p-fluid"
-        style={{ width: "48rem" }}
-        breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-        closable={false} //для скрытия крестика в header dialog
-        header="Перемещение"
-        modal
-        footer={transferDialogFooter}
-        onHide={hideTransferDialog}
-      >
-        <div className="grid">
-          <div className="col-8">
-            <label htmlFor="name">ФИО</label>
-            <AutoComplete
-              id="name"
-              value={transferedItem.employee_name || ""}
-              suggestions={[...filteredEmployees.map((e) => e.full_name)]}
-              completeMethod={searchEmployees}
-              onChange={(e) => setTransferItem({ ...transferedItem, employee_name: e.target.value })}
-              onSelect={(e) => setFilteredEmployees(employees.filter((item) => item.full_name.toLowerCase().includes(e.value.toLowerCase())))}
-              forceSelection
-              autoFocus={true}
-            />
-            {/* <InputText
-              id="name"
-              value={transferedItem.employee_name || ""}
-              onChange={(e) =>
-                setTransferItem({ ...transferedItem, employee_name: e.target.value })
-              }
-              autoFocus={true}
-            /> */}
-          </div>
-          <div className="col-4">
-            <label htmlFor="date">Дата перемещения</label>
-            <Calendar
-              id="date"
-              value={transferedItem.date || null}
-              onChange={(e) =>
-                setTransferItem({
-                  ...transferedItem,
-                  date: e.target.value,
-                })
-              }
-              dateFormat="dd.mm.yy"
-              mask="99.99.9999"
-            />
-          </div>
-          <div className="col-12">
-            <label htmlFor="note">Основание</label>
-            <InputTextarea
-              id="note"
-              aria-describedby="name"
-              value={transferedItem.note || ""}
-              onChange={(e) => setTransferItem({ ...transferedItem, note: e.target.value })}
-              autoResize
-              rows={3}
-              cols={20}
-            />
-          </div>
-        </div>
-      </Dialog>
+
+      <TransferDialogCraft
+        transferDialog={transferDialog}
+        setTransferDialog={setTransferDialog}
+        selectedItems={selectedItems}
+        employees={employees}
+        userAuth={userAuth}
+        transferItem={transferItem}
+      />
+
+      {/* Пакетная загрузка */}
+
       <UploadDialog
         uploadDialogVisible={uploadDialogVisible}
         setUploadDialogVisible={setUploadDialogVisible}

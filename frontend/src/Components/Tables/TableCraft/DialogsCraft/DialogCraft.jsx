@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Dialog } from "primereact/dialog";
 import { TabView, TabPanel } from "primereact/tabview";
 import { getItemDialogFooter } from "./Functions/getItemDialogFooter";
@@ -27,13 +27,14 @@ export const DialogCraft = (props) => {
     updateData,
     emptyItem,
     userAuth,
-    employeesFullNames,
     dialogType,
     employees,
   } = props;
 
   const [disabled, setDisabled] = useState(true);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
+
+  const formButtonRef = useRef();
 
   const handleTabChange = (e) => {
     setActiveTabIndex(e.index);
@@ -53,21 +54,14 @@ export const DialogCraft = (props) => {
       modal
       className="p-fluid"
       footer={getItemDialogFooter(
-        type,
-        addData,
-        updateData,
-        data,
-        item,
         setItemDialog,
-        setItem,
-        emptyItem,
         userAuth,
         disabled,
         setDisabled,
         activeTabIndex,
         setActiveTabIndex,
         dialogType,
-        values
+        formButtonRef
       )}
       onHide={hideNew(setItemDialog, setDisabled)}
     >
@@ -76,6 +70,7 @@ export const DialogCraft = (props) => {
           <TabPanel header="Описание объекта" leftIcon="pi pi-objects-column mr-2">
             <div className={styles.tabContent} style={{ padding: activeTabIndex == 1 ? 0 : "1.25rem" }}>
               <Description
+                type={type}
                 name={name}
                 data={data}
                 columns={columns}
@@ -89,8 +84,10 @@ export const DialogCraft = (props) => {
                 emptyItem={emptyItem}
                 userAuth={userAuth}
                 disabled={disabled}
-                employeesFullNames={employeesFullNames}
+                employees={employees}
                 dialogType={dialogType}
+                formButtonRef={formButtonRef}
+                setDisabled={setDisabled}
               />
             </div>
           </TabPanel>

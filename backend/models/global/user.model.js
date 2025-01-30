@@ -17,6 +17,9 @@ export default (sequelize, Sequelize) =>
     access_type: {
       type: Sequelize.STRING,
     },
+    data_type: {
+      type: Sequelize.STRING,
+    },
     last_logon: {
       type: Sequelize.DATE,
     },

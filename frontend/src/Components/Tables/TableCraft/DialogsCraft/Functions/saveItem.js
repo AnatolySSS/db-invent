@@ -3,7 +3,7 @@ import changeDateType from "../../../../../function-helpers/changeDateType";
 import { createId } from "./createId";
 import { createQRCode } from "../../../../../function-helpers/createQRCode";
 
-export const saveItem = (type, addData, updateData, data, item, setItemDialog, setItem, emptyItem, userAuth, setDisabled, values) => () => {
+export const saveItem = (type, addData, updateData, data, item, setItemDialog, setItem, emptyItem, userAuth, setDisabled, values) => {
   setDisabled(true);
   let _item = { ...item };
   _item.changedDateTime = Date.now();

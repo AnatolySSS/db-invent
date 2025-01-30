@@ -6,16 +6,24 @@ import { FileUpload } from "primereact/fileupload";
 import { ProgressBar } from "primereact/progressbar";
 import { Button } from "primereact/button";
 import { Tooltip } from "primereact/tooltip";
-import { Tag } from "primereact/tag";
 import formatDate from "../../../function-helpers/formatDate";
 import changeDateType from "../../../function-helpers/changeDateType";
 import { createQRCode } from "../../../function-helpers/createQRCode";
-import { getItemDialogFooter } from "../../Tables/TableCraft/DialogsCraft/Functions/getItemDialogFooter";
 import { UploadTable } from "./UploadTable";
-// import "./UploadDialog.css";
 
 export default function UploadDialog(props) {
-  const { data, columns, values, type, uploadDialogVisible, setUploadDialogVisible, uploadToast, uploadData, userMenu, userAuth } = props;
+  const {
+    data,
+    columns,
+    values,
+    type,
+    uploadDialogVisible,
+    setUploadDialogVisible,
+    uploadToast,
+    uploadData,
+    userMenu,
+    userAuth,
+  } = props;
 
   const [totalSize, setTotalSize] = useState(0);
   const [jsonData, setJsonData] = useState({});
@@ -141,20 +149,6 @@ export default function UploadDialog(props) {
     });
   };
 
-  const getItemDialogFooter = () => (
-    <React.Fragment>
-      <div className="mt-2">
-        <Button
-          label="Выйти"
-          icon="pi pi-times"
-          // className="mt-2"
-          outlined
-          onClick={hideNew(setUploadDialogVisible)}
-        />
-      </div>
-    </React.Fragment>
-  );
-
   const onTemplateSelect = (e) => {
     let _totalSize = totalSize;
     let files = e.files;
@@ -189,13 +183,21 @@ export default function UploadDialog(props) {
     setTotalSize(0);
   };
 
-  const chooseOptions = { icon: "pi pi-fw pi-file-excel", iconOnly: true, className: "w-3rem custom-choose-btn p-button-rounded p-button-outlined" };
+  const chooseOptions = {
+    icon: "pi pi-fw pi-file-excel",
+    iconOnly: true,
+    className: "w-3rem custom-choose-btn p-button-rounded p-button-outlined",
+  };
   const uploadOptions = {
     icon: "pi pi-fw pi-cloud-upload",
     iconOnly: true,
     className: "w-3rem custom-upload-btn p-button-success p-button-rounded p-button-outlined",
   };
-  const cancelOptions = { icon: "pi pi-fw pi-times", iconOnly: true, className: "w-3rem custom-cancel-btn p-button-danger p-button-rounded p-button-outlined" };
+  const cancelOptions = {
+    icon: "pi pi-fw pi-times",
+    iconOnly: true,
+    className: "w-3rem custom-cancel-btn p-button-danger p-button-rounded p-button-outlined",
+  };
 
   const headerTemplate = (options) => {
     const { className, chooseButton, uploadButton, cancelButton } = options;
@@ -226,7 +228,7 @@ export default function UploadDialog(props) {
 
   const itemTemplate = (file, props) => {
     return (
-      <UploadTable data={jsonData.lib} columns={columns} getItemDialogFooter={getItemDialogFooter} />
+      <UploadTable data={jsonData.lib} columns={columns} />
       // <div className="flex justify-content-between align-items-center flex-wrap">
       //   <div className="flex align-items-center" style={{ width: "40%" }}>
       //     <img role="presentation" src={require("./../../../img/excel-logo.png")} width={80} />
@@ -253,7 +255,12 @@ export default function UploadDialog(props) {
       <div className="flex align-items-center flex-column">
         <i
           className="pi pi-image mt-3 p-5"
-          style={{ fontSize: "5em", borderRadius: "50%", backgroundColor: "var(--surface-b)", color: "var(--surface-d)" }}
+          style={{
+            fontSize: "5em",
+            borderRadius: "50%",
+            backgroundColor: "var(--surface-b)",
+            color: "var(--surface-d)",
+          }}
         ></i>
         <span style={{ fontSize: "1.2em", color: "var(--text-color-secondary)" }} className="my-5">
           Drag and Drop Image Here
@@ -275,7 +282,6 @@ export default function UploadDialog(props) {
       closable={false} //для скрытия крестика в header dialog
       modal
       className="p-fluid"
-      // footer={getItemDialogFooter()}
       onHide={hideNew(setUploadDialogVisible)}
     >
       <div className="h-full">

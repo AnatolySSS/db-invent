@@ -1,6 +1,6 @@
 import { InventoryAPI } from "../../api/api";
 import { changeDateFormat } from "./functions/changeDateFormat";
-import { DataFilters } from "./filters/data.filter";
+import { Filters } from "./filters/Filters";
 
 const SET_DATA = "sodfu-inventory/year-inventory-reducer/SET_DATA";
 const RESET_STATE = "sodfu-inventory/year-inventory-reducer/RESET_STATE";
@@ -11,7 +11,7 @@ let initialState = {
   columns: [],
   data: [],
   values: [],
-  filters: DataFilters,
+  filters: Filters.data,
   uploadedStatus: false,
   name: "",
   message: "",

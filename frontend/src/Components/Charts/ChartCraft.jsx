@@ -9,7 +9,7 @@ import { Menu } from "primereact/menu";
 import { Chart } from "primereact/chart";
 
 const ChartCraft = (props) => {
-  let {
+  const {
     name,
     message,
     itData,
@@ -28,7 +28,6 @@ const ChartCraft = (props) => {
     isFetching,
     validationStatus,
   } = props;
-  const userMenu = useRef(null);
 
   let itLocation,
     itType,
@@ -39,17 +38,17 @@ const ChartCraft = (props) => {
     furnitureCountType = [],
     furnitureCountLocation = [];
 
-  if (itValues) {
-    itLocation = itValues.map((obj) => obj.location).filter((obj) => obj !== null);
-    itType = itValues.map((obj) => obj.type).filter((obj) => obj !== null);
+  if (itValues.length !== 0) {
+    itLocation = [...itValues.location];
+    itType = [...itValues.type];
   }
 
-  if (furnitureValues) {
-    furnitureLocation = furnitureValues.map((obj) => obj.location).filter((obj) => obj !== null);
-    furnitureType = furnitureValues.map((obj) => obj.type).filter((obj) => obj !== null);
+  if (furnitureValues.length !== 0) {
+    furnitureLocation = [...furnitureValues.location];
+    furnitureType = [...furnitureValues.type];
   }
 
-  if (itData) {
+  if (itData.length !== 0) {
     for (let i = 0; i < itType.length; i++) {
       itCountType[i] = 0;
       itData.forEach((data) => {
@@ -75,7 +74,7 @@ const ChartCraft = (props) => {
     bubbleSort(itCountLocation, itLocation);
   }
 
-  if (furnitureData) {
+  if (furnitureData.length !== 0) {
     for (let i = 0; i < furnitureType.length; i++) {
       furnitureCountType[i] = 0;
       furnitureData.forEach((data) => {
@@ -109,8 +108,8 @@ const ChartCraft = (props) => {
   const [optionsLocation, setOptionsLocation] = useState({});
 
   useEffect(() => {
-    requestItData();
-    requestFurnitureData();
+    requestItData(userAuth);
+    requestFurnitureData(userAuth);
 
     const documentStyle = getComputedStyle(document.documentElement);
     const itDataType = {
@@ -316,13 +315,18 @@ const ChartCraft = (props) => {
     {
       command: () => {},
       template: (item, options) => {
+        let surname = userAuth.fullName.split(" ")[0] ? userAuth.fullName.split(" ")[0] : "";
+        let firstname = userAuth.fullName.split(" ")[1] ? ` ${Array.from(userAuth.fullName.split(" ")[1])[0]}.` : "";
+        let middlename = userAuth.fullName.split(" ")[2] ? ` ${Array.from(userAuth.fullName.split(" ")[2])[0]}.` : "";
+        let fullNameStr = `${surname}${firstname}${middlename}`;
         return (
-          <button onClick={(e) => options.onClick(e)} className={classNames(options.className, "w-full p-link flex align-items-center")}>
+          <button
+            onClick={(e) => options.onClick(e)}
+            className={classNames(options.className, "w-full p-link flex align-items-center")}
+          >
             <Avatar image={getUserLogo()} className="mr-2" icon="pi pi-user" shape="circle" />
             <div className="flex flex-column align">
-              <span className="font-bold">{`${props.userAuth.fullName.split(" ")[0]} ${Array.from(props.userAuth.fullName.split(" ")[1])[0]}.${
-                Array.from(props.userAuth.fullName.split(" ")[2])[0]
-              }.`}</span>
+              <span className="font-bold">{fullNameStr}</span>
             </div>
           </button>
         );
@@ -344,31 +348,31 @@ const ChartCraft = (props) => {
             <Button icon="pi pi-bars" onClick={() => setVisible(true)} />
           </div>
         </div>
-        <div className="flex align-items-center justify-content-center col-fixed">
-          {/* <div className="flex align-items-center justify-content-center min-w-max px-4">
-            <h2>{`${props.name}  (общая)`}</h2>
-          </div> */}
+        {/* <div className="flex align-items-center justify-content-center col-fixed">
           <div className="flex align-items-center justify-content-center">
             <div className="col-fixed flex align-items-center">
               <Menu model={userMenuItems} popup ref={userMenu} style={{ width: "max-content" }} />
-              <Button className="bg-gray-50 hover:bg-gray-400 border-gray-50 px-2 py-1" onClick={(e) => userMenu.current.toggle(e)}>
+              <Button
+                className="bg-gray-50 hover:bg-gray-400 border-gray-50 px-2 py-1"
+                onClick={(e) => userMenu.current.toggle(e)}
+              >
                 <Avatar image={getUserLogo()} icon="pi pi-user" size="large" shape="circle" />
                 <i className="pi pi-angle-down ml-2" style={{ color: "#4a4a4a" }}></i>
               </Button>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
       <p className="text-center text-5xl text-primary">Оборудование</p>
       <div className="card flex justify-content-center">
-        <Chart type="pie" data={dataItType} options={optionsType} className="w-full md:w-30rem" />
-        <Chart type="pie" data={dataItLocation} options={optionsLocation} className="w-full md:w-30rem" />
+        <Chart type="pie" data={dataItType} options={optionsType} className="w-4" />
+        <Chart type="pie" data={dataItLocation} options={optionsLocation} className="w-4" />
       </div>
-      <p className="text-center text-5xl text-primary">Мебель</p>
+      {/* <p className="text-center text-5xl text-primary">Мебель</p>
       <div className="card flex justify-content-center">
         <Chart type="pie" data={dataFurnitureType} options={optionsType} className="w-full md:w-30rem" />
         <Chart type="pie" data={dataFurnitureLocation} options={optionsLocation} className="w-full md:w-30rem" />
-      </div>
+      </div> */}
     </div>
   );
 };

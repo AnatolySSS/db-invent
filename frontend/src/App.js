@@ -6,17 +6,17 @@ import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toast } from "primereact/toast";
 import { initializeApp } from "./redux/reducers/app-reducer";
-import SidebarCraftContainer from "./Components/SidebarCraft/SidebarCraftContainer";
+import SidebarComponentContainer from "./Components/SidebarComponent/SidebarComponentContainer";
 import TableCraftItContainer from "./Components/Tables/TableCraft/TableCraftItContainer";
 import TableCraftFurnitureContainer from "./Components/Tables/TableCraft/TableCraftFurnitureContainer";
 import TableCraftUnmarkedContainer from "./Components/Tables/TableCraft/TableCraftUnmarkedContainer";
 import TableCraftAssetsContainer from "./Components/Tables/TableCraft/TableCraftAssetsContainer";
-import UploadCraftContainer from "./Components/UploadCraft/UploadCraftContainer";
-import LoginCraftContainer from "./Components/LoginCraft/LoginCraftContainer";
+import UploadComponentContainer from "./Components/UploadComponent/UploadComponentContainer";
+import LoginComponent from "./Components/LoginComponent/LoginComponentContainer";
 import YearInventoryContainer from "./Components/Tables/YearInventory/YearInventoryContainer";
 import ChartCraftContainer from "./Components/Charts/ChartCraftContainer";
-import UsersCraftContainer from "./Components/Tables/UsersCraft/UsersCraftContainer";
-import EmployeesCraftContainer from "./Components/Tables/Employees/EmployeesCraftContainer";
+import UsersContainer from "./Components/Tables/Users/UsersContainer";
+import EmployeesContainer from "./Components/Tables/Employees/EmployeesContainer";
 import { getTableHeight } from "./Components/Tables/Functions/Helpers/getTableHeight";
 
 class App extends React.Component {
@@ -36,6 +36,7 @@ class App extends React.Component {
       getTableHeight();
     };
   }
+
   //Выведение сообщения в случае обновления пользователей
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.downloadEmployeeStatus !== this.props.downloadEmployeeStatus) {
@@ -48,19 +49,19 @@ class App extends React.Component {
       <BrowserRouter>
         <div>
           <Toast ref={this.toast} />
-          <SidebarCraftContainer />
+          <SidebarComponentContainer />
           <div className="w-screen h-screen">
             <Routes>
-              <Route path="/" element={<LoginCraftContainer />} />
-              <Route path="/login" element={<LoginCraftContainer />} />
+              <Route path="/" element={<LoginComponent />} />
+              <Route path="/login" element={<LoginComponent />} />
               <Route path="/it" element={<TableCraftItContainer />} />
               <Route path="/furniture" element={<TableCraftFurnitureContainer />} />
               <Route path="/unmarked" element={<TableCraftUnmarkedContainer />} />
               <Route path="/assets" element={<TableCraftAssetsContainer />} />
-              <Route path="/upload" element={<UploadCraftContainer />} />
+              <Route path="/upload" element={<UploadComponentContainer />} />
               <Route path="/charts" element={<ChartCraftContainer />} />
-              <Route path="/users" element={<UsersCraftContainer />} />
-              <Route path="/employees" element={<EmployeesCraftContainer />} />
+              <Route path="/users" element={<UsersContainer />} />
+              <Route path="/employees" element={<EmployeesContainer />} />
               <Route path={`/it/:year`} element={<YearInventoryContainer type="it" />} />
               <Route path={`/furniture/:year`} element={<YearInventoryContainer type="furniture" />} />
               <Route path={`/unmarked/:year`} element={<YearInventoryContainer type="unmarked" />} />

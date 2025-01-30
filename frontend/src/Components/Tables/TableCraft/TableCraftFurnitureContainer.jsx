@@ -9,6 +9,7 @@ import { setVisible } from "../../../redux/reducers/side-bar-reducer";
 import { withAuthNavigate } from "../../../hoc/withAuthNavigate";
 import { logout } from "../../../redux/reducers/auth-reducer";
 import { memo } from "react";
+import { withDataTypeAccessNavigate } from "../../../hoc/withDataTypeAccessNavigate";
 
 let mapStateToProps = (state) => {
   return {
@@ -42,4 +43,4 @@ let mapDispatchToProps = {
 
 // export default connect(mapStateToProps, mapDispatchToProps)(TableCraft)
 
-export default compose(memo, connect(mapStateToProps, mapDispatchToProps), withAuthNavigate)(TableCraft);
+export default compose(memo, connect(mapStateToProps, mapDispatchToProps), withDataTypeAccessNavigate, withAuthNavigate)(TableCraft);

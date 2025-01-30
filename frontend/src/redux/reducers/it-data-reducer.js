@@ -1,5 +1,12 @@
-import { getRequestData, getAddData, getUpdateData, getTransferItem, getDeleteData, getUploadData } from "./functions/function-helpers";
-import { DataFilters } from "./filters/data.filter";
+import {
+  getRequestData,
+  getAddData,
+  getUpdateData,
+  getTransferItem,
+  getDeleteData,
+  getUploadData,
+} from "./functions/function-helpers";
+import { Filters } from "./filters/Filters";
 
 const SET_DATA = "sodfu-inventory/it-data-reducer/SET_DATA";
 const RESET_STATE = "sodfu-inventory/it-data-reducer/RESET_STATE";
@@ -11,7 +18,7 @@ let initialState = {
   columns: [],
   data: [],
   values: [],
-  filters: DataFilters,
+  filters: Filters.data,
   uploadedStatus: false,
   name: "Оборудование",
   message: "",
