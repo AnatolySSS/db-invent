@@ -34,7 +34,7 @@ const tagBodyTemplate = (dropdownType) => (rowData) => {
   //Определение severity на основании значения поля
   return rowData[dropdownType]?.map((type, i) => {
     let severity = getSeverityOptions(type);
-    return <Tag key={i} className="m-1" severity={severity} value={type}></Tag>;
+    return <Tag key={i} className={`m-1 ${severity}`} severity={severity} value={type}></Tag>;
   });
 };
 

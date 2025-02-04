@@ -36,19 +36,16 @@ const YearInventory = (props) => {
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filters, setFilters] = useState(props.filters);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
+  const [filteredData, setFilteredData] = useState(data); // Храним отфильтрованные данные
+  const [filteredValues, setFilteredValues] = useState(values); // Храним отфильтрованные данные
   const userMenu = useRef(null);
 
-  columns.map((obj) => {
-    let dataType;
-    switch (obj.dataType) {
-      case "numeric":
-        dataType = 0;
-        break;
-      default:
-        dataType = null;
-        break;
-    }
-  });
+  values.city_name = [...new Set(data.map((item) => item.city_name).filter((field) => field))].sort();
+  values.employee = [...new Set(data.map((item) => item.employee).filter((field) => field))].sort();
+  values.inv_user = [...new Set(data.map((item) => item.inv_user).filter((field) => field))].sort();
+  values.financially_responsible_person = [
+    ...new Set(data.map((item) => item.financially_responsible_person).filter((field) => field)),
+  ].sort();
 
   useEffect(() => {
     initFilters();
@@ -71,6 +68,19 @@ const YearInventory = (props) => {
     setVisibleColumns(columns);
   }, [columns]);
 
+  useEffect(() => {
+    setFilteredValues(values);
+  }, [values]);
+
+  useEffect(() => {
+    let _filteredValues = {};
+
+    for (const key in values) {
+      _filteredValues[key] = [...new Set(filteredData.map((field) => field[key]).filter((field) => field))].sort();
+    }
+    setFilteredValues(_filteredValues);
+  }, [filteredData]);
+
   const initFilters = () => {
     setFilters(props.filters);
     setGlobalFilterValue(props.filters.global.value);
@@ -91,6 +101,7 @@ const YearInventory = (props) => {
       <DataTable
         value={data}
         filters={filters}
+        onValueChange={(filteredData) => setFilteredData(filteredData)}
         filterDisplay="menu"
         globalFilterFields={getglobalFilterColumns(visibleColumns)}
         dataKey="id"
@@ -146,7 +157,7 @@ const YearInventory = (props) => {
             filter
             filterField={col.field}
             dataType={col.dataType}
-            filterElement={getColumnFilterElement(col, values)}
+            filterElement={getColumnFilterElement(col, filteredValues)}
             filterApply={col.dataType == "boolean" ? filterApplyTemplate : null}
             showFilterMatchModes={col.showFilterMenu}
             style={{ minWidth: col.width, textWrap: "wrap" }}

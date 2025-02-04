@@ -41,12 +41,18 @@ export const UsersDialog = (props) => {
       .required("Обязательное поле")
       .min(1, "Необходимо выбрать хотя бы один элемент")
       .of(Yup.object().shape({ name: Yup.string().required("Обязательное поле") })),
-
-    access_type: Yup.string().required("Обязательное поле"),
+    access_type: Yup.array()
+      .required("Обязательное поле")
+      .min(1, "Необходимо выбрать хотя бы один элемент")
+      .of(Yup.object().shape({ name: Yup.string().required("Обязательное поле") })),
   });
 
   //Преобразование массива для поля data_type в объект типа {name: "Оборудование"}
   const dataTypesOptions = values.data_type?.map((item) => {
+    return { name: item };
+  });
+  //Преобразование массива для поля access_type в объект типа {name: "Оборудование"}
+  const accessTypesOptions = values.access_type?.map((item) => {
     return { name: item };
   });
 
@@ -64,10 +70,12 @@ export const UsersDialog = (props) => {
 
   const submit = (item) => {
     let _item = { ...item };
-
-    _item.user_id = filteredEmployees[0]?.employee_id;
-    _item.login = filteredEmployees[0]?.login;
+    if (!_item.user_id) {
+      _item.user_id = filteredEmployees[0]?.employee_id;
+      _item.login = filteredEmployees[0]?.login;
+    }
     _item.data_type = item.data_type?.map((item) => item.name).toString() || null;
+    _item.access_type = item.access_type?.map((item) => item.name).toString() || null;
 
     saveItem(addData, updateData, _item, setItemDialog, setItem, emptyItem, userAuth, setDisabled, dialogType);
   };
@@ -120,7 +128,7 @@ export const UsersDialog = (props) => {
                 disabled={disabled}
               />
             </div>
-            <div className="col-9">
+            <div className="col-6">
               <Field
                 name="data_type"
                 component={MultiSelectFieldComponent}
@@ -130,12 +138,12 @@ export const UsersDialog = (props) => {
                 disabled={disabled}
               />
             </div>
-            <div className="col-3">
+            <div className="col-6">
               <Field
                 name="access_type"
-                component={DropdownFieldComponent}
-                title="Доступ"
-                options={getDropdownOptions("access_type", values)}
+                component={MultiSelectFieldComponent}
+                title="Подразделения"
+                options={accessTypesOptions}
                 dialogType={dialogType}
                 disabled={disabled}
               />

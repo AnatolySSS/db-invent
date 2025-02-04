@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import * as Yup from "yup";
 import { Dialog } from "primereact/dialog";
 import { handleTransferItem } from "./Functions/handleTransferItem";
@@ -9,7 +9,8 @@ import { CalendarFieldComponent } from "./FormFieldComponents/CalendarFieldCompo
 import { TextAreaFieldComponent } from "./FormFieldComponents/TextAreaFieldComponent";
 
 export const TransferDialogCraft = (props) => {
-  const { transferDialog, setTransferDialog, selectedItems, employees, userAuth, transferItem } = props;
+  const { transferDialog, setTransferDialog, selectedItems, setSelectedItems, employees, userAuth, transferItem } =
+    props;
 
   let emptyTransferedItem = {
     employee: "",
@@ -19,12 +20,23 @@ export const TransferDialogCraft = (props) => {
   };
 
   const [filteredEmployees, setFilteredEmployees] = useState([]);
+  const [latestDate, setLatestDate] = useState(null);
   const formButtonRef = useRef();
 
   const validationSchema = Yup.object().shape({
     employee: Yup.string().required("Обязательное поле"),
     date: Yup.string().required("Обязательное поле"),
+    note: Yup.string().required("Обязательное поле"),
   });
+
+  //При передаче нескольких единиц оборудования, дата передачи не может быть ранее самой поздней даты передачи оборудования
+  //Данный useEffect определяет самую позднюю дату передачи из выбранного оборудования и присваивает ее latestDate
+  useEffect(() => {
+    const employeeSetupDates = selectedItems.map((item) => item.employee_setup_date).filter((item) => item);
+    const latestDateHelper = new Date(Math.max(...employeeSetupDates.map((date) => date?.getTime())));
+    latestDateHelper.setDate(latestDateHelper.getDate() + 1); // добавляем 1 день, т.к. передача оборудования в один день невозможна (предполагается)
+    setLatestDate(latestDateHelper);
+  }, [selectedItems]);
 
   const searchFilteredEmployees = (event) => {
     setFilteredEmployees(employees.filter((item) => item.full_name.toLowerCase().includes(event.query.toLowerCase())));
@@ -39,6 +51,7 @@ export const TransferDialogCraft = (props) => {
     transferedItem.employee_id = filteredEmployees[0].employee_id;
 
     handleTransferItem(transferedItem, transferItem, selectedItems, userAuth, setTransferDialog);
+    setSelectedItems([]);
   };
 
   const transferDialogFooter = (
@@ -101,6 +114,7 @@ export const TransferDialogCraft = (props) => {
                 name="date"
                 component={CalendarFieldComponent}
                 title="Дата перемещения"
+                minDate={latestDate}
                 dialogType={"edit"}
                 disabled={false}
               />

@@ -1,6 +1,6 @@
 import { Sequelize } from "sequelize";
 
-import division from "./global/division.model.js";
+// import division from "./global/division.model.js";
 import user from "./global/user.model.js";
 import employee from "./global/employee.model.js";
 
@@ -12,21 +12,21 @@ import inv from "./global/inv.model.js";
 import { Columns } from "./global/columns.model.js";
 
 import { getDbConfig } from "../config/getDbConfig.js";
-import getDb_D0 from "./division_0/_getDb.js";
-import getDb_D1 from "./division_1/_getDb.js";
-import getDb_D2 from "./division_2/_getDb.js";
-import getDb_D3 from "./division_3/_getDb.js";
+// import getDb_D0 from "./division_0/_getDb.js";
+// import getDb_D1 from "./division_1/_getDb.js";
+// import getDb_D2 from "./division_2/_getDb.js";
+// import getDb_D3 from "./division_3/_getDb.js";
 
 const { config } = getDbConfig();
 
 let sequelize = {
   GLOBAL: null,
-  DIVISIONS: {},
+  // DIVISIONS: {},
 };
 
 const db = {
   GLOBAL: {},
-  DIVISIONS: {},
+  // DIVISIONS: {},
 };
 
 sequelize.GLOBAL = new Sequelize(config.GLOBAL.DB, config.GLOBAL.USER, config.GLOBAL.PASSWORD, {
@@ -41,7 +41,7 @@ sequelize.GLOBAL = new Sequelize(config.GLOBAL.DB, config.GLOBAL.USER, config.GL
   logging: false,
 });
 
-db.GLOBAL.division = division(sequelize.GLOBAL, Sequelize);
+// db.GLOBAL.division = division(sequelize.GLOBAL, Sequelize);
 db.GLOBAL.employee = employee(sequelize.GLOBAL, Sequelize);
 db.GLOBAL.user = user(sequelize.GLOBAL, Sequelize);
 
@@ -53,29 +53,30 @@ db.GLOBAL.inv = inv(sequelize.GLOBAL, Sequelize);
 
 for (const key in Columns) {
   db.GLOBAL[`${key}Cols`] = Columns[key](sequelize.GLOBAL, Sequelize);
+  db.GLOBAL[`${key}Cols`].sync();
 }
 
-//division > employee
-db.GLOBAL.division.hasMany(db.GLOBAL.employee, {
+//vals (city_name) > employee (division_id)
+db.GLOBAL.vals.hasMany(db.GLOBAL.employee, {
   foreignKey: "division_id",
 });
-db.GLOBAL.employee.belongsTo(db.GLOBAL.division, {
-  foreignKey: "division_id",
-});
-
-//division > lib
-db.GLOBAL.division.hasMany(db.GLOBAL.lib, {
-  foreignKey: "division_id",
-});
-db.GLOBAL.lib.belongsTo(db.GLOBAL.division, {
+db.GLOBAL.employee.belongsTo(db.GLOBAL.vals, {
   foreignKey: "division_id",
 });
 
-//division > inv
-db.GLOBAL.division.hasMany(db.GLOBAL.inv, {
+//vals (city_name) > lib
+db.GLOBAL.vals.hasMany(db.GLOBAL.lib, {
   foreignKey: "division_id",
 });
-db.GLOBAL.inv.belongsTo(db.GLOBAL.division, {
+db.GLOBAL.lib.belongsTo(db.GLOBAL.vals, {
+  foreignKey: "division_id",
+});
+
+//vals (city_name) > inv
+db.GLOBAL.vals.hasMany(db.GLOBAL.inv, {
+  foreignKey: "division_id",
+});
+db.GLOBAL.inv.belongsTo(db.GLOBAL.vals, {
   foreignKey: "division_id",
 });
 
@@ -168,28 +169,42 @@ db.GLOBAL.trans.belongsTo(db.GLOBAL.lib, {
   foreignKey: "itemId",
 });
 
-for (const DIVISION in config.DIVISIONS) {
-  sequelize.DIVISIONS[DIVISION] = new Sequelize(config.DIVISIONS[DIVISION].DB, config.DIVISIONS[DIVISION].USER, config.DIVISIONS[DIVISION].PASSWORD, {
-    host: config.DIVISIONS[DIVISION].HOST,
-    dialect: config.DIVISIONS[DIVISION].dialect,
-    operatorsAliases: 0,
-    pool: {
-      max: 5,
-      min: 0,
-      idle: 10000,
-    },
-    logging: false,
-  });
-}
+// for (const DIVISION in config.DIVISIONS) {
+//   sequelize.DIVISIONS[DIVISION] = new Sequelize(
+//     config.DIVISIONS[DIVISION].DB,
+//     config.DIVISIONS[DIVISION].USER,
+//     config.DIVISIONS[DIVISION].PASSWORD,
+//     {
+//       host: config.DIVISIONS[DIVISION].HOST,
+//       dialect: config.DIVISIONS[DIVISION].dialect,
+//       operatorsAliases: 0,
+//       pool: {
+//         max: 5,
+//         min: 0,
+//         idle: 10000,
+//       },
+//       logging: false,
+//     }
+//   );
+// }
 
-db.DIVISIONS.D0 = getDb_D0(sequelize.DIVISIONS.D0, Sequelize);
-db.DIVISIONS.D1 = getDb_D1(sequelize.DIVISIONS.D1, Sequelize);
-db.DIVISIONS.D2 = getDb_D2(sequelize.DIVISIONS.D2, Sequelize);
-db.DIVISIONS.D3 = getDb_D3(sequelize.DIVISIONS.D3, Sequelize);
+// db.DIVISIONS.D0 = getDb_D0(sequelize.DIVISIONS.D0, Sequelize);
+// db.DIVISIONS.D1 = getDb_D1(sequelize.DIVISIONS.D1, Sequelize);
+// db.DIVISIONS.D2 = getDb_D2(sequelize.DIVISIONS.D2, Sequelize);
+// db.DIVISIONS.D3 = getDb_D3(sequelize.DIVISIONS.D3, Sequelize);
 
 //синхрованизация всех моделей с базами данных
-for (const key in db.GLOBAL) {
-  db.GLOBAL[key].sync();
-}
+//Важно соблюдать именно такой порядок синхронизации,
+//т.к. родительские таблицы должны создаваться перед дочерними
+await db.GLOBAL.vals.sync();
+await db.GLOBAL.employee.sync();
+await db.GLOBAL.lib.sync();
+await db.GLOBAL.inv.sync();
+await db.GLOBAL.user.sync();
+await db.GLOBAL.log.sync();
+await db.GLOBAL.trans.sync();
+// for (const key in db.GLOBAL) {
+//   db.GLOBAL[key].sync();
+// }
 
 export default db;

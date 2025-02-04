@@ -23,6 +23,7 @@ export const Description = (props) => {
     dialogType,
     formButtonRef,
     setDisabled,
+    toast,
   } = props;
 
   switch (name) {
@@ -46,6 +47,7 @@ export const Description = (props) => {
           dialogType={dialogType}
           formButtonRef={formButtonRef}
           setDisabled={setDisabled}
+          toast={toast}
         />
       );
     case "Мебель":
@@ -68,6 +70,7 @@ export const Description = (props) => {
           dialogType={dialogType}
           formButtonRef={formButtonRef}
           setDisabled={setDisabled}
+          toast={toast}
         />
       );
     case "Прочее":
@@ -90,6 +93,7 @@ export const Description = (props) => {
           dialogType={dialogType}
           formButtonRef={formButtonRef}
           setDisabled={setDisabled}
+          toast={toast}
         />
       );
     case "Основные средства":
@@ -112,6 +116,7 @@ export const Description = (props) => {
           dialogType={dialogType}
           formButtonRef={formButtonRef}
           setDisabled={setDisabled}
+          toast={toast}
         />
       );
     default:

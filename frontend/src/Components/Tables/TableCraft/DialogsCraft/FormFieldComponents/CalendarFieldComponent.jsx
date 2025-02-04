@@ -1,7 +1,7 @@
 import { Calendar } from "primereact/calendar";
 
 export const CalendarFieldComponent = ({ field, form: { touched, errors }, ...props }) => {
-  const { title, dialogType, disabled } = props;
+  const { title, minDate, dialogType, disabled } = props;
 
   return (
     <div>
@@ -12,6 +12,8 @@ export const CalendarFieldComponent = ({ field, form: { touched, errors }, ...pr
         <Calendar
           id={field.name}
           {...field}
+          showIcon
+          minDate={minDate}
           dateFormat="dd.mm.yy"
           aria-describedby={`${field.name}-help`}
           className={touched[field.name] && errors[field.name] && "p-invalid"}

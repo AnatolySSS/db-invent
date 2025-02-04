@@ -24,6 +24,8 @@ const Employees = (props) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [ItemDialog, setItemDialog] = useState(false);
   const [item, setItem] = useState({});
+  const [filteredData, setFilteredData] = useState(data); // Храним отфильтрованные данные
+  const [filteredValues, setFilteredValues] = useState(values); // Храним отфильтрованные данные
   const toast = useRef(null);
   const userMenu = useRef(null);
   let emptyItem = {};
@@ -41,19 +43,12 @@ const Employees = (props) => {
     emptyItem[obj.field] = dataType;
   });
 
-  values.department = [
-    ...new Set(
-      data.map((element) => element.department)?.filter((element) => element?.length !== 0 && element !== null)
-    ),
-  ].sort((a, b) => a.localeCompare(b));
+  values.city_name = [...new Set(data.map((item) => item.city_name).filter((field) => field))].sort();
+  values.full_name = [...new Set(data.map((item) => item.full_name).filter((field) => field))].sort();
+  values.department = [...new Set(data.map((item) => item.department).filter((field) => field))].sort();
+  values.title = [...new Set(data.map((item) => item.title).filter((field) => field))].sort();
   values.department.unshift("");
-
-  values.title = [
-    ...new Set(data.map((element) => element.title).filter((element) => element?.length !== 0 && element !== null)),
-  ].sort((a, b) => a.localeCompare(b));
   values.title.unshift("");
-
-  values.city_name = ["Москва", "Саратов", "Санкт-Петербург", "Нижний Новгород"];
 
   useEffect(() => {
     requestData(userAuth);
@@ -69,6 +64,19 @@ const Employees = (props) => {
   useEffect(() => {
     setVisibleColumns(columns);
   }, [columns]);
+
+  useEffect(() => {
+    setFilteredValues(values);
+  }, [values]);
+
+  useEffect(() => {
+    let _filteredValues = {};
+
+    for (const key in values) {
+      _filteredValues[key] = [...new Set(filteredData.map((field) => field[key]).filter((field) => field))].sort();
+    }
+    setFilteredValues(_filteredValues);
+  }, [filteredData]);
 
   const initFilters = () => {
     setFilters(props.filters);
@@ -101,6 +109,7 @@ const Employees = (props) => {
       <DataTable
         value={data}
         filters={filters}
+        onValueChange={(filteredData) => setFilteredData(filteredData)}
         filterDisplay="menu"
         globalFilterFields={getglobalFilterColumns(visibleColumns)}
         dataKey="employee_id"
@@ -163,7 +172,7 @@ const Employees = (props) => {
             filter
             filterField={col.field}
             dataType={col.dataType}
-            filterElement={getColumnFilterElement(col, values)}
+            filterElement={getColumnFilterElement(col, filteredValues)}
             showFilterMatchModes={col.showFilterMenu}
             style={{ minWidth: col.width, textWrap: "wrap" }}
             body={getColumnBody(col)}

@@ -29,19 +29,26 @@ export const DescriptionUnmarked = (props) => {
     emptyItem,
     setItemDialog,
     setDisabled,
+    toast,
   } = props;
 
   const [filteredFinanciallyResponsiblePerson, setFilteredFinanciallyResponsiblePerson] = useState([]);
 
   //Переменная для массива наименований столбцов,
   //чтобы показывать только релевантные столбцы для конкретного филиала
-  let currentColumns = columns.map((column) => column.field);
+  let currentColumns = columns.map((column) => {
+    return {
+      field: column.field,
+      header: column.header,
+    };
+  });
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Обязательное поле"),
     type: Yup.string().required("Обязательное поле"),
-    serviceable: currentColumns.includes("serviceable") && Yup.string().required("Обязательное поле"),
-    location: currentColumns.includes("location") && Yup.string().required("Обязательное поле"),
+    serviceable:
+      currentColumns.map((col) => col.field).includes("serviceable") && Yup.string().required("Обязательное поле"),
+    location: currentColumns.map((col) => col.field).includes("location") && Yup.string().required("Обязательное поле"),
     financially_responsible_person: Yup.string().required("Обязательное поле"),
   });
 
@@ -63,7 +70,20 @@ export const DescriptionUnmarked = (props) => {
   const submit = (item) => {
     let _item = { ...item };
     _item.financially_responsible_person_id = filteredFinanciallyResponsiblePerson[0].employee_id;
-    saveItem(type, addData, updateData, data, _item, setItemDialog, setItem, emptyItem, userAuth, setDisabled, values);
+    saveItem(
+      type,
+      addData,
+      updateData,
+      data,
+      _item,
+      setItemDialog,
+      setItem,
+      emptyItem,
+      userAuth,
+      setDisabled,
+      values,
+      toast
+    );
   };
 
   return (
@@ -81,36 +101,36 @@ export const DescriptionUnmarked = (props) => {
 
           <div className="col-9">
             <div className="grid">
-              {currentColumns.includes("name") && (
+              {currentColumns.map((col) => col.field).includes("name") && (
                 <div className="col-12">
                   <Field
                     name="name"
                     component={TextAreaFieldComponent}
-                    title="Наименование"
+                    title={currentColumns.filter((col) => col.field === "name")[0].header}
                     rows={3}
                     dialogType={dialogType}
                     disabled={disabled}
                   />
                 </div>
               )}
-              {currentColumns.includes("location") && (
+              {currentColumns.map((col) => col.field).includes("location") && (
                 <div className="col-6">
                   <Field
                     name="location"
                     component={DropdownFieldComponent}
-                    title="Где установлено"
+                    title={currentColumns.filter((col) => col.field === "location")[0].header}
                     options={getDropdownOptions("location", values)}
                     dialogType={dialogType}
                     disabled={disabled}
                   />
                 </div>
               )}
-              {currentColumns.includes("type") && (
+              {currentColumns.map((col) => col.field).includes("type") && (
                 <div className="col-6">
                   <Field
                     name="type"
                     component={DropdownFieldComponent}
-                    title="Тип"
+                    title={currentColumns.filter((col) => col.field === "type")[0].header}
                     dialogType={dialogType}
                     disabled={disabled}
                     options={getDropdownOptions("type", values)}
@@ -130,12 +150,12 @@ export const DescriptionUnmarked = (props) => {
             <div className="col-12">
               <h2 className="text-primary my-0">Дополнительные сведения</h2>
             </div>
-            {currentColumns.includes("financially_responsible_person") && (
+            {currentColumns.map((col) => col.field).includes("financially_responsible_person") && (
               <div className="col-6">
                 <Field
                   name="financially_responsible_person"
                   component={AutoCompleteFieldComponent}
-                  title="Материально ответственное лицо"
+                  title={currentColumns.filter((col) => col.field === "financially_responsible_person")[0].header}
                   suggestions={[...filteredFinanciallyResponsiblePerson.map((e) => e.full_name)]}
                   onSelect={(e) =>
                     setFilteredFinanciallyResponsiblePerson(
@@ -149,45 +169,45 @@ export const DescriptionUnmarked = (props) => {
                 />
               </div>
             )}
-            {currentColumns.includes("qr_code") && dialogType === "edit" && (
+            {currentColumns.map((col) => col.field).includes("qr_code") && dialogType === "edit" && (
               <div className="col-6">
                 <Field
                   name="qr_code"
                   component={InputFieldComponent}
-                  title="QRCODE"
+                  title={currentColumns.filter((col) => col.field === "qr_code")[0].header}
                   dialogType={dialogType}
                   disabled={true}
                 />
               </div>
             )}
-            {currentColumns.includes("purchase_price") && (
+            {currentColumns.map((col) => col.field).includes("purchase_price") && (
               <div className="col-6">
                 <Field
                   name="purchase_price"
                   component={InputPriceFieldComponent}
-                  title="Стоимость"
+                  title={currentColumns.filter((col) => col.field === "purchase_price")[0].header}
                   dialogType={dialogType}
                   disabled={disabled}
                 />
               </div>
             )}
-            {currentColumns.includes("count") && (
+            {currentColumns.map((col) => col.field).includes("count") && (
               <div className="col-6">
                 <Field
                   name="count"
                   component={InputCountFieldComponent}
-                  title="Количество"
+                  title={currentColumns.filter((col) => col.field === "count")[0].header}
                   dialogType={dialogType}
                   disabled={disabled}
                 />
               </div>
             )}
-            {currentColumns.includes("measurement") && (
+            {currentColumns.map((col) => col.field).includes("measurement") && (
               <div className="col-6">
                 <Field
                   name="measurement"
                   component={DropdownFieldComponent}
-                  title="Единица измерения"
+                  title={currentColumns.filter((col) => col.field === "measurement")[0].header}
                   dialogType={dialogType}
                   disabled={disabled}
                   options={getDropdownOptions("measurement", values)}
@@ -202,12 +222,12 @@ export const DescriptionUnmarked = (props) => {
             <div className="col-12">
               <h2 className="text-primary my-0">Прочее</h2>
             </div>
-            {currentColumns.includes("note") && (
+            {currentColumns.map((col) => col.field).includes("note") && (
               <div className="col-12">
                 <Field
                   name="note"
                   component={TextAreaFieldComponent}
-                  title="Информация"
+                  title={currentColumns.filter((col) => col.field === "note")[0].header}
                   rows={1}
                   dialogType={dialogType}
                   disabled={disabled}

@@ -53,15 +53,19 @@ const TableCraft = (props) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [dialogType, setDialogType] = useState("");
   const [filteredData, setFilteredData] = useState(data); // Храним отфильтрованные данные
-  const [filteredValues, setFilteredValues] = useState(null); // Храним отфильтрованные данные
+  const [filteredValues, setFilteredValues] = useState(values); // Храним отфильтрованные данные
 
   const toast = useRef(null);
-  const uploadToast = useRef(null);
   const userMenu = useRef(null);
 
   let emptyItem = {};
 
-  values.city_name = ["Москва", "Саратов", "Санкт-Петербург", "Нижний Новгород"];
+  values.city_name = [...new Set(data.map((item) => item.city_name).filter((field) => field))].sort();
+  values.employee = [...new Set(data.map((item) => item.employee).filter((field) => field))].sort();
+  values.inv_user = [...new Set(data.map((item) => item.inv_user).filter((field) => field))].sort();
+  values.financially_responsible_person = [
+    ...new Set(data.map((item) => item.financially_responsible_person).filter((field) => field)),
+  ].sort();
 
   columns.map((obj) => {
     let dataType;
@@ -104,27 +108,26 @@ const TableCraft = (props) => {
     for (const key in values) {
       _filteredValues[key] = [...new Set(filteredData.map((field) => field[key]).filter((field) => field))].sort();
     }
-
     setFilteredValues(_filteredValues);
   }, [filteredData]);
 
-  useEffect(() => {
-    if (validationStatus.inventary_number) {
-      toast.current.show({
-        severity: "error",
-        summary: "Error",
-        detail: `Данный инвентарный номер уже имеется в базе данных`,
-        life: 3000,
-      });
-    } else if (validationStatus.qr_code) {
-      toast.current.show({
-        severity: "error",
-        summary: "Error",
-        detail: `Данный qr-code уже имеется в базе данных`,
-        life: 3000,
-      });
-    }
-  }, [validationStatus]);
+  // useEffect(() => {
+  //   if (validationStatus.inventary_number) {
+  //     toast.current.show({
+  //       severity: "error",
+  //       summary: "Error",
+  //       detail: `Данный инвентарный номер уже имеется в базе данных`,
+  //       life: 3000,
+  //     });
+  //   } else if (validationStatus.qr_code) {
+  //     toast.current.show({
+  //       severity: "error",
+  //       summary: "Error",
+  //       detail: `Данный qr-code уже имеется в базе данных`,
+  //       life: 3000,
+  //     });
+  //   }
+  // }, [validationStatus]);
 
   const hideDeleteItemDialog = () => {
     setDeleteItemDialog(false);
@@ -188,7 +191,6 @@ const TableCraft = (props) => {
   return isFetching ? (
     <div className="h-screen flex align-items-center justify-content-center">
       <Toast ref={toast} />
-      <Toast ref={uploadToast} />
       <div className="flex flex-column">
         <Preloader />
       </div>
@@ -196,7 +198,6 @@ const TableCraft = (props) => {
   ) : (
     <div className="card">
       <Toast ref={toast} />
-      <Toast ref={uploadToast} />
       <DataTable
         value={data}
         filters={filters}
@@ -234,9 +235,9 @@ const TableCraft = (props) => {
             setDialogType={setDialogType}
             employees={employees}
             uploadData={uploadData}
-            uploadToast={uploadToast}
             setUploadDialogVisible={setUploadDialogVisible}
             userMenu={userMenu}
+            toast={toast}
           />
         }
         paginator
@@ -322,6 +323,7 @@ const TableCraft = (props) => {
         userAuth={userAuth}
         dialogType={dialogType}
         employees={employees}
+        toast={toast}
       />
 
       {/* Удаление элемента */}
@@ -351,6 +353,7 @@ const TableCraft = (props) => {
         transferDialog={transferDialog}
         setTransferDialog={setTransferDialog}
         selectedItems={selectedItems}
+        setSelectedItems={setSelectedItems}
         employees={employees}
         userAuth={userAuth}
         transferItem={transferItem}
@@ -364,7 +367,7 @@ const TableCraft = (props) => {
         type={type}
         data={data}
         values={values}
-        uploadToast={uploadToast}
+        toast={toast}
         uploadData={uploadData}
         userMenu={userMenu}
         userAuth={userAuth}

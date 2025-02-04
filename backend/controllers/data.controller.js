@@ -1,4 +1,4 @@
-import { Sequelize } from "sequelize";
+import { Op, Sequelize } from "sequelize";
 import changeDateType from "./functions/changeDateType.js";
 import db from "../models/_index.js";
 import formatDate from "./functions/formatDate.js";
@@ -8,7 +8,8 @@ export const DataController = {
   async getData(request, responce) {
     try {
       let { type, userAuth } = request.body;
-      const { division, lib, log, trans, vals, itCols, furnitureCols, unmarkedCols, assetsCols, employee } = db.GLOBAL;
+      const { lib, log, trans, vals, itCols, furnitureCols, unmarkedCols, assetsCols, employee } = db.GLOBAL;
+      console.log(userAuth);
 
       let data = {};
       let columns;
@@ -29,14 +30,15 @@ export const DataController = {
         default:
           break;
       }
-      const whereObj = userAuth.access_type === "limited" ? { division_id: userAuth.division_id, class_type: type } : { class_type: type };
+
+      const whereObj = { division_id: { [Op.in]: userAuth.access_type }, class_type: type };
 
       data.lib = await lib.findAll({
         attributes: {
           include: [
             [Sequelize.col("employee.full_name"), "employee"],
             [Sequelize.col("financially_responsible_person.full_name"), "financially_responsible_person"],
-            [Sequelize.col("division.name"), "city_name"],
+            [Sequelize.col("val.city_name"), "city_name"],
           ],
           exclude: ["createdAt"],
         },
@@ -53,7 +55,7 @@ export const DataController = {
             attributes: [],
           },
           {
-            model: division,
+            model: vals,
             attributes: [],
           },
         ],
@@ -62,14 +64,21 @@ export const DataController = {
 
       data.columns = await columns.findAll({
         attributes: {
-          exclude: ["createdAt", "updatedAt", "division_0", "division_1", "division_2", "division_3"],
+          exclude: ["createdAt", "updatedAt", "division_1", "division_2", "division_3", "division_4"],
         },
         where: { [`division_${userAuth.division_id}`]: true },
         raw: true,
       });
 
       data.values = await vals.findAll({
-        attributes: [[`locations_${userAuth.division_id}`, "location"], [`${type}_type`, "type"], "workplace_type", "serviceable", "office", "measurement"],
+        attributes: [
+          [`locations_${userAuth.division_id}`, "location"],
+          [`${type}_type`, "type"],
+          "workplace_type",
+          "serviceable",
+          "office",
+          "measurement",
+        ],
         raw: true,
       });
 
@@ -95,14 +104,20 @@ export const DataController = {
           ],
           raw: true,
         });
+
         //Изменение наименование столбца "changedFiled"
         lib.logs = logs
           .map((log) => {
+            //Изменение наименование столбца "changedFiled"
             for (const column of data.columns) {
+              //Если changedFiled оканчивается на _id, удаляем эти три символа (_id) для того, чтобы заменить наименование столбца
+              log.changedFiled =
+                log.changedFiled.slice(-3) === "_id" ? log.changedFiled.replace("_id", "") : log.changedFiled;
               if (log.changedFiled === column.field) {
                 log.changedFiled = column.header;
               }
             }
+            //Изменение employee_id на ФИО у всех сотрудников (новые и старые значения)
             for (const employee of employees) {
               if (log.oldValue === employee.employee_id) {
                 log.oldValue = employee.full_name;
@@ -173,7 +188,7 @@ export const DataController = {
     label: try {
       let { rowData } = request.body;
 
-      const { lib, log } = db.GLOBAL;
+      const { lib, log, trans } = db.GLOBAL;
       let data = {
         qr_code: false,
         inventary_number: false,
@@ -191,31 +206,20 @@ export const DataController = {
         }
       }
 
-      // if (type != "unmarked") {
-      //   let qr_code = await table.findOne({
-      //     where: { qr_code: rowData.qr_code },
-      //     raw: true,
-      //   });
-
-      //   if (qr_code != null) {
-      //     data.qr_code = true;
-      //     responce.json(data);
-      //     break label;
-      //   }
-
-      //   let inventary_number = await table.findOne({
-      //     where: { inventary_number: rowData.inventary_number },
-      //     raw: true,
-      //   });
-
-      //   if (inventary_number != null) {
-      //     data.inventary_number = true;
-      //     responce.json(data);
-      //     break label;
-      //   }
-      // }
+      //Добавление склада в качестве владельца
+      rowData.employee_id = `warehouse${rowData.division_id}`;
+      rowData.employee_setup_date = new Date(rowData.changedDateTime).toISOString().split("T")[0];
 
       const id = (await lib.create(rowData)).dataValues.id;
+
+      //Добавление данных в таблицу перемещений
+      const transferData = {
+        itemId: id,
+        employee_id: rowData.employee_id,
+        date: rowData.employee_setup_date,
+        note: "Новая единица ТМЦ",
+      };
+      await trans.create(transferData);
 
       //Запись логов при обновлении значений checkedValues (цикл for...of асинхронный)
       for (const key in rowData) {
@@ -247,8 +251,6 @@ export const DataController = {
   async updateData(request, responce) {
     try {
       let { rowData } = request.body;
-      console.log("rowData");
-      console.log(rowData);
 
       const { lib, log } = db.GLOBAL;
 

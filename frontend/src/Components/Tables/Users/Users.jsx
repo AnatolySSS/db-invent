@@ -41,21 +41,18 @@ const Users = (props) => {
   const [deleteItemDialog, setDeleteItemDialog] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
   const [dialogType, setDialogType] = useState("");
+  const [filteredData, setFilteredData] = useState(data); // Храним отфильтрованные данные
+  const [filteredValues, setFilteredValues] = useState(values); // Храним отфильтрованные данные
   const toast = useRef(null);
   const userMenu = useRef(null);
   let emptyItem = { full_name: "", role: "", access_type: "", data_type: "" };
 
-  values.department = [
-    ...new Set(data.map((element) => element.department).filter((element) => element.length !== 0)),
-  ].sort((a, b) => a.localeCompare(b));
+  values.city_name = [...new Set(data.map((item) => item.city_name).filter((field) => field))].sort();
+  values.full_name = [...new Set(data.map((item) => item.full_name).filter((field) => field))].sort();
+  values.department = [...new Set(data.map((item) => item.department).filter((field) => field))].sort();
+  values.title = [...new Set(data.map((item) => item.title).filter((field) => field))].sort();
   values.department.unshift("");
-
-  values.title = [...new Set(data.map((element) => element.title).filter((element) => element.length !== 0))].sort(
-    (a, b) => a.localeCompare(b)
-  );
   values.title.unshift("");
-
-  values.city_name = ["Москва", "Саратов", "Санкт-Петербург", "Нижний Новгород"];
 
   const [item, setItem] = useState(emptyItem);
 
@@ -74,16 +71,48 @@ const Users = (props) => {
     setVisibleColumns(columns);
   }, [columns]);
 
+  useEffect(() => {
+    setFilteredValues(values);
+  }, [values]);
+
+  //Изменение filteredValues в случае проставления фильтров
+  useEffect(() => {
+    let _filteredValues = {};
+
+    //Для столбцов с типом tag значения для выпадающего списка не берутся из массива
+    const tagCols = columns.filter((col) => col.editingType === "tag").map((col) => col.field);
+
+    for (const key in values) {
+      if (!tagCols.includes(key)) {
+        _filteredValues[key] = [...new Set(filteredData.map((field) => field[key]).filter((field) => field))].sort();
+      } else {
+        const set = new Set();
+        const arr = filteredData.map((field) => field[key]).filter((field) => field);
+        arr.forEach((arr) => {
+          arr.forEach((el) => {
+            set.add(el);
+          });
+        });
+        _filteredValues[key] = [...set];
+      }
+    }
+
+    setFilteredValues(_filteredValues);
+  }, [filteredData]);
+
   const hideDeleteItemDialog = () => {
     setDeleteItemDialog(false);
   };
 
   const editItem = (rowData) => {
     setDialogType("edit");
-    //Преобразование поля data_type из строки в массив объектов типа {name: "Оборудование"}
+    //Преобразование поля data_type и access_type из строки в массив объектов типа {name: "Оборудование"}
     //Необходимо для MultiSelect
     let _rowData = { ...rowData };
     _rowData.data_type = _rowData.data_type?.map((item) => {
+      return { name: item };
+    });
+    _rowData.access_type = _rowData.access_type?.map((item) => {
       return { name: item };
     });
 
@@ -151,6 +180,7 @@ const Users = (props) => {
       <DataTable
         value={data}
         filters={filters}
+        onValueChange={(data) => setFilteredData(data)}
         filterDisplay="menu"
         globalFilterFields={getglobalFilterColumns(visibleColumns)}
         dataKey="user_id"
@@ -215,7 +245,7 @@ const Users = (props) => {
             filter
             filterField={col.field}
             dataType={col.dataType}
-            filterElement={getColumnFilterElement(col, values)}
+            filterElement={getColumnFilterElement(col, filteredValues)}
             showFilterMatchModes={col.showFilterMenu}
             style={{ minWidth: col.width, textWrap: "wrap" }}
             body={getColumnBody(col)}

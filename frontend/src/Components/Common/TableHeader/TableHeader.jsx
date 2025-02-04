@@ -1,10 +1,8 @@
-import { useRef } from "react";
 import { Button } from "primereact/button";
 import { MultiSelect } from "primereact/multiselect";
 import { InputText } from "primereact/inputtext";
 import { Menu } from "primereact/menu";
 import { Avatar } from "primereact/avatar";
-import { Toast } from "primereact/toast";
 import { Tooltip } from "primereact/tooltip";
 import { classNames } from "primereact/utils";
 import { getUserLogo } from "../../Tables/Functions/Helpers/getUserLogo";
@@ -41,18 +39,14 @@ export const TableHeader = (props) => {
     setDialogType,
     employees,
     uploadData,
-    uploadToast,
     setUploadDialogVisible,
     userMenu,
+    toast,
   } = props;
-
-  const userToast = useRef(null);
-  const transferToast = useRef(null);
 
   const onColumnToggle = (event) => {
     let selectedColumns = event.value;
     let orderedSelectedColumns = columns.filter((col) => selectedColumns.some((sCol) => sCol.field === col.field));
-    console.log(orderedSelectedColumns);
 
     setVisibleColumns(orderedSelectedColumns);
   };
@@ -80,9 +74,7 @@ export const TableHeader = (props) => {
     data,
     values,
     logout,
-    userToast,
-    transferToast,
-    uploadToast,
+    toast,
     userAuth,
     selectedItems,
     clearFilter,
@@ -105,8 +97,6 @@ export const TableHeader = (props) => {
   return (
     <div className="flex flex-column">
       <div className="flex justify-content-between">
-        <Toast ref={userToast} />
-        <Toast ref={transferToast} />
         <Tooltip target=".inventory-status" />
         <div className="col-fixed flex">
           <div className="flex align-items-center col-fixed">

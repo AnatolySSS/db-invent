@@ -53,9 +53,6 @@ const libCols = (Sequelize) => {
     header: {
       type: Sequelize.STRING(50),
     },
-    division_0: {
-      type: Sequelize.BOOLEAN,
-    },
     division_1: {
       type: Sequelize.BOOLEAN,
     },
@@ -63,6 +60,9 @@ const libCols = (Sequelize) => {
       type: Sequelize.BOOLEAN,
     },
     division_3: {
+      type: Sequelize.BOOLEAN,
+    },
+    division_4: {
       type: Sequelize.BOOLEAN,
     },
     width: {

@@ -7,8 +7,8 @@ import { Description } from "./Description";
 import styles from "./DialogCraft.module.css";
 
 import { TimelinelHistoryCraft } from "./TabViewCraft/TimelineHistoryCraft";
+import { TableHistoryCraftOld } from "./TabViewCraft/TableHistoryCraftOld";
 import { TablelHistoryCraft } from "./TabViewCraft/TableHistoryCraft";
-import { TablelHistoryCraft2 } from "./TabViewCraft/TableHistoryCraft2";
 import { TimelinelTransferCraft } from "./TabViewCraft/TimelineTransferCraft";
 import { TreeTablelHistoryCraft } from "./TabViewCraft/TreeTableHistoryCraft";
 
@@ -29,6 +29,7 @@ export const DialogCraft = (props) => {
     userAuth,
     dialogType,
     employees,
+    toast,
   } = props;
 
   const [disabled, setDisabled] = useState(true);
@@ -88,6 +89,7 @@ export const DialogCraft = (props) => {
                 dialogType={dialogType}
                 formButtonRef={formButtonRef}
                 setDisabled={setDisabled}
+                toast={toast}
               />
             </div>
           </TabPanel>
@@ -121,7 +123,7 @@ export const DialogCraft = (props) => {
           {item.logs !== undefined && (
             <TabPanel header="История изменений" leftIcon="pi pi-objects-column mr-2">
               <div className={styles.tabContent}>
-                <TablelHistoryCraft2 columns={columns} logs={item.logs} />
+                <TablelHistoryCraft columns={columns} logs={item.logs} />
               </div>
             </TabPanel>
           )}

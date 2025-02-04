@@ -1,4 +1,4 @@
-import { Sequelize } from "sequelize";
+import { Op, Sequelize } from "sequelize";
 import bcrypt from "bcryptjs";
 import generator from "generate-password";
 import nodemailer from "nodemailer";
@@ -9,10 +9,11 @@ export const UsersController = {
   async getUsers(request, responce) {
     try {
       let { userAuth } = request.body;
-      const { user, vals, userCols, employee, division } = db.GLOBAL;
+      const { user, vals, userCols, employee } = db.GLOBAL;
       let data = {};
 
-      const whereObj = userAuth.access_type === "limited" ? { division_id: userAuth.division_id } : {};
+      // const whereObj = userAuth.role === "limited" ? { division_id: userAuth.division_id } : {};
+      // const whereObj = { division_id: { [Op.in]: userAuth.access_type } };
 
       data.lib = await employee.findAll({
         attributes: {
@@ -21,12 +22,12 @@ export const UsersController = {
             [Sequelize.col("user.access_type"), "access_type"],
             [Sequelize.col("user.data_type"), "data_type"],
             [Sequelize.col("user.updatedAt"), "updatedAt"],
-            [Sequelize.col("division.name"), "city_name"],
+            [Sequelize.col("val.city_name"), "city_name"],
             ["employee_id", "user_id"],
           ],
           exclude: ["createdAt", "dn", "employee_id"],
         },
-        where: whereObj,
+        // where: whereObj,
         include: [
           {
             model: user,
@@ -34,7 +35,7 @@ export const UsersController = {
             required: true,
           },
           {
-            model: division,
+            model: vals,
             attributes: [],
           },
         ],
@@ -48,6 +49,7 @@ export const UsersController = {
       });
 
       data.values = getValues(data.values);
+      data.values.access_type = [...data.values.city_name];
 
       //Изменение null на "null"
       data.lib = data.lib.map((libObg) => {
@@ -59,6 +61,7 @@ export const UsersController = {
           });
         }
         libObg.data_type = libObg.data_type?.split(",");
+        libObg.access_type = libObg.access_type?.split(",");
         return libObg;
       });
 
@@ -126,6 +129,7 @@ export const UsersController = {
   async updateUser(request, responce) {
     try {
       let { userData } = request.body;
+
       const { user } = db.GLOBAL;
 
       await user.update(userData, { where: { user_id: userData.user_id } });

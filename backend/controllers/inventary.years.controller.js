@@ -1,4 +1,4 @@
-import Sequelize from "sequelize";
+import Sequelize, { Op } from "sequelize";
 import db from "../models/_index.js";
 import { getValues } from "./functions/getValues.js";
 
@@ -7,9 +7,11 @@ export const InventaryYearsController = {
     try {
       let { type, userDivision } = request.body;
       const { lib, inv } = db.GLOBAL;
-      console.log(type);
-      console.log(userDivision);
-      let currentInvData = await inv.findOne({ where: { class_type: type, division_id: userDivision, year: new Date().getFullYear() }, raw: true });
+
+      let currentInvData = await inv.findOne({
+        where: { class_type: type, division_id: userDivision, year: new Date().getFullYear() },
+        raw: true,
+      });
 
       if (currentInvData === null) {
         let data = (
@@ -47,12 +49,18 @@ export const InventaryYearsController = {
       const { lib, inv } = db.GLOBAL;
 
       let libData = await lib.findAll({ attributes: ["class_type"], where: { division_id: userDivision }, raw: true });
-      let yearsData = await inv.findAll({ attributes: ["class_type", "year"], where: { division_id: userDivision }, raw: true });
+      let yearsData = await inv.findAll({
+        attributes: ["class_type", "year"],
+        where: { division_id: userDivision },
+        raw: true,
+      });
 
       let tables = [...new Set(libData.map((obj) => obj.class_type))];
 
       let yearsIt = [...new Set(yearsData.filter((obj) => obj.class_type === "it").map((obj) => obj.year))];
-      let yearsFurniture = [...new Set(yearsData.filter((obj) => obj.class_type === "furniture").map((obj) => obj.year))];
+      let yearsFurniture = [
+        ...new Set(yearsData.filter((obj) => obj.class_type === "furniture").map((obj) => obj.year)),
+      ];
       let yearsUnmarked = [...new Set(yearsData.filter((obj) => obj.class_type === "unmarked").map((obj) => obj.year))];
       let yearsAssets = [...new Set(yearsData.filter((obj) => obj.class_type === "assets").map((obj) => obj.year))];
 
@@ -67,9 +75,7 @@ export const InventaryYearsController = {
   async getYearData(request, responce) {
     try {
       let { type, year, userAuth } = request.body;
-      const { inv, vals, itCols, furnitureCols, unmarkedCols, assetsCols, employee, division } = db.GLOBAL;
-      // const { itValues, itColumns, furnitureValues, furnitureColumns, unmarkedValues, unmarkedColumns, assetsValues, assetsColumns, sequelize } =
-      //   db.DIVISIONS[`D${userDivision}`];
+      const { inv, vals, itCols, furnitureCols, unmarkedCols, assetsCols, employee } = db.GLOBAL;
 
       let data = {};
 
@@ -77,7 +83,7 @@ export const InventaryYearsController = {
         case "it":
           data.columns = await itCols.findAll({
             attributes: {
-              exclude: ["createdAt", "updatedAt", "division_0", "division_1", "division_2", "division_3"],
+              exclude: ["createdAt", "updatedAt", "division_1", "division_2", "division_3", "division_4"],
             },
             where: { [`division_${userAuth.division_id}`]: true },
             raw: true,
@@ -88,7 +94,7 @@ export const InventaryYearsController = {
         case "furniture":
           data.columns = await furnitureCols.findAll({
             attributes: {
-              exclude: ["createdAt", "updatedAt", "division_0", "division_1", "division_2", "division_3"],
+              exclude: ["createdAt", "updatedAt", "division_1", "division_2", "division_3", "division_4"],
             },
             where: { [`division_${userAuth.division_id}`]: true },
             raw: true,
@@ -99,7 +105,7 @@ export const InventaryYearsController = {
         case "unmarked":
           data.columns = await unmarkedCols.findAll({
             attributes: {
-              exclude: ["createdAt", "updatedAt", "division_0", "division_1", "division_2", "division_3"],
+              exclude: ["createdAt", "updatedAt", "division_1", "division_2", "division_3", "division_4"],
             },
             where: { [`division_${userAuth.division_id}`]: true },
             raw: true,
@@ -110,7 +116,7 @@ export const InventaryYearsController = {
         case "assets":
           data.columns = await assetsCols.findAll({
             attributes: {
-              exclude: ["createdAt", "updatedAt", "division_0", "division_1", "division_2", "division_3"],
+              exclude: ["createdAt", "updatedAt", "division_1", "division_2", "division_3", "division_4"],
             },
             where: { [`division_${userAuth.division_id}`]: true },
             raw: true,
@@ -127,19 +133,19 @@ export const InventaryYearsController = {
         header: "Проверено",
         width: "4rem",
         showFilterMenu: false,
-        dataType: "boolean",
-        dbFieldType: "boolean",
         editingType: "checkbox",
+        dbFieldType: "boolean",
+        dataType: "boolean",
       });
       data.columns.splice(2, 0, {
         id: data.columns.length + 1,
         field: "inv_user",
         header: "Оператор",
         width: "18rem",
-        showFilterMenu: true,
-        dataType: "text",
+        showFilterMenu: false,
+        editingType: "dropdown",
         dbFieldType: "text",
-        editingType: "input",
+        dataType: "text",
       });
       data.columns.splice(3, 0, {
         id: data.columns.length + 1,
@@ -147,9 +153,9 @@ export const InventaryYearsController = {
         header: "Дата сканирования",
         width: "12rem",
         showFilterMenu: true,
-        dataType: "date",
-        dbFieldType: "date",
         editingType: "date",
+        dbFieldType: "date",
+        dataType: "date",
       });
       data.columns.splice(4, 0, {
         id: data.columns.length + 1,
@@ -157,21 +163,31 @@ export const InventaryYearsController = {
         header: "Комментарий",
         width: "12rem",
         showFilterMenu: true,
-        dataType: "date",
-        dbFieldType: "date",
         editingType: "date",
+        dbFieldType: "date",
+        dataType: "date",
       });
 
       //Удаление столбцов createdAt и updatedAt
       // data.columns = data.columns.filter((col) => col.field != "createdAt" && col.field != "updatedAt");
       data.values = await vals.findAll({
-        attributes: [[`locations_${userAuth.division_id}`, "location"], [`${type}_type`, "type"], "workplace_type", "serviceable", "office", "measurement"],
+        attributes: [
+          [`locations_${userAuth.division_id}`, "location"],
+          [`${type}_type`, "type"],
+          "workplace_type",
+          "serviceable",
+          "office",
+          "measurement",
+        ],
         raw: true,
       });
       data.values = getValues(data.values);
 
-      const whereObj =
-        userAuth.access_type === "limited" ? { year: year, division_id: userAuth.division_id, class_type: type } : { year: year, class_type: type };
+      // const whereObj =
+      //   userAuth.access_type === "limited"
+      //     ? { year: year, division_id: userAuth.division_id, class_type: type }
+      //     : { year: year, class_type: type };
+      const whereObj = { year: year, division_id: { [Op.in]: userAuth.access_type }, class_type: type };
 
       data.lib = await inv.findAll({
         attributes: {
@@ -179,7 +195,7 @@ export const InventaryYearsController = {
             [Sequelize.col("employee_inv.full_name"), "employee"],
             [Sequelize.col("financially_responsible_person_inv.full_name"), "financially_responsible_person"],
             [Sequelize.col("inv_user_inv.full_name"), "inv_user"],
-            [Sequelize.col("division.name"), "city_name"],
+            [Sequelize.col("val.city_name"), "city_name"],
           ],
           exclude: ["createdAt"],
         },
@@ -201,7 +217,7 @@ export const InventaryYearsController = {
             attributes: [],
           },
           {
-            model: division,
+            model: vals,
             attributes: [],
           },
         ],
@@ -247,7 +263,10 @@ export const InventaryYearsController = {
       let { type, userDivision } = request.body;
       const { inv } = db.GLOBAL;
 
-      let currentInvData = await inv.findOne({ where: { class_type: type, division_id: userDivision, year: new Date().getFullYear() }, raw: true });
+      let currentInvData = await inv.findOne({
+        where: { class_type: type, division_id: userDivision, year: new Date().getFullYear() },
+        raw: true,
+      });
 
       responce.json({
         hasCurrentInventory: currentInvData !== null ? true : false,

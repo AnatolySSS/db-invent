@@ -16,9 +16,7 @@ export const setUserMenuItems = (
   data,
   values,
   logout,
-  userToast,
-  transferToast,
-  uploadToast,
+  toast,
   userAuth,
   selectedItems,
   clearFilter,
@@ -55,7 +53,7 @@ export const setUserMenuItems = (
 
   const makeCommitmentHelper = () => {
     if (selectedItems.length == 0) {
-      userToast.current.show({
+      toast.current.show({
         severity: "info",
         summary: "Предупреждение",
         detail: `Для формирования обязательства необходимо выбрать один или несколько объектов`,
@@ -75,7 +73,7 @@ export const setUserMenuItems = (
       }
     }
     if (!check) {
-      userToast.current.show({
+      toast.current.show({
         severity: "info",
         summary: "Предупреждение",
         detail: "Выбранные единицы оборудования закреплены за разными сотрудниками",
@@ -93,7 +91,7 @@ export const setUserMenuItems = (
     if (selectedItems.length !== 0) {
       setTransferDialog(true);
     } else {
-      transferToast.current.show({
+      toast.current.show({
         severity: "info",
         summary: "Предупреждение",
         detail: `Для перемещения необходимо выбрать один или несколько объектов`,
@@ -183,7 +181,7 @@ export const setUserMenuItems = (
               await beginInventory(type, userAuth.division_id);
               await requestCurrentInventory(type, userAuth.division_id);
               getTableHeight();
-              userToast.current.show({
+              toast.current.show({
                 severity: "success",
                 summary: "Info",
                 detail: "Инвентаризация инициирована",
@@ -244,7 +242,7 @@ export const setUserMenuItems = (
         );
       },
       command: () => {
-        userToast.current.show({
+        toast.current.show({
           severity: "info",
           summary: "Info",
           detail: userAuth.fullName,

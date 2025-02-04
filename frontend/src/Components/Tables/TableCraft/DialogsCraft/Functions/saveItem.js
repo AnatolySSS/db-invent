@@ -3,7 +3,20 @@ import changeDateType from "../../../../../function-helpers/changeDateType";
 import { createId } from "./createId";
 import { createQRCode } from "../../../../../function-helpers/createQRCode";
 
-export const saveItem = (type, addData, updateData, data, item, setItemDialog, setItem, emptyItem, userAuth, setDisabled, values) => {
+export const saveItem = async (
+  type,
+  addData,
+  updateData,
+  data,
+  item,
+  setItemDialog,
+  setItem,
+  emptyItem,
+  userAuth,
+  setDisabled,
+  values,
+  toast
+) => {
   setDisabled(true);
   let _item = { ...item };
   _item.changedDateTime = Date.now();
@@ -24,9 +37,19 @@ export const saveItem = (type, addData, updateData, data, item, setItemDialog, s
     }
   });
 
+  setItemDialog(false);
+  setItem(emptyItem);
+
   if (_item.id) {
     _item.changedUserId = userAuth.employee_id;
-    updateData(_item, userAuth);
+    await updateData(_item, userAuth);
+
+    toast.current.show({
+      severity: "success",
+      summary: "Обновлено",
+      detail: `${item.name} успешно обновлен`,
+      life: 3000,
+    });
   } else {
     // _item.id = createId(data);
     let qrCode = createQRCode(userAuth.division_id, type, _item.type, data, values);
@@ -35,8 +58,13 @@ export const saveItem = (type, addData, updateData, data, item, setItemDialog, s
     _item.class_type = type;
     _item.qr_code = qrCode;
 
-    addData(_item, userAuth);
+    await addData(_item, userAuth);
+
+    toast.current.show({
+      severity: "success",
+      summary: "Создано",
+      detail: `${item.name} успешно создан`,
+      life: 3000,
+    });
   }
-  setItemDialog(false);
-  setItem(emptyItem);
 };

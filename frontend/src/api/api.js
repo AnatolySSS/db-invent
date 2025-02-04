@@ -94,6 +94,8 @@ export const UsersAPI = {
     return responce.data;
   },
   async updateUser(userData) {
+    console.log(userData);
+
     const responce = await instance.put(`updateUser`, { userData });
     return responce.data;
   },

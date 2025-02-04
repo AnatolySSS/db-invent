@@ -55,6 +55,8 @@ export const requestData = (userAuth) => {
 };
 
 export const updateData = (userData, userAuth) => {
+  console.log(userData);
+
   return async (dispatch) => {
     dispatch(toggleIsFetching(true));
     const message = await UsersAPI.updateUser(userData);

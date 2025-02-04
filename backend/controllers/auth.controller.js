@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import db from "../models/_index.js";
 import authConfig from "../config/auth.config.js";
+import { getValues } from "./functions/getValues.js";
 
 export const AuthController = {
   async login(request, responce) {
@@ -95,7 +96,14 @@ export const AuthController = {
   async auth(request, responce) {
     try {
       let { login } = request.body;
-      const { user, employee, division } = db.GLOBAL;
+      const { user, employee, vals } = db.GLOBAL;
+
+      let city_names = await vals.findAll({
+        attributes: ["id", "city_name"],
+        raw: true,
+      });
+
+      city_names = city_names.filter((val) => val.city_name);
 
       const currentUser = await employee.findOne({
         attributes: {
@@ -105,7 +113,7 @@ export const AuthController = {
             [Sequelize.col("user.role"), "role"],
             [Sequelize.col("user.access_type"), "access_type"],
             [Sequelize.col("user.data_type"), "data_type"],
-            [Sequelize.col("division.name"), "city_name"],
+            [Sequelize.col("val.city_name"), "city_name"],
           ],
           exclude: ["createdAt", "updatedAt"],
         },
@@ -116,7 +124,7 @@ export const AuthController = {
             attributes: [],
           },
           {
-            model: division,
+            model: vals,
             attributes: [],
           },
         ],
@@ -124,6 +132,14 @@ export const AuthController = {
       });
 
       currentUser.data_type = currentUser.data_type?.split(",");
+      currentUser.access_type = currentUser.access_type?.split(",");
+
+      //Изменяем наименования городов на id
+      currentUser.access_type = currentUser.access_type.map((type) => {
+        const city = city_names.find((item) => item.city_name === type);
+        return city ? city.id : type;
+      });
+
       console.log(currentUser);
 
       if (!currentUser) return;

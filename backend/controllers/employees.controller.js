@@ -1,4 +1,4 @@
-import { Sequelize } from "sequelize";
+import { Op, Sequelize } from "sequelize";
 import { Client } from "ldapts";
 import db from "../models/_index.js";
 import { getValues } from "./functions/getValues.js";
@@ -44,13 +44,13 @@ export const EmployeesController = {
           }
 
           if (obj.dn.includes("Саратов")) {
-            obj.division_id = 1;
-          } else if (obj.dn.includes("Санкт-Петербург")) {
             obj.division_id = 2;
-          } else if (obj.dn.includes("Нижний Новгород")) {
+          } else if (obj.dn.includes("Санкт-Петербург")) {
             obj.division_id = 3;
+          } else if (obj.dn.includes("Нижний Новгород")) {
+            obj.division_id = 4;
           } else {
-            obj.division_id = 0;
+            obj.division_id = 1;
           }
 
           obj.is_present = true;
@@ -120,20 +120,21 @@ export const EmployeesController = {
   async getEmployees(request, responce) {
     try {
       let { userAuth } = request.body;
-      const { employee, employeeCols, vals, division } = db.GLOBAL;
+      const { employee, employeeCols, vals } = db.GLOBAL;
       let data = {};
 
-      const whereObj = userAuth.access_type === "limited" ? { division_id: userAuth.division_id } : {};
+      // const whereObj = userAuth.access_type === "limited" ? { division_id: userAuth.division_id } : {};
+      const whereObj = { division_id: { [Op.in]: userAuth.access_type } };
 
       data.lib = await employee.findAll({
         where: whereObj,
         attributes: {
-          include: [[Sequelize.col("division.name"), "city_name"]],
+          include: [[Sequelize.col("val.city_name"), "city_name"]],
           exclude: ["createdAt"],
         },
         include: [
           {
-            model: division,
+            model: vals,
             attributes: [],
           },
         ],

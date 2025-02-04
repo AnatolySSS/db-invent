@@ -88,13 +88,13 @@ const dropdownItemTemplate = (option) => {
 
 const tagItemTemplate = (option) => {
   let severity = getSeverityOptions(option);
-  return <Tag severity={severity} value={option} />;
+  return <Tag className={severity} severity={severity} value={option} />;
 };
 
 const selectedCountryTemplate = (option, props) => {
   let severity = getSeverityOptions(option);
   if (option) {
-    return <Tag severity={severity} value={option} />;
+    return <Tag className={severity} severity={severity} value={option} />;
   }
 
   return <span>{props.placeholder}</span>;
@@ -130,5 +130,13 @@ const dateFilterTemplate = (options) => {
 };
 
 const priceFilterTemplate = (options) => {
-  return <InputNumber value={options.value} onChange={(e) => options.filterCallback(e.value, options.index)} mode="currency" currency="RUB" locale="ru-RU" />;
+  return (
+    <InputNumber
+      value={options.value}
+      onChange={(e) => options.filterCallback(e.value, options.index)}
+      mode="currency"
+      currency="RUB"
+      locale="ru-RU"
+    />
+  );
 };

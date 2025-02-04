@@ -36,7 +36,7 @@ export const Filters = {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],
     },
-    last_setup_date: {
+    employee_setup_date: {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],
     },
@@ -44,14 +44,8 @@ export const Filters = {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
     },
-    employee: {
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
-    },
-    financially_responsible_person: {
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
-    },
+    employee: { value: null, matchMode: FilterMatchMode.IN },
+    financially_responsible_person: { value: null, matchMode: FilterMatchMode.IN },
     city_name: { value: null, matchMode: FilterMatchMode.IN },
     set_with: {
       operator: FilterOperator.AND,
@@ -92,17 +86,16 @@ export const Filters = {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],
     },
-    user: {
+    inv_user: { value: null, matchMode: FilterMatchMode.IN },
+    invent_note: {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
     },
   },
+
   employees: {
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    full_name: {
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
-    },
+    full_name: { value: null, matchMode: FilterMatchMode.IN },
     department: { value: null, matchMode: FilterMatchMode.IN },
     title: { value: null, matchMode: FilterMatchMode.IN },
     city_name: { value: null, matchMode: FilterMatchMode.IN },
@@ -128,12 +121,10 @@ export const Filters = {
     },
     is_present: { value: null, matchMode: FilterMatchMode.EQUALS },
   },
+
   users: {
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    full_name: {
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
-    },
+    full_name: { value: null, matchMode: FilterMatchMode.IN },
     department: { value: null, matchMode: FilterMatchMode.IN },
     title: { value: null, matchMode: FilterMatchMode.IN },
     city_name: { value: null, matchMode: FilterMatchMode.IN },
@@ -150,7 +141,7 @@ export const Filters = {
       constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
     },
     role: { value: null, matchMode: FilterMatchMode.IN },
-    access_type: { value: null, matchMode: FilterMatchMode.IN },
+    access_type: { value: null, matchMode: FilterMatchMode.CONTAINS },
     data_type: { value: null, matchMode: FilterMatchMode.CONTAINS },
     updatedAt: {
       operator: FilterOperator.AND,

@@ -1,7 +1,6 @@
 import React, { useRef, useState } from "react";
 import * as XLSX from "xlsx";
 import { Dialog } from "primereact/dialog";
-import { Toast } from "primereact/toast";
 import { FileUpload } from "primereact/fileupload";
 import { ProgressBar } from "primereact/progressbar";
 import { Button } from "primereact/button";
@@ -19,7 +18,7 @@ export default function UploadDialog(props) {
     type,
     uploadDialogVisible,
     setUploadDialogVisible,
-    uploadToast,
+    toast,
     uploadData,
     userMenu,
     userAuth,
@@ -94,7 +93,7 @@ export default function UploadDialog(props) {
     //Проверка на уникальность qr-кодов
     let qr_codes = jsonData.lib.map((v) => v.qr_code).filter((qr_code) => qr_code);
     if (new Set(qr_codes).size !== qr_codes.length) {
-      uploadToast.current.show({
+      toast.current.show({
         severity: "error",
         summary: "Ошибка загрузки",
         detail: `В загружаемом файле найдены дублирующиеся qr-коды`,
@@ -107,7 +106,7 @@ export default function UploadDialog(props) {
 
     let types = jsonData.lib.map((v) => v.type).filter((qr_code) => !qr_code);
     if (types.length > 0) {
-      uploadToast.current.show({
+      toast.current.show({
         severity: "error",
         summary: "Ошибка загрузки",
         detail: `В загружаемом файле имеются незаполненные значения типа объекта (столбец type)`,
@@ -142,7 +141,7 @@ export default function UploadDialog(props) {
   }
 
   const onUpload = (count) => {
-    uploadToast.current.show({
+    toast.current.show({
       severity: "success",
       summary: "Загрузка завершена",
       detail: `Загружено ${count} единиц ТМЦ`,

@@ -1,5 +1,5 @@
 export const createQRCode = (division, group, type, data, values) => {
-  let divisionNumber = division;
+  let divisionNumber = division - 1;
   let groupNumber;
 
   switch (group) {

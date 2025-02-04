@@ -5,7 +5,7 @@ export default (sequelize, Sequelize) =>
       role: {
         type: Sequelize.STRING(20),
       },
-      access_type: {
+      city_name: {
         type: Sequelize.STRING(20),
       },
       data_type: {
@@ -32,9 +32,6 @@ export default (sequelize, Sequelize) =>
       office: {
         type: Sequelize.STRING(50),
       },
-      locations_0: {
-        type: Sequelize.STRING(50),
-      },
       locations_1: {
         type: Sequelize.STRING(50),
       },
@@ -42,6 +39,9 @@ export default (sequelize, Sequelize) =>
         type: Sequelize.STRING(50),
       },
       locations_3: {
+        type: Sequelize.STRING(50),
+      },
+      locations_4: {
         type: Sequelize.STRING(50),
       },
       measurement: {
